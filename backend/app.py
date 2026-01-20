@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import random
 import string
@@ -6,9 +6,28 @@ import os
 from datetime import datetime, timedelta
 import sqlite3
 import json
+import stripe
+from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+from functools import wraps
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+
+# Stripe configuration
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+
+# Stripe price IDs (create these in Stripe Dashboard)
+PRICE_IDS = {
+    'starter': os.environ.get('STRIPE_PRICE_STARTER', 'price_starter'),
+    'professional': os.environ.get('STRIPE_PRICE_PROFESSIONAL', 'price_professional'),
+    'enterprise': os.environ.get('STRIPE_PRICE_ENTERPRISE', 'price_enterprise')
+}
 
 # Database setup for SB 553 Workplace Violence Compliance
 def init_db():
@@ -23,7 +42,9 @@ def init_db():
                     employee_count INTEGER,
                     locations TEXT,
                     created_at TEXT,
-                    subscription_status TEXT
+                    subscription_status TEXT,
+                    stripe_customer_id TEXT,
+                    stripe_subscription_id TEXT
                 )''')
     
     # Users table
@@ -100,13 +121,254 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+def subscription_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'company_id' not in session:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+        
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT subscription_status FROM companies WHERE id = ?', (session['company_id'],))
+        company = c.fetchone()
+        conn.close()
+        
+        if not company or company['subscription_status'] != 'active':
+            return jsonify({'success': False, 'error': 'Active subscription required'}), 403
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
 # API Routes
 
 @app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({'status': 'ok', 'service': 'CompCleared SB 553'})
 
+# Auth endpoints
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    """Create a new user account"""
+    data = request.json
+    
+    conn = get_db()
+    c = conn.cursor()
+    
+    try:
+        # Check if email already exists
+        c.execute('SELECT id FROM users WHERE email = ?', (data['email'],))
+        if c.fetchone():
+            conn.close()
+            return jsonify({'success': False, 'error': 'Email already registered'}), 400
+        
+        # Hash password
+        password_hash = generate_password_hash(data['password'])
+        
+        # Create user
+        c.execute('''INSERT INTO users (
+            company_id, email, password_hash, name, role, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?)''',
+        (
+            data.get('company_id'),
+            data['email'],
+            password_hash,
+            data.get('name', ''),
+            data.get('role', 'admin'),
+            datetime.now().isoformat()
+        ))
+        
+        user_id = c.lastrowid
+        conn.commit()
+        conn.close()
+        
+        # Create session
+        session['user_id'] = user_id
+        session['company_id'] = data.get('company_id')
+        session['email'] = data['email']
+        
+        return jsonify({
+            'success': True,
+            'user_id': user_id,
+            'message': 'Account created successfully'
+        }), 201
+        
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    """Log in existing user"""
+    data = request.json
+    
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('SELECT * FROM users WHERE email = ?', (data['email'],))
+    user = c.fetchone()
+    conn.close()
+    
+    if not user or not check_password_hash(user['password_hash'], data['password']):
+        return jsonify({'success': False, 'error': 'Invalid email or password'}), 401
+    
+    # Create session
+    session['user_id'] = user['id']
+    session['company_id'] = user['company_id']
+    session['email'] = user['email']
+    
+    return jsonify({
+        'success': True,
+        'user': {
+            'id': user['id'],
+            'email': user['email'],
+            'name': user['name'],
+            'company_id': user['company_id']
+        }
+    })
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    """Log out current user"""
+    session.clear()
+    return jsonify({'success': True})
+
+@app.route('/api/me', methods=['GET'])
+@login_required
+def get_current_user():
+    """Get current user info"""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
+    user = c.fetchone()
+    
+    if user and user['company_id']:
+        c.execute('SELECT * FROM companies WHERE id = ?', (user['company_id'],))
+        company = c.fetchone()
+    else:
+        company = None
+    
+    conn.close()
+    
+    return jsonify({
+        'success': True,
+        'user': dict(user) if user else None,
+        'company': dict(company) if company else None
+    })
+
+# Stripe endpoints
+
+@app.route('/api/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    """Create Stripe checkout session for subscription"""
+    data = request.json
+    tier = data.get('tier', 'starter')
+    
+    try:
+        # Create or get company
+        conn = get_db()
+        c = conn.cursor()
+        
+        c.execute('''INSERT INTO companies (
+            name, tier, employee_count, subscription_status, created_at
+        ) VALUES (?, ?, ?, ?, ?)''',
+        (
+            data['company_name'],
+            tier,
+            data.get('employee_count', 0),
+            'pending',
+            datetime.now().isoformat()
+        ))
+        
+        company_id = c.lastrowid
+        conn.commit()
+        conn.close()
+        
+        # Create Stripe checkout session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price': PRICE_IDS.get(tier, PRICE_IDS['starter']),
+                'quantity': 1,
+            }],
+            mode='subscription',
+            success_url=f'{FRONTEND_URL}/signup/success?session_id={{CHECKOUT_SESSION_ID}}&company_id={company_id}',
+            cancel_url=f'{FRONTEND_URL}/signup?canceled=true',
+            client_reference_id=str(company_id),
+            metadata={
+                'company_id': company_id,
+                'tier': tier
+            }
+        )
+        
+        return jsonify({
+            'success': True,
+            'checkout_url': checkout_session.url,
+            'company_id': company_id
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/webhook', methods=['POST'])
+def stripe_webhook():
+    """Handle Stripe webhook events"""
+    payload = request.data
+    sig_header = request.headers.get('Stripe-Signature')
+    
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, os.environ.get('STRIPE_WEBHOOK_SECRET')
+        )
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+    
+    # Handle subscription events
+    if event['type'] == 'checkout.session.completed':
+        session_data = event['data']['object']
+        company_id = session_data['metadata']['company_id']
+        
+        # Update company with Stripe info
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''UPDATE companies 
+                     SET subscription_status = ?, 
+                         stripe_customer_id = ?,
+                         stripe_subscription_id = ?
+                     WHERE id = ?''',
+                  ('active', 
+                   session_data['customer'],
+                   session_data['subscription'],
+                   company_id))
+        conn.commit()
+        conn.close()
+    
+    elif event['type'] == 'customer.subscription.deleted':
+        subscription = event['data']['object']
+        
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''UPDATE companies 
+                     SET subscription_status = ?
+                     WHERE stripe_subscription_id = ?''',
+                  ('canceled', subscription['id']))
+        conn.commit()
+        conn.close()
+    
+    return jsonify({'success': True})
+
+# Protected endpoints (require auth + subscription)
+
 @app.route('/api/incidents', methods=['POST'])
+@login_required
+@subscription_required
 def create_incident():
     """Log a new workplace violence incident (SB 553)"""
     data = request.json
@@ -126,7 +388,7 @@ def create_incident():
             created_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
         (
-            data.get('company_id', 1),  # Default for MVP
+            session['company_id'],
             data.get('location_id', 'main'),
             data['incident_date'],
             data['incident_time'],
@@ -163,9 +425,11 @@ def create_incident():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/incidents', methods=['GET'])
+@login_required
+@subscription_required
 def get_incidents():
     """Get all incidents for a company"""
-    company_id = request.args.get('company_id', 1)
+    company_id = session['company_id']
     
     conn = get_db()
     c = conn.cursor()
@@ -179,11 +443,14 @@ def get_incidents():
     return jsonify({'success': True, 'incidents': incidents})
 
 @app.route('/api/incidents/<int:incident_id>', methods=['GET'])
+@login_required
+@subscription_required
 def get_incident(incident_id):
     """Get a specific incident"""
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT * FROM incidents WHERE id = ?', (incident_id,))
+    c.execute('SELECT * FROM incidents WHERE id = ? AND company_id = ?', 
+              (incident_id, session['company_id']))
     
     incident = c.fetchone()
     conn.close()
@@ -194,6 +461,8 @@ def get_incident(incident_id):
         return jsonify({'success': False, 'error': 'Incident not found'}), 404
 
 @app.route('/api/training', methods=['POST'])
+@login_required
+@subscription_required
 def create_training_record():
     """Log employee training completion"""
     data = request.json
@@ -207,7 +476,7 @@ def create_training_record():
         created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?)''',
     (
-        data.get('company_id', 1),
+        session['company_id'],
         data['employee_name'],
         data.get('employee_id', ''),
         data['training_date'],
@@ -227,9 +496,11 @@ def create_training_record():
     }), 201
 
 @app.route('/api/training', methods=['GET'])
+@login_required
+@subscription_required
 def get_training_records():
     """Get training records for a company"""
-    company_id = request.args.get('company_id', 1)
+    company_id = session['company_id']
     
     conn = get_db()
     c = conn.cursor()
@@ -243,9 +514,11 @@ def get_training_records():
     return jsonify({'success': True, 'training_records': records})
 
 @app.route('/api/stats', methods=['GET'])
+@login_required
+@subscription_required
 def get_stats():
     """Get incident statistics for dashboard"""
-    company_id = request.args.get('company_id', 1)
+    company_id = session['company_id']
     
     conn = get_db()
     c = conn.cursor()

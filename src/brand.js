@@ -1,43 +1,48 @@
 // CompCleared Brand Constants
 
 export const colors = {
-  // Primary brand colors
-  primary: '#1a1a1a',        // Deep black
-  primaryLight: '#2d2d2d',
-  primaryDark: '#0a0a0a',
-  
+  // Primary brand colors - Trust Blue
+  primary: '#2563EB',        // Trust blue
+  primaryLight: '#3B82F6',
+  primaryDark: '#1E40AF',
+
   // Accent colors
-  accent: '#3b82f6',          // Professional blue
-  accentLight: '#60a5fa',
-  accentDark: '#2563eb',
-  
+  accent: '#3B82F6',          // Professional blue
+  accentLight: '#60A5FA',
+  accentDark: '#2563EB',
+
+  // CTA color
+  cta: '#F97316',             // Orange for call-to-action
+  ctaLight: '#FB923C',
+  ctaDark: '#EA580C',
+
   // Trust/success colors
-  trust: '#10b981',           // Green for verified/secure
-  trustLight: '#34d399',
-  
+  trust: '#10B981',           // Green for verified/secure
+  trustLight: '#34D399',
+
   // Alert colors
-  danger: '#ef4444',          // Red for imminent risk
-  dangerLight: '#f87171',
-  warning: '#f59e0b',         // Orange for warnings
-  warningLight: '#fbbf24',
-  
+  danger: '#EF4444',          // Red for imminent risk
+  dangerLight: '#F87171',
+  warning: '#F59E0B',         // Orange for warnings
+  warningLight: '#FBBF24',
+
   // Neutral colors
   white: '#ffffff',
-  gray50: '#f9fafb',
-  gray100: '#f3f4f6',
-  gray200: '#e5e7eb',
-  gray300: '#d1d5db',
-  gray400: '#9ca3af',
-  gray500: '#6b7280',
-  gray600: '#4b5563',
-  gray700: '#374151',
-  gray800: '#1f2937',
-  gray900: '#111827',
-  
+  gray50: '#F8FAFC',
+  gray100: '#F1F5F9',
+  gray200: '#E2E8F0',
+  gray300: '#CBD5E1',
+  gray400: '#94A3B8',
+  gray500: '#64748B',
+  gray600: '#475569',
+  gray700: '#334155',
+  gray800: '#1E293B',
+  gray900: '#0F172A',
+
   // Background colors
-  bgLight: '#ffffff',
-  bgDark: '#0f172a',
-  bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+  bgLight: '#F8FAFC',
+  bgDark: '#0F172A',
+  bgGradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
 };
 
 export const typography = {
@@ -90,13 +95,20 @@ export const shadows = {
   lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
   xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
   inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-  glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+  glow: '0 0 20px rgba(37, 99, 235, 0.3)',
+  focus: '0 0 0 3px rgba(37, 99, 235, 0.1)',
 };
 
 export const transitions = {
   fast: 'all 0.15s ease-in-out',
   medium: 'all 0.3s ease-in-out',
   slow: 'all 0.5s ease-in-out',
+};
+
+export const focus = {
+  ring: '2px solid #2563EB',
+  ringOffset: '2px',
+  ringColor: '#2563EB',
 };
 
 export const breakpoints = {

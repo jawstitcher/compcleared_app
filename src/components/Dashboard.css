@@ -45,11 +45,13 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border: 1px solid #E2E8F0;
 }
 
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.15);
 }
 
 .stat-value {
@@ -60,7 +62,7 @@
 }
 
 .stat-label {
-    color: #6b7280;
+    color: #64748B;
     font-size: 0.875rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -109,7 +111,7 @@
 }
 
 .type-bar {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    background: linear-gradient(90deg, #2563EB, #3B82F6);
     height: 100%;
     transition: width 0.3s ease;
     border-radius: 0.25rem;
@@ -189,7 +191,8 @@
 }
 
 .incidents-table tbody tr:hover {
-    background: #f9fafb;
+    background: #F8FAFC;
+    cursor: pointer;
 }
 
 .incident-id {
@@ -243,9 +246,9 @@
 .compliance-footer {
     margin-top: 2rem;
     padding: 1.5rem;
-    background: #f9fafb;
+    background: #EFF6FF;
     border-radius: 0.5rem;
-    border-left: 4px solid #3b82f6;
+    border-left: 4px solid #2563EB;
 }
 
 .compliance-footer p {
