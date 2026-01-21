@@ -9,7 +9,7 @@ function LandingPage() {
         <div className="landing-page">
             <nav className="landing-nav">
                 <div className="nav-content">
-                    <h2 className="logo">CompCleared</h2>
+                    <img src="/logo.png" alt="CompCleared" className="logo-image" />
                     <div className="nav-buttons">
                         <button className="btn-secondary" onClick={() => navigate('/login')}>
                             Log In
