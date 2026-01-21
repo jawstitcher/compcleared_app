@@ -12,7 +12,8 @@ function MainApp() {
   const [view, setView] = React.useState('form');
 
   const handleLogout = async () => {
-    await fetch('http://localhost:5000/api/logout', {
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    await fetch(`${apiUrl}/api/logout`, {
       method: 'POST',
       credentials: 'include'
     });

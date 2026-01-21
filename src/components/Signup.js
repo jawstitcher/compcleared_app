@@ -75,7 +75,8 @@ function Signup() {
 
         try {
             // Create checkout session
-            const response = await fetch('http://localhost:5000/api/create-checkout-session', {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+            const response = await fetch(`${apiUrl}/api/create-checkout-session`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -112,7 +113,8 @@ function Signup() {
         const company_id = sessionStorage.getItem('company_id');
 
         try {
-            const response = await fetch('http://localhost:5000/api/signup', {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+            const response = await fetch(`${apiUrl}/api/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
