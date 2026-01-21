@@ -29,7 +29,7 @@ function LandingPage() {
                     </p>
                     <div className="hero-cta">
                         <button className="btn-cta" onClick={() => navigate('/signup')}>
-                            Start Free Trial
+                            Start 14-Day Free Trial
                         </button>
                         <button className="btn-outline" onClick={() => navigate('/login')}>
                             Log In
@@ -79,9 +79,9 @@ function LandingPage() {
             <section className="pricing-preview">
                 <div className="pricing-content">
                     <h2>Simple, Transparent Pricing</h2>
-                    <p>Plans starting at $49/month. Cancel anytime.</p>
+                    <p>14-day free trial. Plans starting at $49/month. Cancel anytime.</p>
                     <button className="btn-cta" onClick={() => navigate('/signup')}>
-                        View Pricing & Sign Up
+                        Start Your Free Trial
                     </button>
                 </div>
             </section>
