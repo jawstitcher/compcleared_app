@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { loadStripe } from '@stripe/stripe-js';
+import Logo from './Logo';
+import { CheckCircle2, ShieldCheck, CreditCard, UserPlus, Loader2 } from 'lucide-react';
 import '../App.css';
 import './Signup.css';
 
@@ -144,25 +145,46 @@ function Signup() {
     };
 
     // Check if returning from Stripe
-    React.useEffect(() => {
+    useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('session_id');
         const companyId = urlParams.get('company_id');
 
         if (sessionId && companyId) {
-            sessionStorage.setItem('company_id', companyId);
-            const savedData = sessionStorage.getItem('signup_data');
-            if (savedData) {
-                setFormData(JSON.parse(savedData));
-            }
-            setStep(2);
+            setLoading(true);
+            const verifyPayment = async () => {
+                try {
+                    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+                    const res = await fetch(`${apiUrl}/api/verify-session?session_id=${sessionId}&company_id=${companyId}`);
+                    const verificationData = await res.json();
+
+                    if (verificationData.success) {
+                        sessionStorage.setItem('company_id', companyId);
+                        const savedData = sessionStorage.getItem('signup_data');
+                        if (savedData) {
+                            setFormData(JSON.parse(savedData));
+                        }
+                        setStep(2);
+                    } else {
+                        setError('Payment verification failed. Please contact support.');
+                    }
+                } catch (err) {
+                    setError('Verification error. Please refresh.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            verifyPayment();
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="container" style={{ maxWidth: '1000px', margin: '40px auto', padding: '20px' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>
-                Get Started with CompCleared
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                <Logo size="large" />
+            </div>
+            <h1 style={{ textAlign: 'center', marginBottom: '40px', color: '#0f172a', fontSize: '2.5rem' }}>
+                Get Started with <span style={{ color: '#0f172a', fontWeight: '800' }}>Comp</span><span style={{ color: '#0891b2', fontWeight: '800' }}>Cleared</span>
             </h1>
 
             {error && (
@@ -191,16 +213,16 @@ function Signup() {
                                 key={key}
                                 onClick={() => handleTierSelect(key)}
                                 style={{
-                                    border: formData.tier === key ? '3px solid #2563eb' : '2px solid #ddd',
+                                    border: formData.tier === key ? '3px solid #0891b2' : '2px solid #ddd',
                                     borderRadius: '12px',
                                     padding: '30px',
                                     cursor: 'pointer',
                                     transition: 'all 0.3s',
-                                    background: formData.tier === key ? '#eff6ff' : 'white'
+                                    background: formData.tier === key ? '#f0f9ff' : 'white'
                                 }}
                             >
                                 <h3 style={{ marginTop: 0 }}>{tier.name}</h3>
-                                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563eb', margin: '15px 0' }}>
+                                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#0891b2', margin: '15px 0' }}>
                                     {tier.price}
                                 </div>
                                 <div style={{ color: '#666', marginBottom: '20px' }}>{tier.employees}</div>
@@ -272,7 +294,7 @@ function Signup() {
                             style={{
                                 width: '100%',
                                 padding: '15px',
-                                background: '#2563eb',
+                                background: '#0891b2',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '8px',

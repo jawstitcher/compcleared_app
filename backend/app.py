@@ -95,19 +95,20 @@ def init_db():
                     FOREIGN KEY (company_id) REFERENCES companies (id)
                 )''')
     
-    # Training records table
+    # Training records table (SB 553 compliance)
     c.execute('''CREATE TABLE IF NOT EXISTS training_records (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     company_id INTEGER,
-                    employee_name TEXT NOT NULL,
-                    employee_id TEXT,
                     training_date TEXT NOT NULL,
-                    training_type TEXT NOT NULL,
-                    completed INTEGER,
-                    certificate_url TEXT,
+                    training_type TEXT NOT NULL, -- e.g., Annual, Initial, Post-Incident
+                    trainer_name TEXT,
+                    topic_description TEXT,
+                    attendee_count INTEGER,
+                    documentation_url TEXT, -- Link to signed sign-in sheets
                     created_at TEXT,
                     FOREIGN KEY (company_id) REFERENCES companies (id)
                 )''')
+
     
     conn.commit()
     conn.close()
@@ -170,8 +171,8 @@ def signup():
             conn.close()
             return jsonify({'success': False, 'error': 'Email already registered'}), 400
         
-        # Hash password
-        password_hash = generate_password_hash(data['password'])
+        # Hash password (using pbkdf2 for compatibility)
+        password_hash = generate_password_hash(data['password'], method='pbkdf2:sha256')
         
         # Create user
         c.execute('''INSERT INTO users (
@@ -317,15 +318,46 @@ def create_checkout_session():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
+@app.route('/api/verify-session', methods=['GET'])
+def verify_session():
+    """Verify Stripe session and activate company"""
+    session_id = request.args.get('session_id')
+    company_id = request.args.get('company_id')
+    
+    if not session_id or not company_id:
+        return jsonify({'success': False, 'error': 'Missing parameters'}), 400
+        
+    try:
+        checkout_session = stripe.checkout.Session.retrieve(session_id)
+        
+        if checkout_session.payment_status == 'paid':
+            conn = get_db()
+            c = conn.cursor()
+            c.execute('''UPDATE companies 
+                         SET subscription_status = 'active', 
+                             stripe_customer_id = ?, 
+                             stripe_subscription_id = ? 
+                         WHERE id = ?''', 
+                      (checkout_session.customer, checkout_session.subscription, company_id))
+            conn.commit()
+            conn.close()
+            return jsonify({'success': True, 'status': 'active'})
+        else:
+            return jsonify({'success': False, 'status': checkout_session.payment_status})
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
 @app.route('/api/webhook', methods=['POST'])
 def stripe_webhook():
     """Handle Stripe webhook events"""
     payload = request.data
     sig_header = request.headers.get('Stripe-Signature')
-    
+    endpoint_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, os.environ.get('STRIPE_WEBHOOK_SECRET')
+            payload, sig_header, endpoint_secret
         )
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -333,22 +365,24 @@ def stripe_webhook():
     # Handle subscription events
     if event['type'] == 'checkout.session.completed':
         session_data = event['data']['object']
-        company_id = session_data['metadata']['company_id']
+        # Try metadata first, then client_reference_id
+        company_id = session_data.get('metadata', {}).get('company_id') or session_data.get('client_reference_id')
         
-        # Update company with Stripe info
-        conn = get_db()
-        c = conn.cursor()
-        c.execute('''UPDATE companies 
-                     SET subscription_status = ?, 
-                         stripe_customer_id = ?,
-                         stripe_subscription_id = ?
-                     WHERE id = ?''',
-                  ('active', 
-                   session_data['customer'],
-                   session_data['subscription'],
-                   company_id))
-        conn.commit()
-        conn.close()
+        if company_id:
+            conn = get_db()
+            c = conn.cursor()
+            c.execute('''UPDATE companies 
+                         SET subscription_status = ?, 
+                             stripe_customer_id = ?,
+                             stripe_subscription_id = ?
+                         WHERE id = ?''',
+                      ('active', 
+                       session_data['customer'],
+                       session_data['subscription'],
+                       company_id))
+            conn.commit()
+            conn.close()
+            print(f"✅ Subscription activated for company {company_id}")
     
     elif event['type'] == 'customer.subscription.deleted':
         subscription = event['data']['object']
@@ -471,17 +505,18 @@ def create_training_record():
     c = conn.cursor()
     
     c.execute('''INSERT INTO training_records (
-        company_id, employee_name, employee_id,
-        training_date, training_type, completed,
-        created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)''',
+        company_id, training_date, training_type,
+        trainer_name, topic_description, attendee_count,
+        documentation_url, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
     (
         session['company_id'],
-        data['employee_name'],
-        data.get('employee_id', ''),
         data['training_date'],
         data['training_type'],
-        1 if data.get('completed') else 0,
+        data.get('trainer_name', ''),
+        data.get('topic_description', ''),
+        data.get('attendee_count', 0),
+        data.get('documentation_url', ''),
         datetime.now().isoformat()
     ))
     
@@ -551,6 +586,230 @@ def get_stats():
             'recent_30_days': recent
         }
     })
+@app.route('/api/report/pdf', methods=['GET'])
+@login_required
+@subscription_required
+def generate_pdf_report():
+    """Generate a Cal/OSHA compliant PDF incident report"""
+    from io import BytesIO
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from flask import send_file
+    
+    company_id = session['company_id']
+    
+    conn = get_db()
+    c = conn.cursor()
+    
+    # Get company info
+    c.execute('SELECT * FROM companies WHERE id = ?', (company_id,))
+    company = dict(c.fetchone())
+    
+    # Get all incidents
+    c.execute('''SELECT * FROM incidents 
+                 WHERE company_id = ? 
+                 ORDER BY incident_date DESC''', (company_id,))
+    incidents = [dict(row) for row in c.fetchall()]
+    conn.close()
+    
+    # Create PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
+    
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=18, spaceAfter=20, textColor=colors.HexColor('#0f172a'))
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=14, spaceBefore=15, spaceAfter=10, textColor=colors.HexColor('#0891b2'))
+    body_style = ParagraphStyle('Body', parent=styles['Normal'], fontSize=10, spaceAfter=8)
+    
+    story = []
+    
+    # Header
+    story.append(Paragraph("SB 553 WORKPLACE VIOLENCE INCIDENT LOG", title_style))
+    story.append(Paragraph(f"Company: {company['name']}", body_style))
+    story.append(Paragraph(f"Report Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", body_style))
+    story.append(Paragraph(f"Total Incidents Recorded: {len(incidents)}", body_style))
+    story.append(Spacer(1, 20))
+    
+    # Compliance statement
+    story.append(Paragraph("CALIFORNIA SB 553 COMPLIANCE CERTIFICATION", heading_style))
+    story.append(Paragraph(
+        "This incident log is maintained in accordance with California Senate Bill 553, which requires employers to "
+        "maintain a Workplace Violence Prevention Plan (WVPP) and violent incident log. All incidents are recorded "
+        "with required fields including date, time, location, type of violence, and detailed circumstances.",
+        body_style
+    ))
+    story.append(Spacer(1, 20))
+    
+    # Incidents
+    if incidents:
+        story.append(Paragraph("INCIDENT RECORDS", heading_style))
+        
+        for i, incident in enumerate(incidents, 1):
+            story.append(Paragraph(f"<b>Incident #{i}</b>", body_style))
+            
+            # Create table for incident details
+            data = [
+                ['Date:', incident.get('incident_date', 'N/A'), 'Time:', incident.get('incident_time', 'N/A')],
+                ['Location:', incident.get('exact_location', 'N/A'), 'Type:', incident.get('violence_type', 'N/A')],
+                ['Offender:', incident.get('offender_classification', 'N/A'), 'Law Enforcement:', 'Yes' if incident.get('law_enforcement_contacted') else 'No'],
+            ]
+            
+            t = Table(data, colWidths=[1.2*inch, 2*inch, 1.2*inch, 2*inch])
+            t.setStyle(TableStyle([
+                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTNAME', (2, 0), (2, -1), 'Helvetica-Bold'),
+                ('TEXTCOLOR', (0, 0), (0, -1), colors.HexColor('#475569')),
+                ('TEXTCOLOR', (2, 0), (2, -1), colors.HexColor('#475569')),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ]))
+            story.append(t)
+            
+            story.append(Paragraph(f"<b>Description:</b> {incident.get('description', 'N/A')}", body_style))
+            if incident.get('corrective_actions'):
+                story.append(Paragraph(f"<b>Corrective Actions:</b> {incident.get('corrective_actions')}", body_style))
+            story.append(Paragraph(f"<i>Logged by: {incident.get('logged_by_name', 'N/A')}, {incident.get('logged_by_title', 'N/A')} on {incident.get('log_date', 'N/A')}</i>", body_style))
+            story.append(Spacer(1, 15))
+    else:
+        story.append(Paragraph("No incidents have been recorded.", body_style))
+    
+    # Footer
+    story.append(Spacer(1, 30))
+    story.append(Paragraph("─" * 50, body_style))
+    story.append(Paragraph(
+        "<i>This report was generated by CompCleared, a Cal/OSHA SB 553 compliance management system. "
+        "Records are maintained with timestamps and audit trails for legal defensibility.</i>",
+        body_style
+    ))
+    
+    doc.build(story)
+    buffer.seek(0)
+    
+    filename = f"SB553_Incident_Report_{company['name'].replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf"
+    
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=filename,
+        mimetype='application/pdf'
+    )
+
+@app.route('/api/report/plan', methods=['GET'])
+@login_required
+@subscription_required
+def generate_written_plan():
+    """Generate a custom Written Workplace Violence Prevention Plan (WVPP)"""
+    from io import BytesIO
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, ListFlowable, ListItem
+    from flask import send_file
+    
+    company_id = session['company_id']
+    
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('SELECT * FROM companies WHERE id = ?', (company_id,))
+    company = dict(c.fetchone())
+    conn.close()
+    
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
+    
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=20, alignment=1, textColor=colors.HexColor('#0f172a'))
+    subtitle_style = ParagraphStyle('Subtitle', parent=styles['Heading2'], fontSize=14, spaceAfter=30, alignment=1, textColor=colors.HexColor('#64748B'))
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceBefore=20, spaceAfter=12, textColor=colors.HexColor('#0891b2'), borderPadding=5, thickness=1)
+    body_style = ParagraphStyle('Body', parent=styles['Normal'], fontSize=11, spaceAfter=10, leading=14)
+    item_style = ParagraphStyle('Item', parent=styles['Normal'], fontSize=11, leftIndent=20, spaceAfter=8)
+    
+    story = []
+    
+    # Cover Page
+    story.append(Spacer(1, 2*inch))
+    story.append(Paragraph("Workplace Violence Prevention Plan (WVPP)", title_style))
+    story.append(Paragraph(f"For: {company['name']}", subtitle_style))
+    story.append(Spacer(1, 0.5*inch))
+    story.append(Paragraph(f"In Compliance with California SB 553 / LC 6401.9", body_style))
+    story.append(Paragraph(f"Effective Date: {datetime.now().strftime('%B %d, %Y')}", body_style))
+    story.append(Paragraph("Last Review Date: " + datetime.now().strftime('%B %d, %Y'), body_style))
+    story.append(PageBreak())
+    
+    # Section 1: Responsibility
+    story.append(Paragraph("1. Responsibility and Authority", heading_style))
+    story.append(Paragraph(
+        f"The designated manager/administrator for {company['name']} has the overall authority and responsibility "
+        "for implementing the provisions of this Workplace Violence Prevention Plan (WVPP). All managers and "
+        "supervisors are responsible for implementing and maintaining the WVPP in their work areas and for answering "
+        "employee questions about the WVPP.",
+        body_style
+    ))
+    
+    # Section 2: Employee Involvement
+    story.append(Paragraph("2. Employee Involvement", heading_style))
+    story.append(Paragraph(
+        f"{company['name']} ensures that all employees are involved in developing and implementing the WVPP through:",
+        body_style
+    ))
+    story.append(Paragraph("• Regular safety meetings and discussions specifically addressing workplace violence risks.", item_style))
+    story.append(Paragraph("• Participation in workplace hazard assessments and identification.", item_style))
+    story.append(Paragraph("• An open reporting system where employees can suggest improvements to safety protocols.", item_style))
+    
+    # Section 3: Reporting Procedures
+    story.append(Paragraph("3. Reporting Workplace Violence", heading_style))
+    story.append(Paragraph(
+        "Employees can report incidents or concerns of workplace violence, including threats of violence, using the "
+        "following methods without fear of retaliation:",
+        body_style
+    ))
+    story.append(Paragraph("• Digital Reporting: Through the CompCleared portal accessible to all employees.", item_style))
+    story.append(Paragraph("• Immediate Threats: Call 911 for all emergencies involving immediate danger.", item_style))
+    story.append(Paragraph("• Internal Reporting: Report to any supervisor or human resources representative.", item_style))
+    
+    # Section 4: Hazard Assessment
+    story.append(Paragraph("4. Workplace Violence Hazard Assessment", heading_style))
+    story.append(Paragraph(
+        f"{company['name']} conducts periodic inspections to identify and evaluate workplace violence hazards. "
+        "Inspections will be performed when the plan is first established, periodically thereafter, and when "
+        "we are made aware of a new or previously unrecognized hazard.",
+        body_style
+    ))
+    
+    # Section 5: Incident Investigation
+    story.append(Paragraph("5. Workplace Violence Incident Investigation", heading_style))
+    story.append(Paragraph(
+        "Following any violent incident, a thorough investigation will be conducted to identify root causes and "
+        "implement corrective measures. All findings will be recorded in the Violent Incident Log as required by law.",
+        body_style
+    ))
+    
+    # Section 6: Training
+    story.append(Paragraph("6. Training and Instruction", heading_style))
+    story.append(Paragraph(
+        "All employees will receive initial and annual training on:",
+        body_style
+    ))
+    story.append(Paragraph("• Definitions and types of workplace violence.", item_style))
+    story.append(Paragraph("• How to report incidents and concerns.", item_style))
+    story.append(Paragraph("• De-escalation techniques and emergency response.", item_style))
+    story.append(Paragraph("• The specific details of this written prevention plan.", item_style))
+    
+    doc.build(story)
+    buffer.seek(0)
+    
+    filename = f"SB553_Written_Plan_{company['name'].replace(' ', '_')}.pdf"
+    
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=filename,
+        mimetype='application/pdf'
+    )
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

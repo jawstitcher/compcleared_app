@@ -5,7 +5,9 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import IncidentLogForm from './components/IncidentLogForm';
+import TrainingLog from './components/TrainingLog';
 import ProtectedRoute from './components/ProtectedRoute';
+import Logo from './components/Logo';
 import './App.css';
 
 function MainApp() {
@@ -23,7 +25,8 @@ function MainApp() {
   return (
     <div className="App">
       <nav className="main-nav">
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <Logo size="small" />
+        <div style={{ display: 'flex', gap: '10px', marginLeft: '20px' }}>
           <button
             className={`nav-btn ${view === 'form' ? 'active' : ''}`}
             onClick={() => setView('form')}
@@ -64,6 +67,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MainApp />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/training"
+          element={
+            <ProtectedRoute>
+              <TrainingLog />
             </ProtectedRoute>
           }
         />

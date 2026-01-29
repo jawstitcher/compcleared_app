@@ -76,13 +76,13 @@ p {
 }
 
 a {
-  color: #2563EB;
+  color: #0891b2;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #3B82F6;
+  color: #0e7490;
   text-decoration: underline;
 }
 
@@ -139,19 +139,19 @@ a:hover {
 }
 
 .btn:focus-visible {
-  outline: 2px solid #2563EB;
+  outline: 2px solid #0891b2;
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background: #2563EB;
+  background: #0891b2;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: #3B82F6;
+  background: #0e7490;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25);
   text-decoration: none;
 }
 
@@ -196,7 +196,7 @@ a:hover {
 }
 
 .card:hover {
-  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(8, 145, 178, 0.1);
 }
 
 /* Form Elements */
@@ -212,7 +212,7 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 button:focus-visible {
-  outline: 2px solid #2563EB;
+  outline: 2px solid #0891b2;
   outline-offset: 2px;
 }
 

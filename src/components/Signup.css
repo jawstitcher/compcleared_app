@@ -78,14 +78,14 @@
 }
 
 .tier-card:focus-visible {
-    outline: 2px solid #2563EB;
+    outline: 2px solid #0891b2;
     outline-offset: 2px;
 }
 
 .tier-card.selected {
-    border-color: #2563EB;
+    border-color: #0891b2;
     border-width: 3px;
-    background: #EFF6FF;
+    background: #f0f9ff;
 }
 
 .tier-card h3 {
@@ -97,7 +97,7 @@
 .tier-price {
     font-size: 2rem;
     font-weight: 700;
-    color: #2563EB;
+    color: #0891b2;
     margin: 1rem 0;
 }
 
@@ -167,9 +167,9 @@
 }
 
 .form-group input:focus {
-    outline: 2px solid #2563EB;
+    outline: 2px solid #0891b2;
     outline-offset: 2px;
-    border-color: #2563EB;
+    border-color: #0891b2;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -183,7 +183,7 @@
 .submit-btn {
     width: 100%;
     padding: 0.9375rem;
-    background: #2563EB;
+    background: #0891b2;
     color: #ffffff;
     border: none;
     border-radius: 0.5rem;
@@ -196,7 +196,7 @@
 }
 
 .submit-btn:hover:not(:disabled) {
-    background: #3B82F6;
+    background: #0e7490;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
@@ -206,7 +206,7 @@
 }
 
 .submit-btn:focus-visible {
-    outline: 2px solid #2563EB;
+    outline: 2px solid #0891b2;
     outline-offset: 2px;
 }
 
@@ -224,19 +224,19 @@
 }
 
 .signup-footer a {
-    color: #2563EB;
+    color: #0891b2;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s ease;
 }
 
 .signup-footer a:hover {
-    color: #3B82F6;
+    color: #0e7490;
     text-decoration: underline;
 }
 
 .signup-footer a:focus-visible {
-    outline: 2px solid #2563EB;
+    outline: 2px solid #0891b2;
     outline-offset: 2px;
 }
 
