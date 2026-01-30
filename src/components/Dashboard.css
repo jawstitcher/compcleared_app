@@ -86,7 +86,7 @@
 }
 
 .compliance-card.official:hover {
-    border-color: #0891b2;
+    border-color: #2563EB;
 }
 
 .card-badge {
@@ -214,7 +214,7 @@
 }
 
 .type-bar {
-    background: linear-gradient(90deg, #0891b2, #0e7490);
+    background: linear-gradient(90deg, #2563EB, #0e7490);
     height: 100%;
     transition: width 0.3s ease;
     border-radius: 0.25rem;
@@ -266,7 +266,7 @@
 }
 
 .btn-primary {
-    background: #0891b2;
+    background: #2563EB;
     color: white;
 }
 
@@ -402,7 +402,7 @@
     padding: 1.5rem;
     background: #f0f9ff;
     border-radius: 0.5rem;
-    border-left: 4px solid #0891b2;
+    border-left: 4px solid #2563EB;
 }
 
 .compliance-footer p {

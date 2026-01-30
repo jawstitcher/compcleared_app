@@ -76,7 +76,7 @@ p {
 }
 
 a {
-  color: #0891b2;
+  color: #2563EB;
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -139,12 +139,12 @@ a:hover {
 }
 
 .btn:focus-visible {
-  outline: 2px solid #0891b2;
+  outline: 2px solid #2563EB;
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background: #0891b2;
+  background: #2563EB;
   color: #ffffff;
 }
 
@@ -212,7 +212,7 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 button:focus-visible {
-  outline: 2px solid #0891b2;
+  outline: 2px solid #2563EB;
   outline-offset: 2px;
 }
 

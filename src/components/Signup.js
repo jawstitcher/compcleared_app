@@ -184,7 +184,7 @@ function Signup() {
                 <Logo size="large" />
             </div>
             <h1 style={{ textAlign: 'center', marginBottom: '40px', color: '#0f172a', fontSize: '2.5rem' }}>
-                Get Started with <span style={{ color: '#0f172a', fontWeight: '800' }}>Comp</span><span style={{ color: '#0891b2', fontWeight: '800' }}>Cleared</span>
+                Get Started with <span style={{ color: '#0f172a', fontWeight: '800' }}>Comp</span><span style={{ color: '#2563EB', fontWeight: '800' }}>Cleared</span>
             </h1>
 
             {error && (
@@ -213,7 +213,7 @@ function Signup() {
                                 key={key}
                                 onClick={() => handleTierSelect(key)}
                                 style={{
-                                    border: formData.tier === key ? '3px solid #0891b2' : '2px solid #ddd',
+                                    border: formData.tier === key ? '3px solid #2563EB' : '2px solid #ddd',
                                     borderRadius: '12px',
                                     padding: '30px',
                                     cursor: 'pointer',
@@ -222,7 +222,7 @@ function Signup() {
                                 }}
                             >
                                 <h3 style={{ marginTop: 0 }}>{tier.name}</h3>
-                                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#0891b2', margin: '15px 0' }}>
+                                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563EB', margin: '15px 0' }}>
                                     {tier.price}
                                 </div>
                                 <div style={{ color: '#666', marginBottom: '20px' }}>{tier.employees}</div>
@@ -294,7 +294,7 @@ function Signup() {
                             style={{
                                 width: '100%',
                                 padding: '15px',
-                                background: '#0891b2',
+                                background: '#2563EB',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '8px',

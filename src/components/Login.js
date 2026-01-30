@@ -67,7 +67,7 @@ function Login() {
                     Welcome Back
                 </h1>
                 <p style={{ textAlign: 'center', color: '#666', marginBottom: '40px' }}>
-                    Log in to your <span style={{ color: '#0f172a', fontWeight: '800' }}>Comp</span><span style={{ color: '#0891b2', fontWeight: '800' }}>Cleared</span> account
+                    Log in to your <span style={{ color: '#0f172a', fontWeight: '800' }}>Comp</span><span style={{ color: '#2563EB', fontWeight: '800' }}>Cleared</span> account
                 </p>
 
                 {error && (
@@ -138,7 +138,7 @@ function Login() {
                         style={{
                             width: '100%',
                             padding: '15px',
-                            background: '#0891b2',
+                            background: '#2563EB',
                             color: 'white',
                             border: 'none',
                             borderRadius: '8px',
@@ -160,7 +160,7 @@ function Login() {
                 }}>
                     Don't have an account?{' '}
                     <a href="/signup" style={{
-                        color: '#0891b2',
+                        color: '#2563EB',
                         textDecoration: 'none',
                         fontWeight: '800'
                     }}>

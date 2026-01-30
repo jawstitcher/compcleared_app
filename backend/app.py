@@ -621,7 +621,7 @@ def generate_pdf_report():
     
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=18, spaceAfter=20, textColor=colors.HexColor('#0f172a'))
-    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=14, spaceBefore=15, spaceAfter=10, textColor=colors.HexColor('#0891b2'))
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=14, spaceBefore=15, spaceAfter=10, textColor=colors.HexColor('#2563EB'))
     body_style = ParagraphStyle('Body', parent=styles['Normal'], fontSize=10, spaceAfter=8)
     
     story = []
@@ -724,7 +724,7 @@ def generate_written_plan():
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=20, alignment=1, textColor=colors.HexColor('#0f172a'))
     subtitle_style = ParagraphStyle('Subtitle', parent=styles['Heading2'], fontSize=14, spaceAfter=30, alignment=1, textColor=colors.HexColor('#64748B'))
-    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceBefore=20, spaceAfter=12, textColor=colors.HexColor('#0891b2'), borderPadding=5, thickness=1)
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceBefore=20, spaceAfter=12, textColor=colors.HexColor('#2563EB'), borderPadding=5, thickness=1)
     body_style = ParagraphStyle('Body', parent=styles['Normal'], fontSize=11, spaceAfter=10, leading=14)
     item_style = ParagraphStyle('Item', parent=styles['Normal'], fontSize=11, leftIndent=20, spaceAfter=8)
     

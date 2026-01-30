@@ -42,7 +42,7 @@ function LandingPage() {
                     </div>
                     <h1>California SB 553 Workplace Violence Compliance Made Simple</h1>
                     <p className="hero-subtitle">
-                        Track incidents, generate compliant reports, and protect your workforce with <span style={{ color: '#0f172a', fontWeight: 'bold' }}>Comp</span><span style={{ color: '#0891b2', fontWeight: 'bold' }}>Cleared</span>'s comprehensive workplace safety platform.
+                        Track incidents, generate compliant reports, and protect your workforce with <span style={{ color: '#0f172a', fontWeight: 'bold' }}>Comp</span><span style={{ color: '#2563EB', fontWeight: 'bold' }}>Cleared</span>'s comprehensive workplace safety platform.
                     </p>
                     <div className="hero-cta">
                         <button className="btn-cta" onClick={() => navigate('/signup')}>
