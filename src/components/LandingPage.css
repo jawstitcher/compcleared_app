@@ -289,19 +289,20 @@
     transition: all 0.2s ease;
     font-family: inherit;
     min-height: 44px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn-cta:hover {
     background: #EA580C;
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.4), 0 4px 6px -2px rgba(249, 115, 22, 0.1);
 }
 
 .btn-outline {
     padding: 0.875rem 2rem;
-    background: transparent;
-    color: #2563EB;
-    border: 2px solid #2563EB;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0.5rem;
     font-size: 1.125rem;
     font-weight: 600;
@@ -309,10 +310,13 @@
     transition: all 0.2s ease;
     font-family: inherit;
     min-height: 44px;
+    backdrop-filter: blur(4px);
 }
 
 .btn-outline:hover {
-    background: #EFF6FF;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    transform: translateY(-1px);
 }
 
 /* Stats Section */
