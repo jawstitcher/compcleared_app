@@ -1,0 +1,4 @@
+# Local development environment variables
+REACT_APP_API_URL=http://localhost:5000
+REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_your_test_key_here
+REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_live_51SrCZV4G233JdT9PtMJ64Q5tWaAlswOtEp3p9ekHFLzboYoonspr6z40ufaCNmwxA8RX8K4K2TF7x4scIxhbAx0o000d6Uw2Cg
