@@ -16,7 +16,16 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
-CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+# CORS Configuration
+# Allow requests from localhost, the configured FRONTEND_URL, and production domains
+allowed_origins = [
+    'http://localhost:3000',
+    os.environ.get('FRONTEND_URL', 'http://localhost:3000'),
+    'https://compcleared.com',
+    'https://www.compcleared.com',
+    'https://compcleared-app.vercel.app'
+]
+CORS(app, supports_credentials=True, origins=allowed_origins)
 
 # Stripe configuration
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
