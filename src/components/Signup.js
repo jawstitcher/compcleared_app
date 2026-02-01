@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { useNavigate } from 'react-router-dom';
-import Logo from './Logo';
-import { CheckCircle2, ShieldCheck, CreditCard, UserPlus, Loader2 } from 'lucide-react';
 import '../App.css';
 import './Signup.css';
 
