@@ -24,7 +24,7 @@ const Logo = ({ type = 'color', size = 'medium' }) => {
     return (
         <div style={containerStyle}>
             <img
-                src="/logo192.png"
+                src="/logo.svg"
                 alt="CompCleared Logo"
                 style={{
                     width: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
