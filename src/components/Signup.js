@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
 import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import '../App.css';
 import './Signup.css';
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const TIERS = {
     starter: {
