@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from './Logo';
+import Logo from '../components/Logo';
 import { CheckCircle2 } from 'lucide-react';
 import './TrainingLog.css';
 

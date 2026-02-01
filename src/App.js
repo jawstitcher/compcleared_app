@@ -3,14 +3,21 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import Signup from './components/Signup';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import IncidentLogForm from './components/IncidentLogForm';
-import TrainingLog from './components/TrainingLog';
+import Dashboard from './foundation/Dashboard';
+import IncidentLogForm from './foundation/IncidentLogForm';
+import TrainingLog from './foundation/TrainingLog';
+import SB53Dashboard from './skyline/SB53Dashboard';
+import LegalWhitepaper from './foundation/LegalWhitepaper';
+import About from './components/About';
+import Contact from './components/Contact';
+import ComplianceHub from './foundation/ComplianceHub';
 import ProtectedRoute from './components/ProtectedRoute';
 import Logo from './components/Logo';
 import './App.css';
 
+
 function MainApp() {
+  console.log('CompCleared: Calibrating the weight of the galaxy.');
   const [view, setView] = React.useState('form');
 
   const handleLogout = async () => {
@@ -54,6 +61,7 @@ function MainApp() {
   );
 }
 
+
 function App() {
   return (
     <Router>
@@ -62,6 +70,11 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signup/success" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/legal" element={<LegalWhitepaper />} />
+        <Route path="/sb53-audit" element={<ProtectedRoute><SB53Dashboard /></ProtectedRoute>} />
+        <Route path="/compliance-hub" element={<ProtectedRoute><ComplianceHub /></ProtectedRoute>} />
         <Route
           path="/dashboard"
           element={

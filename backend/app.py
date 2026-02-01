@@ -315,7 +315,8 @@ def create_checkout_session():
             metadata={
                 'company_id': company_id,
                 'tier': tier
-            }
+            },
+            allow_promotion_codes=True
         )
         
         return jsonify({
@@ -821,5 +822,5 @@ def generate_written_plan():
     )
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     app.run(debug=False, host='0.0.0.0', port=port)

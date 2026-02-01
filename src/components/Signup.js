@@ -6,7 +6,7 @@ import { CheckCircle2, ShieldCheck, CreditCard, UserPlus, Loader2 } from 'lucide
 import '../App.css';
 import './Signup.css';
 
-const stripePromise = loadStripe('pk_live_51SrCZV4G233JdT9PtMJ64Q5tWaAlswOtEp3p9ekHFLzboYoonspr6z40ufaCNmwxA8RX8K4K2TF7x4scIxhbAx0o000d6Uw2Cg');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const TIERS = {
     starter: {
