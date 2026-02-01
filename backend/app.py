@@ -16,6 +16,12 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+# Session Configuration for Cross-Origin (Vercel -> Railway)
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='None',
+)
 # CORS Configuration
 # Allow requests from localhost, the configured FRONTEND_URL, and production domains
 allowed_origins = [
