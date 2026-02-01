@@ -11,24 +11,7 @@ const Logo = ({ type = 'color', size = 'medium' }) => {
         userSelect: 'none'
     };
 
-    const iconStyle = {
-        width: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
-        height: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
-        borderRadius: '50%',
-        background: 'linear-gradient(135deg, #0f172a 0%, #2563eb 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        flexShrink: 0
-    };
 
-    const checkStyle = {
-        color: 'white',
-        fontSize: size === 'large' ? '24px' : size === 'small' ? '14px' : '18px',
-        fontWeight: 'bold',
-        marginTop: '-2px'
-    };
 
     const textStyle = {
         fontFamily: "'Inter', 'Poppins', sans-serif",
@@ -40,9 +23,17 @@ const Logo = ({ type = 'color', size = 'medium' }) => {
 
     return (
         <div style={containerStyle}>
-            <div style={iconStyle}>
-                <span style={checkStyle}>✓</span>
-            </div>
+            <img
+                src="/logo192.png"
+                alt="CompCleared Logo"
+                style={{
+                    width: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
+                    height: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
+                    borderRadius: '50%', // Optional, ensures if image has corners they are rounded, though the image itself is circular
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    display: 'block'
+                }}
+            />
             <div style={textStyle}>
                 <span style={{ color: isDark ? 'white' : '#0f172a' }}>Comp</span>
                 <span style={{ color: isDark ? '#38bdf8' : '#2563eb' }}>Cleared</span>
