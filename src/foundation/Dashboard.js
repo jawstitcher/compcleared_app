@@ -7,9 +7,7 @@ import {
     FileText,
     Download,
     PlusCircle,
-    ClipboardList,
-    ShieldAlert,
-    History
+    ClipboardList
 } from 'lucide-react';
 import './Dashboard.css';
 

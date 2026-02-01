@@ -5,7 +5,7 @@ const SB53Dashboard = () => {
     // Colors: Deep Navy (#0f172a) and Slate Grey (#64748b)
     // Surface: 'Bureaucrat-Grade'
 
-    const [modalOpen, setModalOpen] = useState(false);
+    // const [modalOpen, setModalOpen] = useState(false); // Valid for future expansion
 
     return (
         <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '40px' }}>
