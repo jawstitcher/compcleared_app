@@ -6,8 +6,6 @@ import Login from './components/Login';
 import Dashboard from './foundation/Dashboard';
 import IncidentLogForm from './foundation/IncidentLogForm';
 import TrainingLog from './foundation/TrainingLog';
-import SB53Dashboard from './skyline/SB53Dashboard';
-import LegalWhitepaper from './foundation/LegalWhitepaper';
 import About from './components/About';
 import Contact from './components/Contact';
 import ComplianceHub from './foundation/ComplianceHub';
@@ -17,7 +15,6 @@ import './App.css';
 
 
 function MainApp() {
-  console.log('CompCleared: Calibrating the weight of the galaxy.');
   const [view, setView] = React.useState('form');
 
   const handleLogout = async () => {
@@ -72,8 +69,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/legal" element={<LegalWhitepaper />} />
-        <Route path="/sb53-audit" element={<ProtectedRoute><SB53Dashboard /></ProtectedRoute>} />
         <Route path="/compliance-hub" element={<ProtectedRoute><ComplianceHub /></ProtectedRoute>} />
         <Route
           path="/dashboard"

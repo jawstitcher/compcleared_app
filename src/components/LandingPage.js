@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import { Shield, ShieldCheck, Lock, CheckCircle, ClipboardList, BarChart3, Users, Smartphone, Zap, HelpCircle, Mail } from 'lucide-react';
+import { ShieldCheck, Lock, CheckCircle, ClipboardList, BarChart3, Users, Smartphone, Zap, HelpCircle, Mail } from 'lucide-react';
 import './LandingPage.css';
 
 function LandingPage() {
@@ -28,10 +28,9 @@ function LandingPage() {
             {/* Trust Bar */}
             <div className="trust-bar">
                 <div className="trust-bar-content">
-                    <span className="trust-item"><Shield size={16} /> SOC 2 Compliant</span>
-                    <span className="trust-item"><ShieldCheck size={16} /> Cal/OSHA Ready</span>
-                    <span className="trust-item"><Lock size={16} /> 256-bit Encryption</span>
-                    <span className="trust-item"><CheckCircle size={16} /> Trusted by 500+ California Businesses</span>
+                    <span className="trust-item"><ShieldCheck size={16} /> Cal/OSHA SB 553 Ready</span>
+                    <span className="trust-item"><Lock size={16} /> Encrypted Records</span>
+                    <span className="trust-item"><CheckCircle size={16} /> 5-Year Retention</span>
                 </div>
             </div>
 
@@ -57,24 +56,20 @@ function LandingPage() {
                 </div>
             </section>
 
-            {/* Stats Section */}
+            {/* How It Works */}
             <section className="stats-section">
                 <div className="stats-container">
                     <div className="stat-item">
-                        <div className="stat-number">500+</div>
-                        <div className="stat-label">California Businesses Protected</div>
+                        <div className="stat-number">1</div>
+                        <div className="stat-label">Tell us about your business</div>
                     </div>
                     <div className="stat-item">
-                        <div className="stat-number">50,000+</div>
-                        <div className="stat-label">Employees Covered</div>
+                        <div className="stat-number">2</div>
+                        <div className="stat-label">Log incidents &amp; training in minutes</div>
                     </div>
                     <div className="stat-item">
-                        <div className="stat-number">100%</div>
-                        <div className="stat-label">Compliance Rate</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-number">24/7</div>
-                        <div className="stat-label">Incident Reporting</div>
+                        <div className="stat-number">3</div>
+                        <div className="stat-label">Export audit-ready PDF anytime</div>
                     </div>
                 </div>
             </section>
@@ -139,43 +134,25 @@ function LandingPage() {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
+            {/* Founding Customers */}
             <section className="testimonials-section">
                 <div className="testimonials-container">
-                    <h2>Trusted by California HR Leaders</h2>
-                    <div className="testimonials-grid">
-                        <div className="testimonial-card">
-                            <div className="testimonial-quote">"CompCleared made our SB 553 compliance seamless. We went from worrying about deadlines to being fully compliant in a week."</div>
-                            <div className="testimonial-author">
-                                <div className="testimonial-name">Sarah M.</div>
-                                <div className="testimonial-title">HR Director, Tech Startup (150 employees)</div>
-                                <div className="testimonial-location">San Francisco, CA</div>
-                            </div>
-                        </div>
-                        <div className="testimonial-card">
-                            <div className="testimonial-quote">"The incident logging is intuitive and the reports are exactly what Cal/OSHA requires. Highly recommend for any California employer."</div>
-                            <div className="testimonial-author">
-                                <div className="testimonial-name">Michael T.</div>
-                                <div className="testimonial-title">Operations Manager, Retail Chain</div>
-                                <div className="testimonial-location">Los Angeles, CA</div>
-                            </div>
-                        </div>
-                        <div className="testimonial-card">
-                            <div className="testimonial-quote">"We manage 12 locations across California. CompCleared keeps us compliant at every single one."</div>
-                            <div className="testimonial-author">
-                                <div className="testimonial-name">Jennifer L.</div>
-                                <div className="testimonial-title">VP of People, Healthcare Network</div>
-                                <div className="testimonial-location">San Diego, CA</div>
-                            </div>
-                        </div>
-                    </div>
+                    <h2>Be Our First Case Study</h2>
+                    <p className="testimonials-subtitle">
+                        We're looking for 10 California small businesses to lock in lifetime pricing of $79/year
+                        in exchange for honest feedback and a public case study. Help us build the right tool — and
+                        never see a price increase.
+                    </p>
+                    <button className="btn-cta" onClick={() => navigate('/signup')}>
+                        Apply for Founding Pricing
+                    </button>
                 </div>
             </section>
 
             <section className="pricing-preview">
                 <div className="pricing-content">
                     <h2>Simple, Transparent Pricing</h2>
-                    <p>14-day free trial. Plans starting at $49/month. Cancel anytime.</p>
+                    <p>Free to start. Paid plans from $9/month or $79/year. Cancel anytime.</p>
                     <button className="btn-cta" onClick={() => navigate('/signup')}>
                         Start Your Free Trial
                     </button>
@@ -188,7 +165,7 @@ function LandingPage() {
                     <img src="/california-badge.png" alt="SB 553 Compliant" className="compliance-badge-small" />
                     <div className="compliance-text">
                         <strong>Built specifically for California SB 553 compliance.</strong>
-                        <p>CompCleared is designed by workplace safety experts to help California employers meet all requirements of Senate Bill 553, the Workplace Violence Prevention Act effective July 1, 2024.</p>
+                        <p>CompCleared helps California employers meet the recordkeeping requirements of Senate Bill 553, the Workplace Violence Prevention Act effective July 1, 2024. Templates reflect best practices as of the date shown above; consult a licensed California employment attorney before relying on any generated document.</p>
                     </div>
                 </div>
             </section>
@@ -209,6 +186,12 @@ function LandingPage() {
                         <a href="mailto:support@compcleared.com" className="footer-link">
                             <Mail size={16} /> Contact Support
                         </a>
+                        <p className="footer-disclaimer">
+                            CompCleared provides compliance tools and templates for informational purposes only and
+                            does not constitute legal advice. Use of this service does not create an attorney-client
+                            relationship. Consult a California-licensed employment attorney before relying on any
+                            generated document. Not a substitute for counsel.
+                        </p>
                         <p>&copy; 2026 CompCleared. All rights reserved.</p>
                     </div>
                 </div>
