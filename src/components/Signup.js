@@ -9,7 +9,7 @@ const TIERS = {
         name: 'Monthly',
         price: '$9/month',
         employees: 'For any California employer',
-        priceId: 'STRIPE_PRICE_MONTHLY',
+        priceId: 'price_1Tib1VFb1S18uyiqVmB7yUC1',
         features: [
             'Customized WVPP generator (PDF, all 6 sections)',
             'Violent Incident Log (digital, all 14 fields)',
@@ -24,7 +24,7 @@ const TIERS = {
         name: 'Annual',
         price: '$79/year',
         employees: 'Save $29/year vs monthly',
-        priceId: 'STRIPE_PRICE_ANNUAL',
+        priceId: 'price_1TibCxFb1S18uyiq2X86CGYE',
         popular: true,
         features: [
             'Everything in Monthly, plus:',

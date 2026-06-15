@@ -37,11 +37,10 @@ CORS(app, supports_credentials=True, origins=allowed_origins)
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
 
-# Stripe price IDs (create these in Stripe Dashboard)
+# Stripe price IDs (CompCleared Pro — $9/mo and $79/yr)
 PRICE_IDS = {
-    'starter': os.environ.get('STRIPE_PRICE_STARTER', 'price_starter'),
-    'professional': os.environ.get('STRIPE_PRICE_PROFESSIONAL', 'price_professional'),
-    'enterprise': os.environ.get('STRIPE_PRICE_ENTERPRISE', 'price_enterprise')
+    'monthly': os.environ.get('STRIPE_PRICE_MONTHLY', 'price_1Tib1VFb1S18uyiqVmB7yUC1'),
+    'annual': os.environ.get('STRIPE_PRICE_ANNUAL', 'price_1TibCxFb1S18uyiq2X86CGYE')
 }
 
 # Database setup for SB 553 Workplace Violence Compliance
@@ -285,7 +284,7 @@ def get_current_user():
 def create_checkout_session():
     """Create Stripe checkout session for subscription"""
     data = request.json
-    tier = data.get('tier', 'starter')
+    tier = data.get('tier', 'annual')
     
     try:
         # Create or get company
@@ -311,7 +310,7 @@ def create_checkout_session():
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
-                'price': PRICE_IDS.get(tier, PRICE_IDS['starter']),
+                'price': PRICE_IDS.get(tier, PRICE_IDS['monthly']),
                 'quantity': 1,
             }],
             mode='subscription',
