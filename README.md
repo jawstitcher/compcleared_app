@@ -18,9 +18,31 @@ Prevention Act** (Cal. Lab. Code § 6401.9, effective July 1, 2024).
   training sessions.
 - **Dashboard** — at-a-glance view of compliance status, recent incidents,
   training history, and quick PDF export for audits.
+- **Free exposure check** — 5-question screening tool at `/exposure-check` that
+  tells a visitor in 60 seconds whether SB 553 applies to them.
+- **Resource center** — `/resources` has plain-English guides on SB 553,
+  penalties, the IIPP/WVPP distinction, training requirements, and
+  inspection prep.
 - **Compliance update alerts** — when Cal/OSHA's permanent standard takes
   effect (statutorily due December 31, 2026), customers get notified and can
   update their plan.
+
+## Marketing pages (no backend required)
+
+These pages are all client-side React, deployed statically to Vercel:
+
+- `/` — landing page with hero, how-it-works, features, FAQ
+- `/pricing` — 2 tiers (Free, $9/mo or $79/yr) with feature comparison
+- `/resources` — 6 plain-English guides on SB 553
+- `/exposure-check` — 5-question free tool (lead generation)
+- `/about`, `/contact`, `/privacy`, `/terms` — required standard pages
+
+## App pages (require backend)
+
+- `/signup`, `/login` — auth flow
+- `/dashboard` — main app (incident log, training log, PDF export)
+- `/training` — training record form
+- `/compliance-hub` — interactive Q&A assistant
 
 ## What this app does not do
 
@@ -33,10 +55,11 @@ Prevention Act** (Cal. Lab. Code § 6401.9, effective July 1, 2024).
 ## Stack
 
 - **Frontend:** React 19 (Create React App), React Router 7
-- **Backend:** Python 3 + Flask, SQLite (dev) / Postgres (production)
+- **Backend:** Python 3 + Flask + SQLAlchemy + Postgres
 - **Payments:** Stripe Checkout + Subscriptions
 - **PDF generation:** ReportLab
 - **Deploy:** Vercel (frontend) + Railway (backend)
+- **Marketing analytics:** (none yet — add Plausible or Fathom when ready)
 
 ## Local development
 
@@ -57,6 +80,7 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+flask db upgrade   # run migrations
 python app.py
 ```
 
@@ -66,12 +90,12 @@ Copy `.env.example` to `.env` in both the project root and `backend/`. Required
 keys for the backend:
 
 ```
-SECRET_KEY=<random 32+ char string>
+SECRET_KEY=<32+ char string>
 FRONTEND_URL=http://localhost:3000
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PRICE_STARTER=price_...
-STRIPE_PRICE_PROFESSIONAL=price_...
-STRIPE_PRICE_ENTERPRISE=price_...
+DATABASE_URL=postgresql://localhost/compcleared
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_PRICE_MONTHLY=price_...
+STRIPE_PRICE_ANNUAL=price_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
@@ -79,7 +103,7 @@ Required keys for the frontend (in `.env`):
 
 ```
 REACT_APP_API_URL=http://localhost:5000
-REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...
+REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_live_...
 ```
 
 ## Production
@@ -91,17 +115,18 @@ REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
 ## Pricing
 
-- **Free** — read-only access to the WVPP template and the SB 553 recordkeeping
-  reference.
+- **Free** — `/exposure-check` 5-question tool + read the `/resources` knowledge
+  center. No account required.
 - **$9/month or $79/year** — full platform: incident log, training log,
   dashboard, audit-ready PDF exports, email alerts on Cal/OSHA changes.
+  14-day money-back guarantee.
 
-See `/signup` to start.
+See `/pricing` for details.
 
 ## Legal
 
-- **Privacy Policy:** [link to be added]
-- **Terms of Service:** [link to be added]
+- **Privacy Policy:** [`/privacy`](src/components/PrivacyPolicy.js)
+- **Terms of Service:** [`/terms`](src/components/TermsOfService.js)
 - **Disclaimer:** CompCleared provides compliance tools and templates for
   informational purposes only and does not constitute legal advice. Use of
   this service does not create an attorney-client relationship. CompCleared

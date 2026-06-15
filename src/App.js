@@ -8,7 +8,12 @@ import IncidentLogForm from './foundation/IncidentLogForm';
 import TrainingLog from './foundation/TrainingLog';
 import About from './components/About';
 import Contact from './components/Contact';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 import ComplianceHub from './foundation/ComplianceHub';
+import PricingPage from './foundation/PricingPage';
+import ExposureCheck from './foundation/ExposureCheck';
+import Resources from './foundation/Resources';
 import ProtectedRoute from './components/ProtectedRoute';
 import Logo from './components/Logo';
 import './App.css';
@@ -64,11 +69,16 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/exposure-check" element={<ExposureCheck />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signup/success" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
         <Route path="/compliance-hub" element={<ProtectedRoute><ComplianceHub /></ProtectedRoute>} />
         <Route
           path="/dashboard"

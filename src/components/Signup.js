@@ -5,37 +5,32 @@ import '../App.css';
 import './Signup.css';
 
 const TIERS = {
-    starter: {
-        name: 'Starter',
-        price: '$49/month',
-        employees: '1-50 employees',
+    monthly: {
+        name: 'Monthly',
+        price: '$9/month',
+        employees: 'For any California employer',
+        priceId: 'STRIPE_PRICE_MONTHLY',
         features: [
-            'Unlimited incident logging',
-            'SB 553 compliant reports',
-            'Training tracking',
-            'Basic analytics'
+            'Customized WVPP generator (PDF, all 6 sections)',
+            'Violent Incident Log (digital, all 14 fields)',
+            'Training tracker (annual, initial, post-incident, new-hazard)',
+            'Audit-ready PDF export (one click)',
+            'Email alerts on Cal/OSHA regulatory changes',
+            '5-year retention of all records',
+            '14-day money-back guarantee',
         ]
     },
-    professional: {
-        name: 'Professional',
-        price: '$99/month',
-        employees: '51-200 employees',
+    annual: {
+        name: 'Annual',
+        price: '$79/year',
+        employees: 'Save $29/year vs monthly',
+        priceId: 'STRIPE_PRICE_ANNUAL',
+        popular: true,
         features: [
-            'Everything in Starter',
-            'Multi-location support',
-            'Advanced analytics',
-            'Priority support'
-        ]
-    },
-    enterprise: {
-        name: 'Enterprise',
-        price: '$199/month',
-        employees: '201+ employees',
-        features: [
-            'Everything in Professional',
-            'Custom integrations',
-            'Dedicated account manager',
-            'SLA guarantee'
+            'Everything in Monthly, plus:',
+            '2 months free vs monthly billing',
+            'Locked-in rate (no surprise price increases)',
+            'Priority email support',
         ]
     }
 };
@@ -49,7 +44,7 @@ function Signup() {
     const [formData, setFormData] = useState({
         company_name: '',
         employee_count: '',
-        tier: 'starter',
+        tier: 'annual',
         email: '',
         password: '',
         name: ''
