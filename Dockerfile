@@ -24,5 +24,5 @@ EXPOSE 8080
 # Define environment variable
 ENV PORT=8080
 
-# Run app.py when the container launches
-CMD ["python", "backend/app.py"]
+# Run gunicorn for production serving
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8080", "backend.app:app"]

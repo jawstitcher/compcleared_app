@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import './LandingPage.css';
+import Footer from './Footer';
 
 const About = () => {
     const navigate = useNavigate();
@@ -24,9 +24,12 @@ const About = () => {
                 <h1 style={{ fontSize: '42px', fontWeight: '800', color: '#0f172a', marginBottom: '20px', textAlign: 'center' }}>
                     About CompCleared
                 </h1>
+                <p style={{ fontSize: '20px', lineHeight: '1.5', color: '#475569', textAlign: 'center', marginBottom: '40px', fontWeight: '500' }}>
+                    <span style={{ color: '#10B981', fontWeight: '700' }}>✓ Complete Compliance. Cleared.</span>
+                </p>
                 <p style={{ fontSize: '18px', lineHeight: '1.6', color: '#475569', textAlign: 'center', marginBottom: '60px' }}>
-                    CompCleared is a small, California-based tool that helps small businesses meet the
-                    recordkeeping requirements of Senate Bill 553 — the California Workplace Violence Prevention Act.
+                    CompCleared was built by workplace safety experts to take the anxiety out of California labor laws.
+                    We turn complex regulatory mandates into simple, 2-minute workflows so business owners can focus on building their empire.
                 </p>
 
                 <section style={{ marginBottom: '60px' }}>
@@ -44,14 +47,19 @@ const About = () => {
                 <section style={{ marginBottom: '60px' }}>
                     <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a', marginBottom: '15px' }}>What we actually do</h2>
                     <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginBottom: '16px' }}>
-                        CompCleared helps you:
+                        CompCleared is a comprehensive compliance shield for California small businesses. Right now we deliver:
                     </p>
                     <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
-                        <li style={{ marginBottom: '8px' }}>Generate a written Workplace Violence Prevention Plan (WVPP) with the six sections SB 553 requires</li>
-                        <li style={{ marginBottom: '8px' }}>Log workplace violence incidents with all 14 fields Cal/OSHA requires</li>
-                        <li style={{ marginBottom: '8px' }}>Track employee training completion (annual, initial, post-incident, new-hazard)</li>
-                        <li style={{ marginBottom: '8px' }}>Export a Cal/OSHA-formatted PDF audit bundle when you need it</li>
-                        <li style={{ marginBottom: '8px' }}>Get notified when Cal/OSHA's permanent standard (due Dec 31, 2026) changes the rules</li>
+                        <li style={{ marginBottom: '8px' }}><strong>SB 553 Workplace Violence Prevention</strong> — written WVPP, 14-field incident log, training tracker, audit-ready PDF</li>
+                        <li style={{ marginBottom: '8px' }}>Cal/OSHA inspection-readiness guide and resources</li>
+                        <li style={{ marginBottom: '8px' }}>Email alerts when Cal/OSHA's permanent standard (due Dec 31, 2026) changes the rules</li>
+                    </ul>
+                    <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginTop: '20px' }}>
+                        Coming Q3 2026:
+                    </p>
+                    <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
+                        <li style={{ marginBottom: '8px' }}><strong>OSHA 300 / 300A Injury Logs</strong> — extend your incident log to all workplace injuries, auto-fill end-of-year Cal/OSHA forms</li>
+                        <li style={{ marginBottom: '8px' }}><strong>California Employee Handbook Generator</strong> — customized, California-compliant handbooks that update when labor laws change</li>
                     </ul>
                 </section>
 
@@ -79,24 +87,7 @@ const About = () => {
                 </section>
             </div>
 
-            <footer className="landing-footer">
-                <div className="footer-content">
-                    <div className="footer-brand">
-                        <Logo size="small" type="white" />
-                        <p>SB 553 Workplace Violence Compliance</p>
-                    </div>
-                    <div className="footer-links">
-                        <a href="/privacy" className="footer-link">Privacy</a>
-                        <a href="/terms" className="footer-link">Terms</a>
-                        <a href="/contact" className="footer-link">Contact</a>
-                        <p className="footer-disclaimer">
-                            CompCleared provides compliance tools and templates for informational purposes only and
-                            does not constitute legal advice. Not a substitute for counsel.
-                        </p>
-                        <p>&copy; 2026 CompCleared. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

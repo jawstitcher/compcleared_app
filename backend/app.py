@@ -4,7 +4,8 @@ import random
 import string
 import os
 from datetime import datetime, timedelta
-import sqlite3
+import psycopg
+from database import get_db, DATABASE_URL
 import json
 import stripe
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -45,12 +46,16 @@ PRICE_IDS = {
 
 # Database setup for SB 553 Workplace Violence Compliance
 def init_db():
-    conn = sqlite3.connect('compcleared.db')
+    if not DATABASE_URL:
+        print("⚠️  DATABASE_URL not set — skipping init_db (will run when DATABASE_URL is configured)")
+        return
+
+    conn = psycopg.connect(DATABASE_URL)
     c = conn.cursor()
-    
+
     # Companies table
     c.execute('''CREATE TABLE IF NOT EXISTS companies (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id SERIAL PRIMARY KEY,
                     name TEXT NOT NULL,
                     tier TEXT NOT NULL,
                     employee_count INTEGER,
@@ -60,10 +65,10 @@ def init_db():
                     stripe_customer_id TEXT,
                     stripe_subscription_id TEXT
                 )''')
-    
+
     # Users table
     c.execute('''CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id SERIAL PRIMARY KEY,
                     company_id INTEGER,
                     email TEXT UNIQUE NOT NULL,
                     password_hash TEXT,
@@ -73,45 +78,45 @@ def init_db():
                     created_at TEXT,
                     FOREIGN KEY (company_id) REFERENCES companies (id)
                 )''')
-    
+
     # Workplace Violence Incidents table (SB 553 compliant)
     c.execute('''CREATE TABLE IF NOT EXISTS incidents (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id SERIAL PRIMARY KEY,
                     company_id INTEGER,
                     location_id TEXT,
-                    
+
                     -- SB 553 Required Fields
                     incident_date TEXT NOT NULL,
                     incident_time TEXT NOT NULL,
                     exact_location TEXT NOT NULL,
-                    
+
                     violence_type TEXT NOT NULL,
                     offender_classification TEXT NOT NULL,
-                    
+
                     description TEXT NOT NULL,
                     circumstances TEXT,
                     violence_nature TEXT,
-                    
+
                     consequences TEXT,
                     law_enforcement_contacted INTEGER,
                     injuries TEXT,
                     protective_measures TEXT,
-                    
+
                     employees_involved TEXT,
                     corrective_actions TEXT,
-                    
+
                     logged_by_name TEXT NOT NULL,
                     logged_by_title TEXT NOT NULL,
                     log_date TEXT NOT NULL,
-                    
+
                     created_at TEXT,
-                    
+
                     FOREIGN KEY (company_id) REFERENCES companies (id)
                 )''')
-    
+
     # Training records table (SB 553 compliance)
     c.execute('''CREATE TABLE IF NOT EXISTS training_records (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id SERIAL PRIMARY KEY,
                     company_id INTEGER,
                     training_date TEXT NOT NULL,
                     training_type TEXT NOT NULL, -- e.g., Annual, Initial, Post-Incident
@@ -123,18 +128,14 @@ def init_db():
                     FOREIGN KEY (company_id) REFERENCES companies (id)
                 )''')
 
-    
+
     conn.commit()
     conn.close()
-    print("✅ SB 553 database initialized")
+    print("✅ SB 553 Postgres database initialized")
 
 init_db()
 
-# Helper functions
-def get_db():
-    conn = sqlite3.connect('compcleared.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+from database import get_db
 
 def login_required(f):
     @wraps(f)
@@ -152,7 +153,7 @@ def subscription_required(f):
         
         conn = get_db()
         c = conn.cursor()
-        c.execute('SELECT subscription_status FROM companies WHERE id = ?', (session['company_id'],))
+        c.execute('SELECT subscription_status FROM companies WHERE id = %s', (session['company_id'],))
         company = c.fetchone()
         conn.close()
         
@@ -180,7 +181,7 @@ def signup():
     
     try:
         # Check if email already exists
-        c.execute('SELECT id FROM users WHERE email = ?', (data['email'],))
+        c.execute('SELECT id FROM users WHERE email = %s', (data['email'],))
         if c.fetchone():
             conn.close()
             return jsonify({'success': False, 'error': 'Email already registered'}), 400
@@ -191,7 +192,7 @@ def signup():
         # Create user
         c.execute('''INSERT INTO users (
             company_id, email, password_hash, name, role, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?)''',
+        ) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id''',
         (
             data.get('company_id'),
             data['email'],
@@ -200,8 +201,7 @@ def signup():
             data.get('role', 'admin'),
             datetime.now().isoformat()
         ))
-        
-        user_id = c.lastrowid
+        user_id = c.fetchone()['id']
         conn.commit()
         conn.close()
         
@@ -227,7 +227,7 @@ def login():
     
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT * FROM users WHERE email = ?', (data['email'],))
+    c.execute('SELECT * FROM users WHERE email = %s', (data['email'],))
     user = c.fetchone()
     conn.close()
     
@@ -261,11 +261,11 @@ def get_current_user():
     """Get current user info"""
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
+    c.execute('SELECT * FROM users WHERE id = %s', (session['user_id'],))
     user = c.fetchone()
     
     if user and user['company_id']:
-        c.execute('SELECT * FROM companies WHERE id = ?', (user['company_id'],))
+        c.execute('SELECT * FROM companies WHERE id = %s', (user['company_id'],))
         company = c.fetchone()
     else:
         company = None
@@ -293,7 +293,7 @@ def create_checkout_session():
         
         c.execute('''INSERT INTO companies (
             name, tier, employee_count, subscription_status, created_at
-        ) VALUES (?, ?, ?, ?, ?)''',
+        ) VALUES (%s, %s, %s, %s, %s) RETURNING id''',
         (
             data['company_name'],
             tier,
@@ -301,8 +301,7 @@ def create_checkout_session():
             'pending',
             datetime.now().isoformat()
         ))
-        
-        company_id = c.lastrowid
+        company_id = c.fetchone()['id']
         conn.commit()
         conn.close()
         
@@ -348,11 +347,11 @@ def verify_session():
         if checkout_session.payment_status == 'paid':
             conn = get_db()
             c = conn.cursor()
-            c.execute('''UPDATE companies 
-                         SET subscription_status = 'active', 
-                             stripe_customer_id = ?, 
-                             stripe_subscription_id = ? 
-                         WHERE id = ?''', 
+            c.execute('''UPDATE companies
+                         SET subscription_status = 'active',
+                             stripe_customer_id = %s,
+                             stripe_subscription_id = %s
+                         WHERE id = %s''',
                       (checkout_session.customer, checkout_session.subscription, company_id))
             conn.commit()
             conn.close()
@@ -386,11 +385,11 @@ def stripe_webhook():
         if company_id:
             conn = get_db()
             c = conn.cursor()
-            c.execute('''UPDATE companies 
-                         SET subscription_status = ?, 
-                             stripe_customer_id = ?,
-                             stripe_subscription_id = ?
-                         WHERE id = ?''',
+            c.execute('''UPDATE companies
+                         SET subscription_status = %s,
+                             stripe_customer_id = %s,
+                             stripe_subscription_id = %s
+                         WHERE id = %s''',
                       ('active', 
                        session_data['customer'],
                        session_data['subscription'],
@@ -404,9 +403,9 @@ def stripe_webhook():
         
         conn = get_db()
         c = conn.cursor()
-        c.execute('''UPDATE companies 
-                     SET subscription_status = ?
-                     WHERE stripe_subscription_id = ?''',
+        c.execute('''UPDATE companies
+                     SET subscription_status = %s
+                     WHERE stripe_subscription_id = %s''',
                   ('canceled', subscription['id']))
         conn.commit()
         conn.close()
@@ -435,7 +434,7 @@ def create_incident():
             employees_involved, corrective_actions,
             logged_by_name, logged_by_title, log_date,
             created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id''',
         (
             session['company_id'],
             data.get('location_id', 'main'),
@@ -459,7 +458,7 @@ def create_incident():
             datetime.now().isoformat()
         ))
         
-        incident_id = c.lastrowid
+        incident_id = c.fetchone()['id']
         conn.commit()
         conn.close()
         
@@ -482,8 +481,8 @@ def get_incidents():
     
     conn = get_db()
     c = conn.cursor()
-    c.execute('''SELECT * FROM incidents 
-                 WHERE company_id = ? 
+    c.execute('''SELECT * FROM incidents
+                 WHERE company_id = %s
                  ORDER BY incident_date DESC, incident_time DESC''', (company_id,))
     
     incidents = [dict(row) for row in c.fetchall()]
@@ -498,7 +497,7 @@ def get_incident(incident_id):
     """Get a specific incident"""
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT * FROM incidents WHERE id = ? AND company_id = ?', 
+    c.execute('SELECT * FROM incidents WHERE id = %s AND company_id = %s', 
               (incident_id, session['company_id']))
     
     incident = c.fetchone()
@@ -523,7 +522,7 @@ def create_training_record():
         company_id, training_date, training_type,
         trainer_name, topic_description, attendee_count,
         documentation_url, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id''',
     (
         session['company_id'],
         data['training_date'],
@@ -535,7 +534,7 @@ def create_training_record():
         datetime.now().isoformat()
     ))
     
-    training_id = c.lastrowid
+    training_id = c.fetchone()['id']
     conn.commit()
     conn.close()
     
@@ -554,8 +553,8 @@ def get_training_records():
     
     conn = get_db()
     c = conn.cursor()
-    c.execute('''SELECT * FROM training_records 
-                 WHERE company_id = ? 
+    c.execute('''SELECT * FROM training_records
+                 WHERE company_id = %s
                  ORDER BY training_date DESC''', (company_id,))
     
     records = [dict(row) for row in c.fetchall()]
@@ -574,20 +573,19 @@ def get_stats():
     c = conn.cursor()
     
     # Total incidents
-    c.execute('SELECT COUNT(*) as count FROM incidents WHERE company_id = ?', (company_id,))
+    c.execute('SELECT COUNT(*) as count FROM incidents WHERE company_id = %s', (company_id,))
     total = c.fetchone()['count']
     
     # By violence type
-    c.execute('''SELECT violence_type, COUNT(*) as count 
-                 FROM incidents 
-                 WHERE company_id = ? 
+    c.execute('''SELECT violence_type, COUNT(*) as count FROM incidents
+                 WHERE company_id = %s
                  GROUP BY violence_type''', (company_id,))
     by_type = [dict(row) for row in c.fetchall()]
     
     # Recent incidents (last 30 days)
     thirty_days_ago = (datetime.now() - timedelta(days=30)).isoformat()[:10]
-    c.execute('''SELECT COUNT(*) as count FROM incidents 
-                 WHERE company_id = ? AND incident_date >= ?''', 
+    c.execute('''SELECT COUNT(*) as count FROM incidents
+                 WHERE company_id = %s AND incident_date >= %s''',
                  (company_id, thirty_days_ago))
     recent = c.fetchone()['count']
     
@@ -620,12 +618,12 @@ def generate_pdf_report():
     c = conn.cursor()
     
     # Get company info
-    c.execute('SELECT * FROM companies WHERE id = ?', (company_id,))
+    c.execute('SELECT * FROM companies WHERE id = %s', (company_id,))
     company = dict(c.fetchone())
     
     # Get all incidents
-    c.execute('''SELECT * FROM incidents 
-                 WHERE company_id = ? 
+    c.execute('''SELECT * FROM incidents
+                 WHERE company_id = %s
                  ORDER BY incident_date DESC''', (company_id,))
     incidents = [dict(row) for row in c.fetchall()]
     conn.close()
@@ -729,7 +727,7 @@ def generate_written_plan():
     
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT * FROM companies WHERE id = ?', (company_id,))
+    c.execute('SELECT * FROM companies WHERE id = %s', (company_id,))
     company = dict(c.fetchone())
     conn.close()
     
