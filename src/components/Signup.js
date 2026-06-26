@@ -7,7 +7,7 @@ import './Signup.css';
 const TIERS = {
     monthly: {
         name: 'Monthly',
-        price: '$9/month',
+        price: '$19/month',
         employees: 'For any California employer',
         priceId: 'price_1Tib1VFb1S18uyiqVmB7yUC1',
         features: [
@@ -22,13 +22,13 @@ const TIERS = {
     },
     annual: {
         name: 'Annual',
-        price: '$79/year',
-        employees: 'Save $29/year vs monthly',
+        price: '$149/year',
+        employees: 'Save $79/year vs monthly',
         priceId: 'price_1TibCxFb1S18uyiq2X86CGYE',
         popular: true,
         features: [
             'Everything in Monthly, plus:',
-            '2 months free vs monthly billing',
+            'Save $79 vs monthly billing',
             'Locked-in rate (no surprise price increases)',
             'Priority email support',
         ]

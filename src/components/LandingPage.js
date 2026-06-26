@@ -62,7 +62,7 @@ function LandingPage() {
                 </p>
                 <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button className="btn-primary" onClick={() => navigate('/signup')} style={{ fontSize: '18px', padding: '14px 32px' }}>
-                        Start for $9/month →
+                        Start for $19/month →
                     </button>
                     <button className="btn-secondary" onClick={() => navigate('/exposure-check')} style={{ fontSize: '18px', padding: '14px 32px' }}>
                         Am I Exposed? (Free Check)
@@ -81,7 +81,7 @@ function LandingPage() {
                     </strong>
                 </div>
                 <p style={{ fontSize: '16px', color: '#7f1d1d', margin: 0 }}>
-                    Cal/OSHA citations for SB 553 violations start at <strong>$18,000</strong> and can reach <strong>$150,000</strong> for willful or repeat violations. Criminal penalties are possible. CompCleared starts at <strong>$9/month</strong>.
+                    Cal/OSHA citations for SB 553 violations start at <strong>$18,000</strong> and can reach <strong>$150,000</strong> for willful or repeat violations. Criminal penalties are possible. CompCleared starts at <strong>$19/month</strong>.
                 </p>
             </section>
 

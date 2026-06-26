@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { Shield, AlertTriangle, CheckCircle, ArrowRight } from 'lucide-react';
-import './LandingPage.css';
+import '../components/LandingPage.css';
 
 const QUESTIONS = [
     {

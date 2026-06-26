@@ -42,7 +42,7 @@ const TermsOfService = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>2. Subscriptions and Payment</h2>
                 <p style={{ marginBottom: '16px' }}>
-                    CompCleared Pro is offered as a recurring subscription ($9/month or $79/year) or as a 14-day
+                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year) or as a 14-day
                     free trial. By providing a payment method, you authorize us to charge the applicable fees.
                 </p>
                 <p style={{ marginBottom: '16px' }}>

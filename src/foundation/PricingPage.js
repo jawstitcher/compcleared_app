@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { Check, X } from 'lucide-react';
-import './LandingPage.css';
+import { Check } from 'lucide-react';
+import '../components/LandingPage.css';
 
 const PricingPage = () => {
     const navigate = useNavigate();
@@ -118,11 +118,11 @@ const PricingPage = () => {
                             For California employers who need to actually comply
                         </p>
                         <div style={{ marginBottom: '8px' }}>
-                            <span style={{ fontSize: '48px', fontWeight: '800' }}>$9</span>
+                            <span style={{ fontSize: '48px', fontWeight: '800' }}>$19</span>
                             <span style={{ fontSize: '18px', color: '#CBD5E1' }}> /month</span>
                         </div>
                         <p style={{ fontSize: '14px', color: '#94A3B8', marginBottom: '24px' }}>
-                            or <strong style={{ color: '#fff' }}>$79/year</strong> (save $29)
+                            or <strong style={{ color: '#fff' }}>$149/year</strong> (save $79)
                         </p>
                         <button
                             onClick={() => navigate('/signup')}
@@ -178,7 +178,7 @@ const PricingPage = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                         {[
                             { q: 'Can I cancel anytime?', a: 'Yes. One click in your account settings, no retention games, no "are you sure" loops. Cancellation is effective immediately.' },
-                            { q: 'Do you charge sales tax?', a: 'No, not in California. SaaS is not currently taxed in CA. We will add tax collection if/when the law changes in 2027.' },
+                            { q: 'Do you charge sales tax?', a: 'Taxes, if applicable, are calculated at checkout. CompCleared is currently focused on California employers.' },
                             { q: 'What happens to my data if I cancel?', a: 'You can export everything as PDF before canceling. We retain your records for 30 days after cancellation in case you change your mind, then they are permanently deleted.' },
                             { q: 'Is there a free trial?', a: 'Yes — 14 days, no credit card required. If you decide not to continue, your account simply stops working. No charges, no awkward emails.' },
                         ].map((item, i) => (

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { BookOpen, ArrowRight } from 'lucide-react';
-import './LandingPage.css';
+import '../components/LandingPage.css';
 
 const RESOURCES = [
     {
@@ -43,7 +43,7 @@ The law was passed in response to rising workplace violence incidents, particula
 
 **What "serious" means for SB 553:** Cal/OSHA considers a violation "serious" if there is a realistic possibility that death or serious physical harm could result from the hazard. Because the entire purpose of SB 553 is to prevent workplace violence deaths, most SB 553 violations are likely to be classified as serious, exposing employers to the higher $25,000 penalty.
 
-**The cost math:** CompCleared Pro is $9/month ($108/year) or $79/year. A single serious violation citation is $25,000. The math is not complicated.`
+**The cost math:** CompCleared Pro is $19/month ($228/year) or $149/year. A single serious violation citation is $25,000. The math is not complicated.`
     },
     {
         slug: 'wvpp-vs-iipp',

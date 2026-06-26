@@ -117,7 +117,7 @@ REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_live_...
 
 - **Free** — `/exposure-check` 5-question tool + read the `/resources` knowledge
   center. No account required.
-- **$9/month or $79/year** — full platform: incident log, training log,
+- **$19/month or $149/year** — full platform: incident log, training log,
   dashboard, audit-ready PDF exports, email alerts on Cal/OSHA changes.
   14-day money-back guarantee.
 
