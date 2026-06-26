@@ -32,7 +32,7 @@ Prevention Act** (Cal. Lab. Code § 6401.9, effective July 1, 2024).
 These pages are all client-side React, deployed statically to Vercel:
 
 - `/` — landing page with hero, how-it-works, features, FAQ
-- `/pricing` — 2 tiers (Free, $9/mo or $79/yr) with feature comparison
+- `/pricing` — 2 tiers (Free, $19/mo or $149/yr) with feature comparison
 - `/resources` — 6 plain-English guides on SB 553
 - `/exposure-check` — 5-question free tool (lead generation)
 - `/about`, `/contact`, `/privacy`, `/terms` — required standard pages
@@ -55,7 +55,7 @@ These pages are all client-side React, deployed statically to Vercel:
 ## Stack
 
 - **Frontend:** React 19 (Create React App), React Router 7
-- **Backend:** Python 3 + Flask + SQLAlchemy + Postgres
+- **Backend:** Python 3 + Flask + psycopg + Postgres
 - **Payments:** Stripe Checkout + Subscriptions
 - **PDF generation:** ReportLab
 - **Deploy:** Vercel (frontend) + Railway (backend)

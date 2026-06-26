@@ -129,7 +129,7 @@ const PricingPage = () => {
                             className="btn-cta"
                             style={{ width: '100%', marginBottom: '24px' }}
                         >
-                            Start 14-Day Free Trial
+                            Start CompCleared Pro
                         </button>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {[
@@ -180,7 +180,7 @@ const PricingPage = () => {
                             { q: 'Can I cancel anytime?', a: 'Yes. One click in your account settings, no retention games, no "are you sure" loops. Cancellation is effective immediately.' },
                             { q: 'Do you charge sales tax?', a: 'Taxes, if applicable, are calculated at checkout. CompCleared is currently focused on California employers.' },
                             { q: 'What happens to my data if I cancel?', a: 'You can export everything as PDF before canceling. We retain your records for 30 days after cancellation in case you change your mind, then they are permanently deleted.' },
-                            { q: 'Is there a free trial?', a: 'Yes — 14 days, no credit card required. If you decide not to continue, your account simply stops working. No charges, no awkward emails.' },
+                            { q: 'Is there a guarantee?', a: 'Yes. CompCleared offers a 14-day money-back guarantee on paid subscriptions. The free exposure check and resources do not require a card.' },
                         ].map((item, i) => (
                             <div key={i} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '20px' }}>
                                 <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>{item.q}</h3>

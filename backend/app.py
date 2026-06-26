@@ -41,10 +41,11 @@ CORS(app, supports_credentials=True, origins=allowed_origins)
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
 
-# Stripe price IDs (CompCleared Pro — $9/mo and $79/yr)
+# Stripe price IDs (CompCleared Pro — $19/mo and $149/yr).
+# Set these in Railway. Do not hardcode live Price IDs or secrets in the repo.
 PRICE_IDS = {
-    'monthly': os.environ.get('STRIPE_PRICE_MONTHLY', 'price_1Tib1VFb1S18uyiqVmB7yUC1'),
-    'annual': os.environ.get('STRIPE_PRICE_ANNUAL', 'price_1TibCxFb1S18uyiq2X86CGYE')
+    'monthly': os.environ.get('STRIPE_PRICE_MONTHLY'),
+    'annual': os.environ.get('STRIPE_PRICE_ANNUAL')
 }
 
 # Database setup for SB 553 Workplace Violence Compliance
@@ -307,11 +308,18 @@ def create_checkout_session():
         conn.commit()
         conn.close()
         
+        price_id = PRICE_IDS.get(tier) or PRICE_IDS.get('monthly')
+        if not price_id:
+            return jsonify({
+                'success': False,
+                'error': 'Stripe price IDs are not configured. Set STRIPE_PRICE_MONTHLY and STRIPE_PRICE_ANNUAL in Railway.'
+            }), 500
+
         # Create Stripe checkout session
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
-                'price': PRICE_IDS.get(tier, PRICE_IDS['monthly']),
+                'price': price_id,
                 'quantity': 1,
             }],
             mode='subscription',

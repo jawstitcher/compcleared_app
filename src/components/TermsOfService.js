@@ -42,17 +42,13 @@ const TermsOfService = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>2. Subscriptions and Payment</h2>
                 <p style={{ marginBottom: '16px' }}>
-                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year) or as a 14-day
-                    free trial. By providing a payment method, you authorize us to charge the applicable fees.
+                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year) with a 14-day
+                    money-back guarantee. By providing a payment method, you authorize us to charge the applicable fees.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
                     <strong>Auto-Renewal Disclosure.</strong> Your subscription automatically renews at the end of
                     each billing period unless you cancel before the renewal date. You will be charged the then-current
                     subscription fee. We will send you a reminder email at least 15 days before any annual renewal.
-                </p>
-                <p style={{ marginBottom: '16px' }}>
-                    <strong>Free Trial Conversion.</strong> If you start a 14-day free trial, your subscription will
-                    not begin and you will not be charged until the trial ends, unless you cancel before then.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
                     <strong>14-Day Money-Back Guarantee.</strong> If you are not satisfied with a paid subscription

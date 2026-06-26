@@ -1,139 +1,114 @@
-# CompCleared - Quick Start Guide
+# CompCleared Quick Start
 
-## 🚀 Ready to Deploy?
+## Current pricing
 
-Your app now has:
-- ✅ Stripe payment integration
-- ✅ User authentication (signup/login)
-- ✅ Subscription management
-- ✅ Protected routes
+- Free: exposure check + public resources
+- Pro Monthly: $19/month
+- Pro Annual: $149/year
 
----
+Do not use the old $49/$99/$199 tier docs. The product is now one paid plan with monthly or annual billing.
 
-## 📋 What You Need
+## What you need
 
-1. **Stripe Account** (stripe.com)
-   - Create 3 subscription products
-   - Get API keys
-   
-2. **Railway Account** (railway.app)
-   - For backend hosting
-   
-3. **Vercel Account** (vercel.com)
-   - For frontend hosting
+1. Stripe account
+   - Live or test API keys
+   - One $19/month recurring Price ID
+   - One $149/year recurring Price ID
+   - Webhook signing secret
 
----
+2. Railway backend
+   - Backend service live
+   - Postgres/DATABASE_URL configured
+   - Stripe env vars configured
 
-## ⚡ Quick Deploy Steps
+3. Vercel frontend
+   - Frontend deployed from GitHub
+   - API URL pointed at Railway
+   - Stripe publishable key configured
 
-### 1. Set Up Stripe (15 min)
+## Stripe setup
 
-Create products in Stripe Dashboard:
-- **Starter**: $49/month
-- **Professional**: $99/month
-- **Enterprise**: $199/month
+In Stripe Dashboard, create these two prices in the same mode you are using for deployment:
 
-Copy the Price IDs (starts with `price_...`)
+- CompCleared Pro Monthly
+  - $19.00 USD
+  - Recurring monthly
 
-### 2. Deploy Backend (Railway)
+- CompCleared Pro Annual
+  - $149.00 USD
+  - Recurring yearly
 
-```bash
-# Push code
-git add .
-git commit -m "Production ready"
-git push origin main
+Copy both Price IDs. They start with `price_...`.
+
+Webhook endpoint:
+
+```text
+https://YOUR-RAILWAY-BACKEND-URL/api/webhook
 ```
 
-Then:
-1. Connect GitHub repo to Railway
-2. Add environment variables (see DEPLOYMENT.md)
-3. Deploy
-4. Copy your Railway URL
+Webhook events:
 
-### 3. Deploy Frontend (Vercel)
+- `checkout.session.completed`
+- `customer.subscription.deleted`
 
-1. Update `vercel.json` with Railway URL
-2. Push to GitHub
-3. Import repo in Vercel
-4. Add environment variables
-5. Deploy
+Copy the webhook signing secret. It starts with `whsec_...`.
 
-### 4. Test
+## Railway backend env vars
 
-Use Stripe test card:
-- Number: `4242 4242 4242 4242`
-- Date: Any future date
-- CVC: Any 3 digits
+Set these in Railway, not in this repo:
 
----
+```text
+DATABASE_URL=postgresql://...
+SECRET_KEY=<32+ char random string>
+FRONTEND_URL=https://compcleared.com
+STRIPE_SECRET_KEY=sk_test_or_sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_MONTHLY=price_...   # $19/month
+STRIPE_PRICE_ANNUAL=price_...    # $149/year
+```
 
-## 📖 Full Guide
+Generate `SECRET_KEY` locally:
 
-See [DEPLOYMENT.md](file:///Users/connorimpey/Desktop/compcleared_app/DEPLOYMENT.md) for detailed step-by-step instructions.
+```bash
+python3 -c "import secrets; print(secrets.token_hex(32))"
+```
 
----
+## Vercel frontend env vars
 
-## 💳 Pricing Tiers
+Set these in Vercel:
 
-| Tier | Price | Employees |
-|------|-------|-----------|
-| Starter | $49/mo | 1-50 |
-| Professional | $99/mo | 51-200 |
-| Enterprise | $199/mo | 201+ |
+```text
+REACT_APP_API_URL=https://YOUR-RAILWAY-BACKEND-URL
+REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_or_pk_live...
+```
 
----
+## Test checkout
 
-## 🔧 Local Development
+If using Stripe test mode, use:
 
-The app is currently running locally with placeholders.
+- Card: `4242 4242 4242 4242`
+- Expiry: any future date
+- CVC: any 3 digits
+- ZIP: any 5 digits
 
-To test locally (optional):
-1. Get Stripe test API keys
-2. Update `.env` files with real test keys
-3. Restart backend: `python3 app.py`
-4. Restart frontend: `npm start`
-5 Use test card to complete signup
+Then verify:
 
-**Note:** You can skip local testing and deploy directly!
+1. `/api/health` returns OK on the Railway backend.
+2. `/signup` creates a Stripe Checkout session.
+3. Successful checkout redirects back to CompCleared.
+4. Account creation works.
+5. Dashboard loads.
 
----
+## Going live
 
-## 📁 Important Files
+When ready for real payments:
 
-- `DEPLOYMENT.md` - Complete deployment guide
-- `backend/.env.example` - Backend environment template
-- `.env.example` - Frontend environment template
-- `backend/app.py` - Backend with auth + Stripe
-- `src/components/Signup.js` - Signup flow
-- `src/components/Login.js` - Login page
+1. Switch Stripe Dashboard to Live mode.
+2. Create the same $19/month and $149/year live prices.
+3. Replace Railway `STRIPE_SECRET_KEY` with `sk_live_...`.
+4. Replace Railway `STRIPE_PRICE_MONTHLY` and `STRIPE_PRICE_ANNUAL` with the live `price_...` IDs.
+5. Replace Railway `STRIPE_WEBHOOK_SECRET` with the live webhook secret.
+6. Replace Vercel `REACT_APP_STRIPE_PUBLISHABLE_KEY` with `pk_live_...`.
+7. Redeploy Railway and Vercel if they do not auto-redeploy after env changes.
 
----
-
-## 🆘 Need Help?
-
-Common questions:
-
-**Do I need a Stripe account before deploying?**
-- Yes, you need Stripe API keys and Price IDs
-
-**Can I test locally first?**
-- Yes, but not required. You can deploy directly with test keys
-
-**How long does deployment take?**
-- ~30-40 minutes total (including Stripe setup)
-
-**What if I don't have compcleared.com set up?**
-- No problem! Vercel gives you a free subdomain
-
----
-
-## ✅ Ready?
-
-When you're ready to deploy, follow these docs in order:
-
-1. Read [DEPLOYMENT.md](file:///Users/connorimpey/Desktop/compcleared_app/DEPLOYMENT.md)
-2. Set up Stripe products
-3. Deploy to Railway
-4. Deploy to Vercel
-5. Test with Stripe test card
-6. Go live!
+Never paste `sk_live_`, `whsec_`, or database URLs into chat.
