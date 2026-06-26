@@ -6,9 +6,9 @@ import os
 from datetime import datetime, timedelta
 import psycopg
 try:
-    from .database import get_db, DATABASE_URL
+    from .database import get_db, get_database_url
 except ImportError:
-    from database import get_db, DATABASE_URL
+    from database import get_db, get_database_url
 import json
 import stripe
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -49,11 +49,12 @@ PRICE_IDS = {
 
 # Database setup for SB 553 Workplace Violence Compliance
 def init_db():
-    if not DATABASE_URL:
+    database_url = get_database_url()
+    if not database_url:
         print("⚠️  DATABASE_URL not set — skipping init_db (will run when DATABASE_URL is configured)")
         return
 
-    conn = psycopg.connect(DATABASE_URL)
+    conn = psycopg.connect(database_url)
     c = conn.cursor()
 
     # Companies table
