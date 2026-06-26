@@ -1,10 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 
 const Footer = () => {
-    const navigate = useNavigate();
-
     return (
         <footer style={{
             backgroundColor: '#0f172a',

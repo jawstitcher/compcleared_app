@@ -88,7 +88,6 @@ const ExposureCheck = () => {
     const [step, setStep] = useState(0);
     const [answers, setAnswers] = useState({});
     const [result, setResult] = useState(null);
-    const [email, setEmail] = useState('');
 
     const handleAnswer = (id, value) => {
         const next = { ...answers, [id]: value };
@@ -104,7 +103,6 @@ const ExposureCheck = () => {
         setStep(0);
         setAnswers({});
         setResult(null);
-        setEmail('');
     };
 
     return (
