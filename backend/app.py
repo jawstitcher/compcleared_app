@@ -5,7 +5,10 @@ import string
 import os
 from datetime import datetime, timedelta
 import psycopg
-from database import get_db, DATABASE_URL
+try:
+    from .database import get_db, DATABASE_URL
+except ImportError:
+    from database import get_db, DATABASE_URL
 import json
 import stripe
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -134,8 +137,6 @@ def init_db():
     print("✅ SB 553 Postgres database initialized")
 
 init_db()
-
-from database import get_db
 
 def login_required(f):
     @wraps(f)
