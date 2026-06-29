@@ -1,7 +1,22 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
 
-const FAQ = ({ items, compact = false }) => {
+const DEFAULT_ITEMS = [
+    {
+        q: 'What does CompCleared help me do?',
+        a: 'CompCleared helps California employers create a workplace violence prevention plan, keep incident and training records, and export audit-ready documentation for SB 553.'
+    },
+    {
+        q: 'Is CompCleared legal advice?',
+        a: 'No. CompCleared provides compliance tools and templates for informational purposes only. It is not a law firm and does not create an attorney-client relationship.'
+    },
+    {
+        q: 'Can I cancel?',
+        a: 'Yes. You can cancel anytime. Paid subscriptions include a 14-day money-back guarantee.'
+    }
+];
+
+const FAQ = ({ items = DEFAULT_ITEMS, compact = false }) => {
     const [openIndex, setOpenIndex] = useState(null);
 
     return (

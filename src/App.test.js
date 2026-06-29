@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders the CompCleared landing page', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Complete Compliance/i })).toBeInTheDocument();
+  expect(screen.getByText(/Start for \$19\/month/i)).toBeInTheDocument();
 });
