@@ -65,11 +65,11 @@ function LandingPage() {
                         Start for $19/month →
                     </button>
                     <button className="btn-secondary" onClick={() => navigate('/exposure-check')} style={{ fontSize: '18px', padding: '14px 32px' }}>
-                        Am I Exposed? (Free Check)
+                        Check SB 553 Requirements
                     </button>
                 </div>
                 <p style={{ fontSize: '14px', color: '#64748b', marginTop: '16px' }}>
-                    ✓ 14-day money-back guarantee &nbsp;·&nbsp; ✓ No credit card for the free check &nbsp;·&nbsp; ✓ Cancel anytime
+                    ✓ 14-day money-back guarantee &nbsp;·&nbsp; ✓ Free SB 553 applicability check &nbsp;·&nbsp; ✓ Cancel anytime
                 </p>
             </section>
 
@@ -143,7 +143,7 @@ function LandingPage() {
 
             <section style={{ maxWidth: '900px', margin: '0 auto 80px', padding: '0 20px', textAlign: 'center' }}>
                 <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#0f172a', marginBottom: '40px' }}>
-                    From exposed to compliant in 3 steps
+                    From SB 553 uncertainty to audit-ready records in 3 steps
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
                     {[

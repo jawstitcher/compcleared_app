@@ -31,7 +31,7 @@ const Footer = () => {
                             Product
                         </h4>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 2 }}>
-                            <li><a href="/exposure-check" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Am I Exposed? (Free)</a></li>
+                            <li><a href="/exposure-check" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>SB 553 Applicability Check</a></li>
                             <li><a href="/pricing" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Pricing</a></li>
                             <li><a href="/signup" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Get Started</a></li>
                             <li><a href="/resources" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Resources</a></li>
