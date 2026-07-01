@@ -48,32 +48,34 @@ function LandingPage() {
                 </div>
             </nav>
 
-            <section className="hero" style={{ textAlign: 'center', padding: '80px 20px 40px' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                    <ShieldCheck size={56} color="#10B981" strokeWidth={2.5} />
-                    <span style={{ fontSize: '32px', fontWeight: '800', color: '#10B981' }}>✓</span>
+            <section className="hero-light">
+                <div className="hero-inner">
+                    <div className="hero-eyebrow">
+                        <ShieldCheck size={16} /> California SB 553 workplace violence compliance
+                    </div>
+                    <h1 className="hero-title">
+                        Complete Compliance.<br />Cleared. <span className="accent">✓</span>
+                    </h1>
+                    <p className="hero-lede">
+                        CompCleared helps California small businesses meet SB 553 workplace violence
+                        prevention requirements — a written plan, incident log, training records, and an
+                        audit-ready PDF, all in one place.
+                    </p>
+                    <div className="hero-actions">
+                        <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
+                            Check your SB 553 exposure — free →
+                        </button>
+                        <button className="btn-hero-secondary" onClick={() => navigate('/signup')}>
+                            Start CompCleared Pro · $19/mo
+                        </button>
+                    </div>
+                    <p className="hero-trust">
+                        Free exposure check, no signup &nbsp;·&nbsp; Cancel Pro anytime &nbsp;·&nbsp; 14-day money-back guarantee
+                    </p>
                 </div>
-                <h1 style={{ fontSize: '64px', fontWeight: '800', color: '#0f172a', lineHeight: 1.1, marginBottom: '20px' }}>
-                    Complete Compliance.<br />Cleared. <span style={{ color: '#10B981' }}>✓</span>
-                </h1>
-                <p style={{ fontSize: '20px', lineHeight: 1.5, color: '#475569', maxWidth: '720px', margin: '0 auto 40px' }}>
-                    The all-in-one HR compliance platform for California small businesses.
-                    Protect your team and check every Cal/OSHA box with one seamless dashboard.
-                </p>
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <button className="btn-primary" onClick={() => navigate('/signup')} style={{ fontSize: '18px', padding: '14px 32px' }}>
-                        Start for $19/month →
-                    </button>
-                    <button className="btn-secondary" onClick={() => navigate('/exposure-check')} style={{ fontSize: '18px', padding: '14px 32px' }}>
-                        Check SB 553 Requirements
-                    </button>
-                </div>
-                <p style={{ fontSize: '14px', color: '#64748b', marginTop: '16px' }}>
-                    ✓ 14-day money-back guarantee &nbsp;·&nbsp; ✓ Free SB 553 applicability check &nbsp;·&nbsp; ✓ Cancel anytime
-                </p>
             </section>
 
-            <section style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '24px 32px', maxWidth: '800px', margin: '0 auto 60px', textAlign: 'center' }}>
+            <section style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '24px 32px', maxWidth: '800px', margin: '56px auto 80px', textAlign: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
                     <AlertTriangle size={20} color="#dc2626" />
                     <strong style={{ color: '#991b1b', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -164,7 +166,35 @@ function LandingPage() {
                 </div>
             </section>
 
-            <FAQ />
+            <section style={{ maxWidth: '1000px', margin: '0 auto 80px', padding: '0 20px' }}>
+                <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '16px', padding: '48px 40px', textAlign: 'center', color: '#fff' }}>
+                    <h2 style={{ fontSize: '30px', fontWeight: '800', marginBottom: '12px', lineHeight: 1.2 }}>
+                        See where you stand — then get compliant
+                    </h2>
+                    <p style={{ fontSize: '17px', color: '#CBD5E1', maxWidth: '560px', margin: '0 auto 28px', lineHeight: 1.6 }}>
+                        Start with the free SB 553 exposure check. When you're ready, CompCleared Pro
+                        builds your plan, incident log, and audit-ready records for $19/month.
+                    </p>
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
+                            Free SB 553 exposure check →
+                        </button>
+                        <button className="btn-cta" onClick={() => navigate('/signup')}>
+                            Start CompCleared Pro
+                        </button>
+                    </div>
+                    <p style={{ fontSize: '13px', color: '#94A3B8', marginTop: '16px' }}>
+                        Free check, no signup &nbsp;·&nbsp; Cancel Pro anytime &nbsp;·&nbsp; 14-day money-back guarantee
+                    </p>
+                </div>
+            </section>
+
+            <section style={{ maxWidth: '900px', margin: '0 auto 40px', padding: '0 20px' }}>
+                <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#0f172a', textAlign: 'center', marginBottom: '32px' }}>
+                    Frequently asked questions
+                </h2>
+                <FAQ />
+            </section>
 
             <Footer />
         </div>
