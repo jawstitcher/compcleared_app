@@ -122,7 +122,7 @@ const PricingPage = () => {
                             <span style={{ fontSize: '18px', color: '#CBD5E1' }}> /month</span>
                         </div>
                         <p style={{ fontSize: '14px', color: '#94A3B8', marginBottom: '24px' }}>
-                            or <strong style={{ color: '#fff' }}>$149/year</strong> (save $79)
+                            or <strong style={{ color: '#fff' }}>$149/year</strong> — save $79 vs monthly
                         </p>
                         <button
                             onClick={() => navigate('/signup')}
