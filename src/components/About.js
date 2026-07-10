@@ -79,9 +79,9 @@ const About = () => {
                 <section style={{ marginBottom: '60px', backgroundColor: '#f8fafc', padding: '40px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                     <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a', marginBottom: '15px' }}>Who's behind it</h2>
                     <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155' }}>
-                        CompCleared is built and run by a small California team. We're not a venture-backed startup.
-                        We don't have a sales team. The product is the product, and if you email us, you get a real
-                        person. Questions, complaints, feature requests — all welcome at{' '}
+                        CompCleared is built and run by a small independent team serving California employers.
+                        We're not a venture-backed startup. We don't have a sales team. The product is the product,
+                        and if you email us, you get a real person. Questions, complaints, feature requests — all welcome at{' '}
                         <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                     </p>
                 </section>

@@ -9,7 +9,7 @@ CompCleared is deployed as:
 
 Current pricing:
 
-- Free exposure check + public resource center
+- Free SB 553 readiness check + public resource center
 - CompCleared Pro Monthly: $19/month
 - CompCleared Pro Annual: $149/year
 
@@ -184,4 +184,3 @@ Check:
 - Rotate any secret that was pasted into chat, docs, git, or screenshots.
 - Terms and Privacy currently exist, but should be replaced/reviewed before scaling paid traffic.
 - One-click cancellation is promised in the copy; make sure the account UI supports it before broad marketing.
-

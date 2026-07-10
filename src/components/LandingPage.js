@@ -50,6 +50,11 @@ function LandingPage() {
 
             <section className="hero-light">
                 <div className="hero-inner">
+                    <img
+                        src="/california-badge.png"
+                        alt="SB 553 compliant Cal/OSHA ready badge"
+                        className="hero-badge"
+                    />
                     <div className="hero-eyebrow">
                         <ShieldCheck size={16} /> California SB 553 workplace violence compliance
                     </div>
@@ -63,14 +68,14 @@ function LandingPage() {
                     </p>
                     <div className="hero-actions">
                         <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
-                            Check your SB 553 exposure — free →
+                            Free SB 553 Readiness Check →
                         </button>
                         <button className="btn-hero-secondary" onClick={() => navigate('/signup')}>
                             Start CompCleared Pro · $19/mo
                         </button>
                     </div>
                     <p className="hero-trust">
-                        Free exposure check, no signup &nbsp;·&nbsp; Cancel Pro anytime &nbsp;·&nbsp; 14-day money-back guarantee
+                        Free readiness check, no signup &nbsp;·&nbsp; Cancel Pro anytime &nbsp;·&nbsp; 14-day money-back guarantee
                     </p>
                 </div>
             </section>
@@ -172,12 +177,12 @@ function LandingPage() {
                         See where you stand — then get compliant
                     </h2>
                     <p style={{ fontSize: '17px', color: '#CBD5E1', maxWidth: '560px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-                        Start with the free SB 553 exposure check. When you're ready, CompCleared Pro
+                        Start with the free SB 553 readiness check. When you're ready, CompCleared Pro
                         builds your plan, incident log, and audit-ready records for $19/month.
                     </p>
                     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
-                            Free SB 553 exposure check →
+                            Free SB 553 Readiness Check →
                         </button>
                         <button className="btn-cta" onClick={() => navigate('/signup')}>
                             Start CompCleared Pro

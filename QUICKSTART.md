@@ -2,7 +2,7 @@
 
 ## Current pricing
 
-- Free: exposure check + public resources
+- Free: SB 553 readiness check + public resources
 - Pro Monthly: $19/month
 - Pro Annual: $149/year
 

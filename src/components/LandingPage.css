@@ -124,6 +124,15 @@
     margin: 0 auto;
 }
 
+.hero-badge {
+    width: 132px;
+    height: 132px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 1.5rem;
+    filter: drop-shadow(0 14px 28px rgba(15, 23, 42, 0.16));
+}
+
 .hero-eyebrow {
     display: inline-flex;
     align-items: center;
@@ -223,6 +232,11 @@
 @media (max-width: 768px) {
     .hero-light {
         padding: 3.5rem 1.25rem 3rem;
+    }
+
+    .hero-badge {
+        width: 108px;
+        height: 108px;
     }
 
     .hero-title {

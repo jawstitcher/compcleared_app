@@ -18,7 +18,7 @@ Prevention Act** (Cal. Lab. Code § 6401.9, effective July 1, 2024).
   training sessions.
 - **Dashboard** — at-a-glance view of compliance status, recent incidents,
   training history, and quick PDF export for audits.
-- **Free exposure check** — 5-question screening tool at `/exposure-check` that
+- **Free SB 553 readiness check** — 5-question screening tool at `/exposure-check` that
   tells a visitor in 60 seconds whether SB 553 applies to them.
 - **Resource center** — `/resources` has plain-English guides on SB 553,
   penalties, the IIPP/WVPP distinction, training requirements, and

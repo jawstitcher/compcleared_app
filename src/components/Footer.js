@@ -31,7 +31,7 @@ const Footer = () => {
                             Product
                         </h4>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 2 }}>
-                            <li><a href="/exposure-check" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>SB 553 Applicability Check</a></li>
+                            <li><a href="/exposure-check" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>SB 553 Readiness Check</a></li>
                             <li><a href="/pricing" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Pricing</a></li>
                             <li><a href="/signup" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Get Started</a></li>
                             <li><a href="/resources" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px' }}>Resources</a></li>
@@ -74,7 +74,7 @@ const Footer = () => {
                     </p>
                     <p style={{ margin: 0 }}>
                         &copy; 2026 CompCleared. All rights reserved. &nbsp;·&nbsp;
-                        <a href="/about" style={{ color: '#94a3b8' }}>A California small business</a>
+                        <a href="/about" style={{ color: '#94a3b8' }}>Built for California small businesses</a>
                     </p>
                 </div>
             </div>
