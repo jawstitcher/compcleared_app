@@ -9,6 +9,7 @@ import {
     PlusCircle,
     ClipboardList
 } from 'lucide-react';
+import { apiUrl } from '../api';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -25,9 +26,9 @@ const Dashboard = () => {
     const fetchData = async () => {
         try {
             const [incidentsRes, statsRes, trainingsRes] = await Promise.all([
-                fetch('/api/incidents?company_id=1'),
-                fetch('/api/stats?company_id=1'),
-                fetch('/api/training')
+                fetch(apiUrl('/api/incidents?company_id=1'), { credentials: 'include' }),
+                fetch(apiUrl('/api/stats?company_id=1'), { credentials: 'include' }),
+                fetch(apiUrl('/api/training'), { credentials: 'include' })
             ]);
 
             const incidentsData = await incidentsRes.json();
@@ -101,7 +102,7 @@ const Dashboard = () => {
                         <p>Download your customized Cal/OSHA model-compliant written plan. Keep a copy accessible to all employees at all times.</p>
                         <button
                             className="btn btn-primary btn-official"
-                            onClick={() => window.open('/api/report/plan', '_blank')}
+                            onClick={() => window.open(apiUrl('/api/report/plan'), '_blank')}
                         >
                             <FileText size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                             Generate Official Plan (PDF)
@@ -170,7 +171,7 @@ const Dashboard = () => {
                 <div className="section-header">
                     <h2>Recent Incidents</h2>
                     <div className="header-actions">
-                        <button className="btn btn-secondary" onClick={() => window.open('/api/report/pdf', '_blank')}>
+                        <button className="btn btn-secondary" onClick={() => window.open(apiUrl('/api/report/pdf'), '_blank')}>
                             <Download size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                             Export Audit Log (PDF)
                         </button>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { apiUrl } from '../api';
 import './IncidentLogForm.css';
 
 const IncidentLogForm = () => {
@@ -94,9 +95,10 @@ const IncidentLogForm = () => {
         };
 
         try {
-            const response = await fetch('/api/incidents', {
+            const response = await fetch(apiUrl('/api/incidents'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(payload),
             });
 

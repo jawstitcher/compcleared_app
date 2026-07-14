@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { FileText, AlertTriangle, MessageSquare, CheckCircle, Send, User } from 'lucide-react';
+import { apiUrl } from '../api';
 import './ComplianceHub.css';
 
 const ComplianceHub = () => {
@@ -46,9 +47,10 @@ const ComplianceHub = () => {
 
     const markTrainingComplete = async () => {
         try {
-            const response = await fetch('/api/training', {
+            const response = await fetch(apiUrl('/api/training'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({
                     training_date: new Date().toISOString().split('T')[0],
                     training_type: 'Interactive AI Session',

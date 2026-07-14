@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { CheckCircle2 } from 'lucide-react';
+import { apiUrl } from '../api';
 import './TrainingLog.css';
 
 const TrainingLog = () => {
@@ -27,9 +28,10 @@ const TrainingLog = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await fetch('/api/training', {
+            const response = await fetch(apiUrl('/api/training'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({
                     ...formData,
                     attendee_count: parseInt(formData.attendee_count) || 0
