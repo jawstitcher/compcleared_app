@@ -59,6 +59,16 @@ const Dashboard = () => {
         });
     };
 
+    const openBillingPortal = async () => {
+        const response = await fetch(apiUrl('/api/billing-portal'), {
+            method: 'POST',
+            credentials: 'include'
+        });
+        const data = await response.json();
+        if (data.success) window.location.assign(data.url);
+        else window.alert(data.error || 'Unable to open subscription management.');
+    };
+
     if (loading) {
         return (
             <div className="dashboard">
@@ -71,24 +81,27 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="dashboard-header">
                 <Logo size="large" />
-                <h1>SB 553 Compliance Dashboard</h1>
+                <button className="btn btn-outline manage-subscription" onClick={openBillingPortal}>
+                    Manage subscription
+                </button>
+                <h1>Workplace Violence Records Dashboard</h1>
             </div>
 
             {/* Compliance Status Bar */}
             <div className="compliance-status-bar">
-                <div className="status-item complete">
+                <div className="status-item">
                     <span className="status-icon"><CheckCircle2 size={16} /></span>
-                    <span className="status-text">Violent Incident Log</span>
+                    <span className="status-text">Incident Records</span>
                 </div>
-                <div className="status-item complete">
+                <div className="status-item">
                     <span className="status-icon"><CheckCircle2 size={16} /></span>
-                    <span className="status-text">Written Prevention Plan</span>
+                    <span className="status-text">Prevention Plan Template</span>
                 </div>
                 <div className={`status-item ${stats?.total_incidents > 0 ? 'complete' : 'pending'}`}>
                     <span className="status-icon">
                         {stats?.total_incidents > 0 ? <CheckCircle2 size={16} /> : <Circle size={16} />}
                     </span>
-                    <span className="status-text">{stats?.total_incidents > 0 ? 'Annual Audit Ready' : 'Awaiting Audit Entry'}</span>
+                    <span className="status-text">{stats?.total_incidents > 0 ? 'Records Available to Review' : 'No Incident Records Yet'}</span>
                 </div>
             </div>
 
@@ -96,26 +109,26 @@ const Dashboard = () => {
             <div className="compliance-hero-grid">
                 {/* Written Plan Card */}
                 <div className="compliance-card official">
-                    <div className="card-badge">SB 553 MANDATORY</div>
+                    <div className="card-badge">PLAN TEMPLATE</div>
                     <div className="card-content">
-                        <h2>Written Prevention Plan (WVPP)</h2>
-                        <p>Download your customized Cal/OSHA model-compliant written plan. Keep a copy accessible to all employees at all times.</p>
+                        <h2>Workplace Violence Prevention Plan</h2>
+                        <p>Generate a plan template to review and adapt for your business. CompCleared does not provide legal advice.</p>
                         <button
                             className="btn btn-primary btn-official"
                             onClick={() => window.open(apiUrl('/api/report/plan'), '_blank')}
                         >
                             <FileText size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                            Generate Official Plan (PDF)
+                            Generate Plan Template (PDF)
                         </button>
                     </div>
                 </div>
 
                 {/* Training Tracker Mini Card */}
                 <div className="compliance-card official secondary">
-                    <div className="card-badge">LEGAL GAP</div>
+                    <div className="card-badge">TRAINING RECORDS</div>
                     <div className="card-content">
                         <h2>Employee Training Log</h2>
-                        <p>Ensure every employee has completed annual de-escalation and safety training to avoid $18k+ fines.</p>
+                        <p>Record completed workplace violence prevention training sessions for your internal records.</p>
                         <button className="btn btn-outline" onClick={() => navigate('/training')}>
                             <ClipboardList size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                             Log Training Session
@@ -139,10 +152,6 @@ const Dashboard = () => {
                         {incidents.filter(i => i.law_enforcement_contacted).length}
                     </div>
                     <div className="stat-label">Law Enforcement Involved</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-value">5 Years</div>
-                    <div className="stat-label">Retention Period</div>
                 </div>
             </div>
 
@@ -173,7 +182,7 @@ const Dashboard = () => {
                     <div className="header-actions">
                         <button className="btn btn-secondary" onClick={() => window.open(apiUrl('/api/report/pdf'), '_blank')}>
                             <Download size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                            Export Audit Log (PDF)
+                            Export Incident Summary (PDF)
                         </button>
                         <button className="btn btn-primary" onClick={() => window.location.href = '/'}>
                             <PlusCircle size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
@@ -185,7 +194,7 @@ const Dashboard = () => {
                 {incidents.length === 0 ? (
                     <div className="empty-state">
                         <p>No incidents logged yet.</p>
-                        <p className="empty-subtitle">Start logging workplace violence incidents to maintain SB 553 compliance.</p>
+                        <p className="empty-subtitle">Start logging workplace violence incidents to organize your records.</p>
                     </div>
                 ) : (
                     <div className="incidents-table">
@@ -224,7 +233,7 @@ const Dashboard = () => {
                                         </td>
                                         <td>
                                             <span className="badge badge-compliant">
-                                                ✓ Compliant
+                                                Recorded
                                             </span>
                                         </td>
                                     </tr>
@@ -247,7 +256,7 @@ const Dashboard = () => {
                 {trainings.length === 0 ? (
                     <div className="empty-state">
                         <p>No training sessions recorded yet.</p>
-                        <p className="empty-subtitle">Keep your log updated to prove you have a trained workforce.</p>
+                        <p className="empty-subtitle">Keep your training log updated for your internal records.</p>
                     </div>
                 ) : (
                     <div className="incidents-table">
@@ -270,7 +279,7 @@ const Dashboard = () => {
                                         <td>{training.attendee_count} employees</td>
                                         <td>
                                             <span className="badge badge-compliant">
-                                                ✓ Certified
+                                                Recorded
                                             </span>
                                         </td>
                                     </tr>
@@ -283,8 +292,7 @@ const Dashboard = () => {
 
             <div className="compliance-footer">
                 <p>
-                    <strong>SB 553 Compliance:</strong> All incidents and training records are stored for 5 years.
-                    Records available to Cal/OSHA within 15 days upon request.
+                    CompCleared helps organize plan, training, and incident records. It does not provide legal advice.
                 </p>
             </div>
         </div >

@@ -27,12 +27,7 @@ const PricingPage = () => {
                         Simple pricing. No surprises.
                     </h1>
                     <p style={{ fontSize: '18px', color: '#475569', maxWidth: '640px', margin: '0 auto' }}>
-                        Start free. Upgrade when you need the full platform.
-                        Cheaper than one hour with a compliance attorney.
-                    </p>
-                    <p style={{ fontSize: '14px', color: '#64748B', marginTop: '20px', fontStyle: 'italic' }}>
-                        For context: a single Cal/OSHA SB 553 citation starts at <strong style={{ color: '#0f172a' }}>$18,000</strong>.
-                        A compliance attorney charges <strong style={{ color: '#0f172a' }}>$300-500/hour</strong>.
+                        Start with the free educational self-assessment, then use Pro to organize your plan, training records, and incident log.
                     </p>
                 </div>
 
@@ -69,13 +64,12 @@ const PricingPage = () => {
                                 marginBottom: '24px'
                             }}
                         >
-                            Check SB 553 Requirements
+                            Start Free Self-Assessment
                         </button>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {[
-                                'Free SB 553 applicability check (5 questions)',
+                                'Free educational self-assessment (5 questions)',
                                 'Read the SB 553 reference guide',
-                                'Download the Cal/OSHA model WVPP template',
                                 'No account required'
                             ].map((f, i) => (
                                 <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '15px', color: '#334155' }}>
@@ -115,7 +109,7 @@ const PricingPage = () => {
                         </div>
                         <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>Pro</h3>
                         <p style={{ fontSize: '14px', color: '#CBD5E1', marginBottom: '24px' }}>
-                            For California employers who need to actually comply
+                            For California employers organizing workplace violence prevention materials
                         </p>
                         <div style={{ marginBottom: '8px' }}>
                             <span style={{ fontSize: '48px', fontWeight: '800' }}>$19</span>
@@ -134,13 +128,10 @@ const PricingPage = () => {
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {[
                                 'Everything in Free, plus:',
-                                'Customized WVPP generator (PDF, all 6 sections)',
+                                'Customized WVPP plan template',
                                 'Violent Incident Log (digital, all 14 fields)',
                                 'Training tracker (annual, initial, post-incident, new-hazard)',
-                                'Audit-ready PDF export (one click)',
-                                'Email alerts on Cal/OSHA regulatory changes',
-                                '5-year retention of all records',
-                                '14-day money-back guarantee',
+                                'Available PDF exports for product records',
                             ].map((f, i) => (
                                 <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '15px', color: i === 0 ? '#CBD5E1' : '#fff' }}>
                                     {i === 0 ? (
@@ -165,8 +156,7 @@ const PricingPage = () => {
                         figure out if we can help, and if not, we'll point you to someone who can.
                     </p>
                     <p style={{ fontSize: '13px', color: '#64748B' }}>
-                        All plans include: encrypted data in transit and at rest · CCPA/CPRA-compliant data handling ·
-                        one-click cancellation · no hidden fees.
+                        Prices are shown in USD. Contact support with billing or tax questions.
                     </p>
                 </div>
 
@@ -177,10 +167,9 @@ const PricingPage = () => {
                     </h2>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                         {[
-                            { q: 'Can I cancel anytime?', a: 'Yes. One click in your account settings, no retention games, no "are you sure" loops. Cancellation is effective immediately.' },
-                            { q: 'Do you charge sales tax?', a: 'Taxes, if applicable, are calculated at checkout. CompCleared is currently focused on California employers.' },
-                            { q: 'What happens to my data if I cancel?', a: 'You can export everything as PDF before canceling. We retain your records for 30 days after cancellation in case you change your mind, then they are permanently deleted.' },
-                            { q: 'Is there a guarantee?', a: 'Yes. CompCleared offers a 14-day money-back guarantee on paid subscriptions. The SB 553 applicability check and resources do not require a card.' },
+                            { q: 'How do I manage my subscription?', a: 'Manage your subscription through Stripe’s secure billing portal. For refunds or data requests, email support@compcleared.com.' },
+                            { q: 'Do you charge sales tax?', a: 'Prices are shown in USD. Contact support@compcleared.com with billing or tax questions.' },
+                            { q: 'How are billing or refund questions handled?', a: 'For billing or refund questions, email support@compcleared.com. The educational self-assessment and resources do not require a card.' },
                         ].map((item, i) => (
                             <div key={i} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '20px' }}>
                                 <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>{item.q}</h3>

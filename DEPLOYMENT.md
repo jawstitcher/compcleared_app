@@ -145,7 +145,19 @@ When ready to accept real money:
 5. Set Railway live `STRIPE_WEBHOOK_SECRET`.
 6. Set Vercel `REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_live_...`.
 7. Redeploy Railway and Vercel.
-8. Run a real low-dollar card test if needed, then refund it.
+
+### Live billing readiness
+
+- Railway `STRIPE_SECRET_KEY` begins with `sk_live_`.
+- Railway `STRIPE_PRICE_MONTHLY` and `STRIPE_PRICE_ANNUAL` match live-mode Stripe Price IDs.
+- Railway `STRIPE_WEBHOOK_SECRET` is copied from the active live webhook destination.
+- Railway changes are deployed and `/api/health` returns 200.
+- Stripe Billing Portal is configured to allow subscription cancellation.
+- Do not make a live charge without explicit owner authorization.
+
+Open `/signup`, select each plan, and stop when Stripe opens Checkout. Confirm it is live mode and shows the intended product, price, and billing interval. Do not enter a card during this no-charge check.
+
+After the owner authorizes a small real purchase, confirm the live webhook delivery succeeds, the company activates, and the Stripe Billing Portal opens. Refund/cancel through the portal only after recording the result.
 
 ## 9. Common issues
 

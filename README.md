@@ -1,31 +1,23 @@
 # CompCleared
 
-California SB 553 workplace violence compliance for small businesses.
+Workplace violence prevention record organization for California small businesses.
 
-A guided builder that helps California employers create, maintain, and export
-the records required by **California Senate Bill 553 — the Workplace Violence
-Prevention Act** (Cal. Lab. Code § 6401.9, effective July 1, 2024).
+A guided builder that helps California employers organize workplace violence
+prevention plans, training records, incident records, and available PDF exports.
+It is not legal advice.
 
 ## What this app does
 
-- **Workplace Violence Prevention Plan (WVPP) generator** — produces a written
-  plan in PDF form, with the six sections required by SB 553.
-- **Violent Incident Log** — captures every required field (date, time,
-  location, Type 1-4 classification, offender classification, circumstances,
-  law enforcement contact, etc.) and stores it for the legally required
-  five-year retention period.
-- **Training log** — records annual, initial, post-incident, and new-hazard
-  training sessions.
-- **Dashboard** — at-a-glance view of compliance status, recent incidents,
-  training history, and quick PDF export for audits.
+- **Workplace Violence Prevention Plan (WVPP) generator** — produces a plan
+  template in PDF form for review and adaptation.
+- **Incident log** — records incident details entered by the customer.
+- **Training log** — records training sessions entered by the customer.
+- **Dashboard** — at-a-glance view of plan, incident, and training records,
+  with available PDF exports.
 - **Free SB 553 readiness check** — 5-question screening tool at `/exposure-check` that
   tells a visitor in 60 seconds whether SB 553 applies to them.
-- **Resource center** — `/resources` has plain-English guides on SB 553,
-  penalties, the IIPP/WVPP distinction, training requirements, and
-  inspection prep.
-- **Compliance update alerts** — when Cal/OSHA's permanent standard takes
-  effect (statutorily due December 31, 2026), customers get notified and can
-  update their plan.
+- **Resource center** — `/resources` has general educational guides about
+  workplace violence prevention topics.
 
 ## Marketing pages (no backend required)
 
@@ -117,9 +109,9 @@ REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_live_...
 
 - **Free** — `/exposure-check` 5-question tool + read the `/resources` knowledge
   center. No account required.
-- **$19/month or $149/year** — full platform: incident log, training log,
-  dashboard, audit-ready PDF exports, email alerts on Cal/OSHA changes.
-  14-day money-back guarantee.
+- **$19/month or $149/year** — full platform: plan template, incident log,
+  training log, dashboard, and available PDF exports. For billing or refund
+  questions, email support@compcleared.com.
 
 See `/pricing` for details.
 

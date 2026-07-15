@@ -30,3 +30,6 @@ __pycache__/
 backend/__pycache__/
 node_modules/
 .worktrees/
+
+# Local superpowers agent briefs, diffs, and handoff reports.
+.superpowers/sdd/

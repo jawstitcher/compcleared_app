@@ -48,6 +48,10 @@ PRICE_IDS = {
     'annual': os.environ.get('STRIPE_PRICE_ANNUAL')
 }
 
+# A Checkout authorization exists only long enough to create the first account.
+# The browser session stores a reference to this row, never the authorization itself.
+CHECKOUT_AUTHORIZATION_TTL = timedelta(minutes=30)
+
 # Database setup for SB 553 Workplace Violence Compliance
 def init_db():
     database_url = get_database_url()
@@ -82,6 +86,28 @@ def init_db():
                     location_id TEXT,
                     created_at TEXT,
                     FOREIGN KEY (company_id) REFERENCES companies (id)
+                )''')
+
+    # This table is intentionally independent of Flask's signed client cookie. It
+    # makes the authorization durable across a webhook/browser race and lets the
+    # signup transaction consume it exactly once.
+    c.execute('''CREATE TABLE IF NOT EXISTS checkout_authorizations (
+                    checkout_session_id TEXT PRIMARY KEY,
+                    company_id INTEGER NOT NULL REFERENCES companies (id),
+                    expires_at TIMESTAMPTZ NOT NULL,
+                    consumed_at TIMESTAMPTZ
+                )''')
+    # Existing databases may have received the initial table before consumed_at
+    # was introduced; this makes the change safe to deploy repeatedly.
+    c.execute('''ALTER TABLE checkout_authorizations
+                 ADD COLUMN IF NOT EXISTS consumed_at TIMESTAMPTZ''')
+    c.execute('''CREATE INDEX IF NOT EXISTS checkout_authorizations_expiry_idx
+                 ON checkout_authorizations (expires_at)''')
+    # Stripe can deliver subscription cancellation before checkout completion.
+    # Retain that fact even while the company is still pending.
+    c.execute('''CREATE TABLE IF NOT EXISTS canceled_stripe_subscriptions (
+                    stripe_subscription_id TEXT PRIMARY KEY,
+                    canceled_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
                 )''')
 
     # Workplace Violence Incidents table (SB 553 compliant)
@@ -178,6 +204,12 @@ def health():
 def signup():
     """Create a new user account"""
     data = request.json
+    checkout_session_id = session.get('verified_checkout_session_id')
+    if not checkout_session_id:
+        return jsonify({
+            'success': False,
+            'error': 'Complete payment verification before creating an account'
+        }), 403
     
     conn = get_db()
     c = conn.cursor()
@@ -188,6 +220,60 @@ def signup():
         if c.fetchone():
             conn.close()
             return jsonify({'success': False, 'error': 'Email already registered'}), 400
+
+        # Take the same subscription lock as checkout completion and cancellation.
+        # The subsequent consume statement rechecks the company state while this
+        # lock is held, so a cancellation cannot race a first-account signup.
+        c.execute('''SELECT authorization.company_id, company.stripe_subscription_id
+                     FROM checkout_authorizations AS authorization
+                     JOIN companies AS company ON company.id = authorization.company_id
+                     WHERE authorization.checkout_session_id = %s
+                       AND authorization.expires_at > NOW()
+                       AND authorization.consumed_at IS NULL
+                     FOR UPDATE''', (checkout_session_id,))
+        checkout_authorization = c.fetchone()
+        if not checkout_authorization or not checkout_authorization['stripe_subscription_id']:
+            conn.rollback()
+            conn.close()
+            session.pop('verified_checkout_session_id', None)
+            return jsonify({
+                'success': False,
+                'error': 'Complete payment verification before creating an account'
+            }), 403
+
+        c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))',
+                  (checkout_authorization['stripe_subscription_id'],))
+
+        # UPDATE ... RETURNING is the one-time authorization consume operation.
+        # It and the user insert share one transaction, so an insert failure rolls
+        # the consumption back instead of stranding a legitimate payer. Joining
+        # companies and the cancellation marker makes this a final, atomic active
+        # subscription check under the shared subscription lock.
+        c.execute('''UPDATE checkout_authorizations AS authorization
+                     SET consumed_at = NOW()
+                     FROM companies AS company
+                     WHERE authorization.checkout_session_id = %s
+                       AND authorization.company_id = company.id
+                       AND authorization.expires_at > NOW()
+                       AND authorization.consumed_at IS NULL
+                       AND company.subscription_status = 'active'
+                       AND company.stripe_subscription_id = %s
+                       AND NOT EXISTS (
+                           SELECT 1 FROM canceled_stripe_subscriptions
+                           WHERE stripe_subscription_id = company.stripe_subscription_id
+                       )
+                     RETURNING authorization.company_id''',
+                  (checkout_session_id, checkout_authorization['stripe_subscription_id']))
+        authorization = c.fetchone()
+        if not authorization:
+            conn.rollback()
+            conn.close()
+            session.pop('verified_checkout_session_id', None)
+            return jsonify({
+                'success': False,
+                'error': 'Complete payment verification before creating an account'
+            }), 403
+        company_id = authorization['company_id']
         
         # Hash password (using pbkdf2 for compatibility)
         password_hash = generate_password_hash(data['password'], method='pbkdf2:sha256')
@@ -197,7 +283,7 @@ def signup():
             company_id, email, password_hash, name, role, created_at
         ) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id''',
         (
-            data.get('company_id'),
+            company_id,
             data['email'],
             password_hash,
             data.get('name', ''),
@@ -210,8 +296,9 @@ def signup():
         
         # Create session
         session['user_id'] = user_id
-        session['company_id'] = data.get('company_id')
+        session['company_id'] = company_id
         session['email'] = data['email']
+        session.pop('verified_checkout_session_id', None)
         
         return jsonify({
             'success': True,
@@ -220,6 +307,7 @@ def signup():
         }), 201
         
     except Exception as e:
+        conn.rollback()
         conn.close()
         return jsonify({'success': False, 'error': str(e)}), 400
 
@@ -353,21 +441,68 @@ def verify_session():
         
     try:
         checkout_session = stripe.checkout.Session.retrieve(session_id)
-        
-        if checkout_session.payment_status == 'paid':
-            conn = get_db()
-            c = conn.cursor()
+
+        metadata_company_id = (checkout_session.metadata or {}).get('company_id')
+        if (metadata_company_id != company_id or
+                checkout_session.client_reference_id != company_id):
+            return jsonify({
+                'success': False,
+                'error': 'Checkout session does not match this company'
+            }), 403
+
+        if checkout_session.payment_status != 'paid' or not checkout_session.subscription:
+            return jsonify({'success': False, 'status': checkout_session.payment_status}), 400
+
+        conn = get_db()
+        c = conn.cursor()
+        # Serialize checkout completion and cancellation for this Stripe
+        # subscription, even if the cancellation webhook arrives first.
+        c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))', (checkout_session.subscription,))
+        # Browser verification may follow the webhook. Accept only the matching
+        # active subscription in that ordering; a canceled company can never pass.
+        c.execute('''SELECT id, subscription_status, stripe_subscription_id
+                     FROM companies WHERE id = %s FOR UPDATE''', (company_id,))
+        company = c.fetchone()
+        if not company or company['subscription_status'] not in ('pending', 'active'):
+            conn.close()
+            return jsonify({
+                'success': False,
+                'error': 'Company is not awaiting checkout verification'
+            }), 403
+
+        c.execute('''SELECT stripe_subscription_id
+                     FROM canceled_stripe_subscriptions
+                     WHERE stripe_subscription_id = %s''', (checkout_session.subscription,))
+        if c.fetchone():
+            conn.close()
+            return jsonify({
+                'success': False,
+                'error': 'Company is not awaiting checkout verification'
+            }), 403
+
+        if company['subscription_status'] == 'pending':
             c.execute('''UPDATE companies
                          SET subscription_status = 'active',
                              stripe_customer_id = %s,
                              stripe_subscription_id = %s
-                         WHERE id = %s''',
+                         WHERE id = %s AND subscription_status = 'pending' ''',
                       (checkout_session.customer, checkout_session.subscription, company_id))
-            conn.commit()
+        elif company['stripe_subscription_id'] != checkout_session.subscription:
             conn.close()
-            return jsonify({'success': True, 'status': 'active'})
-        else:
-            return jsonify({'success': False, 'status': checkout_session.payment_status})
+            return jsonify({
+                'success': False,
+                'error': 'Company is not awaiting checkout verification'
+            }), 403
+
+        c.execute('''INSERT INTO checkout_authorizations (
+                         checkout_session_id, company_id, expires_at
+                     ) VALUES (%s, %s, %s)
+                     ON CONFLICT (checkout_session_id) DO NOTHING''',
+                  (session_id, company_id, datetime.now().astimezone() + CHECKOUT_AUTHORIZATION_TTL))
+        conn.commit()
+        conn.close()
+        session['verified_checkout_session_id'] = session_id
+        return jsonify({'success': True, 'status': 'active'})
             
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
@@ -389,21 +524,30 @@ def stripe_webhook():
     # Handle subscription events
     if event['type'] == 'checkout.session.completed':
         session_data = event['data']['object']
-        # Try metadata first, then client_reference_id
-        company_id = session_data.get('metadata', {}).get('company_id') or session_data.get('client_reference_id')
+        metadata_company_id = session_data.get('metadata', {}).get('company_id')
+        company_id = session_data.get('client_reference_id')
         
-        if company_id:
+        if (company_id and company_id == metadata_company_id and
+                session_data.get('payment_status') == 'paid' and
+                session_data.get('subscription')):
             conn = get_db()
             c = conn.cursor()
+            c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))',
+                      (session_data['subscription'],))
             c.execute('''UPDATE companies
                          SET subscription_status = %s,
                              stripe_customer_id = %s,
                              stripe_subscription_id = %s
-                         WHERE id = %s''',
+                         WHERE id = %s AND subscription_status = 'pending'
+                           AND NOT EXISTS (
+                               SELECT 1 FROM canceled_stripe_subscriptions
+                               WHERE stripe_subscription_id = %s
+                           )''',
                       ('active', 
                        session_data['customer'],
                        session_data['subscription'],
-                       company_id))
+                       company_id,
+                       session_data['subscription']))
             conn.commit()
             conn.close()
             print(f"✅ Subscription activated for company {company_id}")
@@ -413,16 +557,49 @@ def stripe_webhook():
         
         conn = get_db()
         c = conn.cursor()
+        c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))', (subscription['id'],))
+        c.execute('''INSERT INTO canceled_stripe_subscriptions (stripe_subscription_id)
+                     VALUES (%s) ON CONFLICT (stripe_subscription_id) DO NOTHING''',
+                  (subscription['id'],))
         c.execute('''UPDATE companies
                      SET subscription_status = %s
                      WHERE stripe_subscription_id = %s''',
                   ('canceled', subscription['id']))
+        # Invalidate outstanding browser authorizations in the same locked
+        # transaction. This covers cancellation delivered before the browser
+        # returns from Checkout and makes stale cookies unusable immediately.
+        c.execute('''UPDATE checkout_authorizations AS authorization
+                     SET consumed_at = NOW()
+                     FROM companies AS company
+                     WHERE authorization.company_id = company.id
+                       AND company.stripe_subscription_id = %s
+                       AND authorization.consumed_at IS NULL''',
+                  (subscription['id'],))
         conn.commit()
         conn.close()
     
     return jsonify({'success': True})
 
 # Protected endpoints (require auth + subscription)
+
+@app.route('/api/billing-portal', methods=['POST'])
+@login_required
+@subscription_required
+def create_billing_portal():
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('SELECT stripe_customer_id FROM companies WHERE id = %s', (session['company_id'],))
+    company = c.fetchone()
+    conn.close()
+
+    if not company or not company['stripe_customer_id']:
+        return jsonify({'success': False, 'error': 'Billing account is not available yet'}), 409
+
+    portal_session = stripe.billing_portal.Session.create(
+        customer=company['stripe_customer_id'],
+        return_url=f'{FRONTEND_URL}/dashboard',
+    )
+    return jsonify({'success': True, 'url': portal_session.url})
 
 @app.route('/api/incidents', methods=['POST'])
 @login_required
@@ -613,7 +790,7 @@ def get_stats():
 @login_required
 @subscription_required
 def generate_pdf_report():
-    """Generate a Cal/OSHA compliant PDF incident report"""
+    """Generate a PDF summary of incident records entered in CompCleared."""
     from io import BytesIO
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import letter
@@ -650,18 +827,17 @@ def generate_pdf_report():
     story = []
     
     # Header
-    story.append(Paragraph("SB 553 WORKPLACE VIOLENCE INCIDENT LOG", title_style))
-    story.append(Paragraph(f"Company: {company['name']}", body_style))
+    story.append(Paragraph("WORKPLACE VIOLENCE INCIDENT RECORD SUMMARY", title_style))
+    story.append(Paragraph(f"Customer organization: {company['name']}", body_style))
     story.append(Paragraph(f"Report Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", body_style))
     story.append(Paragraph(f"Total Incidents Recorded: {len(incidents)}", body_style))
     story.append(Spacer(1, 20))
     
-    # Compliance statement
-    story.append(Paragraph("CALIFORNIA SB 553 COMPLIANCE CERTIFICATION", heading_style))
+    # Record summary
+    story.append(Paragraph("INCIDENT RECORD SUMMARY", heading_style))
     story.append(Paragraph(
-        "This incident log is maintained in accordance with California Senate Bill 553, which requires employers to "
-        "maintain a Workplace Violence Prevention Plan (WVPP) and violent incident log. All incidents are recorded "
-        "with required fields including date, time, location, type of violence, and detailed circumstances.",
+        "This summary includes only incident records entered in CompCleared and is not a complete record of every incident. "
+        "It is provided for record organization and is not legal advice.",
         body_style
     ))
     story.append(Spacer(1, 20))
@@ -703,8 +879,7 @@ def generate_pdf_report():
     story.append(Spacer(1, 30))
     story.append(Paragraph("─" * 50, body_style))
     story.append(Paragraph(
-        "<i>This report was generated by CompCleared, a Cal/OSHA SB 553 compliance management system. "
-        "Records are maintained with timestamps and audit trails for legal defensibility.</i>",
+        "<i>This report was generated by CompCleared to help organize incident records. It is not legal advice.</i>",
         body_style
     ))
     
@@ -755,28 +930,26 @@ def generate_written_plan():
     
     # Cover Page
     story.append(Spacer(1, 2*inch))
-    story.append(Paragraph("Workplace Violence Prevention Plan (WVPP)", title_style))
+    story.append(Paragraph("Customizable Workplace Violence Prevention Plan Template", title_style))
     story.append(Paragraph(f"For: {company['name']}", subtitle_style))
     story.append(Spacer(1, 0.5*inch))
-    story.append(Paragraph(f"In Compliance with California SB 553 / LC 6401.9", body_style))
-    story.append(Paragraph(f"Effective Date: {datetime.now().strftime('%B %d, %Y')}", body_style))
-    story.append(Paragraph("Last Review Date: " + datetime.now().strftime('%B %d, %Y'), body_style))
+    story.append(Paragraph("This customizable workplace violence prevention plan template was generated by CompCleared. Review and adapt it for your business with qualified counsel; it is not legal advice.", body_style))
+    story.append(Paragraph("Effective Date: [Customer to complete]", body_style))
+    story.append(Paragraph("Last Review Date: [Customer to complete]", body_style))
     story.append(PageBreak())
     
     # Section 1: Responsibility
     story.append(Paragraph("1. Responsibility and Authority", heading_style))
     story.append(Paragraph(
-        f"The designated manager/administrator for {company['name']} has the overall authority and responsibility "
-        "for implementing the provisions of this Workplace Violence Prevention Plan (WVPP). All managers and "
-        "supervisors are responsible for implementing and maintaining the WVPP in their work areas and for answering "
-        "employee questions about the WVPP.",
+        f"Use this section to identify the person or role at {company['name']} that may coordinate workplace violence "
+        "prevention planning. Customize responsibilities, communication channels, and points of contact for your workplace.",
         body_style
     ))
     
     # Section 2: Employee Involvement
     story.append(Paragraph("2. Employee Involvement", heading_style))
     story.append(Paragraph(
-        f"{company['name']} ensures that all employees are involved in developing and implementing the WVPP through:",
+        f"Consider whether and how {company['name']} would seek input while developing and updating this template:",
         body_style
     ))
     story.append(Paragraph("• Regular safety meetings and discussions specifically addressing workplace violence risks.", item_style))
@@ -786,35 +959,33 @@ def generate_written_plan():
     # Section 3: Reporting Procedures
     story.append(Paragraph("3. Reporting Workplace Violence", heading_style))
     story.append(Paragraph(
-        "Employees can report incidents or concerns of workplace violence, including threats of violence, using the "
-        "following methods without fear of retaliation:",
+        "Customize the reporting options and escalation contacts that may be appropriate for concerns of workplace violence, including threats:",
         body_style
     ))
-    story.append(Paragraph("• Digital Reporting: Through the CompCleared portal accessible to all employees.", item_style))
+    story.append(Paragraph("• Digital Reporting: [Describe any internal reporting channel you choose to offer.]", item_style))
     story.append(Paragraph("• Immediate Threats: Call 911 for all emergencies involving immediate danger.", item_style))
     story.append(Paragraph("• Internal Reporting: Report to any supervisor or human resources representative.", item_style))
     
     # Section 4: Hazard Assessment
     story.append(Paragraph("4. Workplace Violence Hazard Assessment", heading_style))
     story.append(Paragraph(
-        f"{company['name']} conducts periodic inspections to identify and evaluate workplace violence hazards. "
-        "Inspections will be performed when the plan is first established, periodically thereafter, and when "
-        "we are made aware of a new or previously unrecognized hazard.",
+        f"Consider how {company['name']} will identify and evaluate workplace violence hazards, including the people, "
+        "locations, and events it will review. Customize any review cadence and triggers for your workplace.",
         body_style
     ))
     
     # Section 5: Incident Investigation
     story.append(Paragraph("5. Workplace Violence Incident Investigation", heading_style))
     story.append(Paragraph(
-        "Following any violent incident, a thorough investigation will be conducted to identify root causes and "
-        "implement corrective measures. All findings will be recorded in the Violent Incident Log as required by law.",
+        "Consider documenting how the organization would review reported incidents, identify potential improvements, "
+        "and decide what internal records it will maintain. Review applicable obligations with qualified counsel.",
         body_style
     ))
     
     # Section 6: Training
     story.append(Paragraph("6. Training and Instruction", heading_style))
     story.append(Paragraph(
-        "All employees will receive initial and annual training on:",
+        "Consider whether these topics are appropriate for your workplace and customize any training approach with qualified counsel:",
         body_style
     ))
     story.append(Paragraph("• Definitions and types of workplace violence.", item_style))

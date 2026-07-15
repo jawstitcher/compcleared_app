@@ -123,8 +123,8 @@ const IncidentLogForm = () => {
                     <div className="success-icon">✓</div>
                     <h2>Incident Logged Successfully</h2>
                     <p>Incident ID: <strong>#{incidentId}</strong></p>
-                    <p>This incident has been recorded in compliance with California SB 553.</p>
-                    <p>Records will be maintained for 5 years as required by law.</p>
+                    <p>This incident has been added to your CompCleared records.</p>
+                    <p>Review your recordkeeping obligations with qualified counsel.</p>
                     <button
                         className="btn btn-primary"
                         onClick={() => {
@@ -403,9 +403,8 @@ const IncidentLogForm = () => {
 
                 <div className="compliance-notice">
                     <p>
-                        This log is maintained in compliance with California SB 553.
-                        Records will be stored securely for 5 years and made available to
-                        Cal/OSHA upon request.
+                        CompCleared helps organize incident records and does not provide legal advice.
+                        Review your recordkeeping obligations with qualified counsel.
                     </p>
                 </div>
             </form>

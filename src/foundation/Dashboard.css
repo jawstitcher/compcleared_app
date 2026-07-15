@@ -18,6 +18,11 @@
     object-fit: contain;
 }
 
+.manage-subscription {
+    margin-left: 1rem;
+    vertical-align: middle;
+}
+
 .dashboard-header h1 {
     color: #1a1a1a;
     font-size: 2rem;

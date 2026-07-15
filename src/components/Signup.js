@@ -10,13 +10,10 @@ const TIERS = {
         price: '$19/month',
         employees: 'For any California employer',
         features: [
-            'Customized WVPP generator (PDF, all 6 sections)',
+            'Customized WVPP plan template',
             'Violent Incident Log (digital, all 14 fields)',
             'Training tracker (annual, initial, post-incident, new-hazard)',
-            'Audit-ready PDF export (one click)',
-            'Email alerts on Cal/OSHA regulatory changes',
-            '5-year retention of all records',
-            '14-day money-back guarantee',
+            'Available PDF exports for product records',
         ]
     },
     annual: {
@@ -27,8 +24,6 @@ const TIERS = {
         features: [
             'Everything in Monthly, plus:',
             'Save $79 vs monthly billing',
-            'Locked-in rate (no surprise price increases)',
-            'Priority email support',
         ]
     }
 };
@@ -80,8 +75,6 @@ function Signup() {
             const data = await response.json();
 
             if (data.success) {
-                // Save company_id for after payment
-                sessionStorage.setItem('company_id', data.company_id);
                 sessionStorage.setItem('signup_data', JSON.stringify(formData));
 
                 // Redirect to Stripe checkout
@@ -101,8 +94,6 @@ function Signup() {
         setError('');
         setLoading(true);
 
-        const company_id = sessionStorage.getItem('company_id');
-
         try {
             const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
             const response = await fetch(`${apiUrl}/api/signup`, {
@@ -110,7 +101,6 @@ function Signup() {
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({
-                    company_id: parseInt(company_id),
                     email: formData.email,
                     password: formData.password,
                     name: formData.name,
@@ -121,7 +111,6 @@ function Signup() {
             const data = await response.json();
 
             if (data.success) {
-                sessionStorage.removeItem('company_id');
                 sessionStorage.removeItem('signup_data');
                 navigate('/dashboard');
             } else {
@@ -145,11 +134,13 @@ function Signup() {
             const verifyPayment = async () => {
                 try {
                     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-                    const res = await fetch(`${apiUrl}/api/verify-session?session_id=${sessionId}&company_id=${companyId}`);
+                    const res = await fetch(
+                        `${apiUrl}/api/verify-session?session_id=${sessionId}&company_id=${companyId}`,
+                        { credentials: 'include' }
+                    );
                     const verificationData = await res.json();
 
                     if (verificationData.success) {
-                        sessionStorage.setItem('company_id', companyId);
                         const savedData = sessionStorage.getItem('signup_data');
                         if (savedData) {
                             setFormData(JSON.parse(savedData));
@@ -278,6 +269,9 @@ function Signup() {
                             />
                         </div>
 
+                        <p style={{ marginBottom: '16px', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>
+                            You’ll be taken to Stripe to complete your selected paid plan. The free readiness check is available without an account. For billing or refund questions, email support@compcleared.com.
+                        </p>
                         <button
                             type="submit"
                             disabled={loading}

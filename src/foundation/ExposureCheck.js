@@ -13,7 +13,7 @@ const QUESTIONS = [
     {
         id: 'employee_count',
         q: 'Do you have 10 or more employees (including part-time and seasonal)?',
-        help: 'SB 553 has limited exemptions for very small teams.'
+        help: 'Workplace size and public access can be useful topics to review.'
     },
     {
         id: 'public_access',
@@ -23,49 +23,49 @@ const QUESTIONS = [
     {
         id: 'has_wvpp',
         q: 'Have you written a Workplace Violence Prevention Plan?',
-        help: 'A written plan is required. The free Cal/OSHA template counts if customized for your site.'
+        help: 'Consider whether a written plan would be useful for your workplace.'
     },
     {
-        id: 'annual_training',
-        q: 'Have you trained all employees on workplace violence prevention in the past 12 months?',
-        help: 'Annual training is required for every employee.'
+        id: 'training_review',
+        q: 'Have you considered workplace violence prevention training for your team?',
+        help: 'Consider reviewing training topics and timing for your workplace.'
     }
 ];
 
 const RESULTS = {
     low: {
-        title: 'Likely Exempt — but document everything',
+        title: 'Topics to Review',
         color: '#10B981',
         icon: CheckCircle,
-        summary: 'Based on your answers, you may be in one of the limited SB 553 exemption categories (under 10 employees with no public access, certain healthcare facilities, etc.).',
+        summary: 'Your answers suggest topics that may be useful to review. This educational self-assessment does not determine whether any law applies to your business.',
         next: [
-            'Document your exempt status in writing — keep it with your HR records',
-            'Re-evaluate annually as your business grows',
-            'Even exempt employers benefit from a basic plan — it protects you from civil liability',
+            'Consider reviewing how workplace size, public access, and work locations affect your planning',
+            'Consider documenting the workplace-violence-prevention practices you choose to use',
+            'Consult qualified California counsel about your circumstances',
         ]
     },
     medium: {
-        title: 'At Risk — Plan Needed',
+        title: 'Consider a Closer Review',
         color: '#F59E0B',
         icon: AlertTriangle,
-        summary: 'Based on your answers, SB 553 likely applies to your business. You probably need a written Workplace Violence Prevention Plan and annual training records.',
+        summary: 'Workplace violence prevention rules may apply depending on your circumstances. Consider reviewing a plan, training topics, and recordkeeping practices with qualified California counsel.',
         next: [
-            'Write or generate a customized WVPP for your specific workplace',
-            'Train all current employees on the plan within 30 days',
-            'Set up annual training reminders for next year',
-            'Keep records of all training for at least 1 year',
+            'Consider reviewing a customizable workplace violence prevention plan template',
+            'Consider what reporting options fit your workplace',
+            'Consider reviewing training and recordkeeping practices',
+            'Consult qualified California counsel about what may apply',
         ]
     },
     high: {
-        title: 'Likely Non-Compliant — Act Now',
+        title: 'Review Planning Options',
         color: '#EF4444',
         icon: AlertTriangle,
-        summary: 'Based on your answers, SB 553 almost certainly applies to your business and you may be out of compliance. Cal/OSHA penalties start at $18,000 per serious violation.',
+        summary: 'Workplace violence prevention rules may apply to your business. This educational self-assessment is not legal advice and does not determine your legal obligations.',
         next: [
-            'Write a Workplace Violence Prevention Plan this week — not next quarter',
-            'Train all employees and document it (date, attendees, topics)',
-            'Set up a violent incident log before you need one',
-            'Consult a California employment attorney for a 30-minute review ($300-500)',
+            'Consider reviewing a workplace violence prevention plan template for your business',
+            'Consider how you would communicate and document workplace safety practices',
+            'Consider whether an incident log would help your internal recordkeeping',
+            'Consult qualified California counsel about your circumstances',
         ]
     }
 };
@@ -77,7 +77,7 @@ const scoreResult = (answers) => {
     if (answers.employee_count === 'yes') score += 1;
     if (answers.public_access === 'yes') score += 1;
     if (answers.has_wvpp === 'no') score += 1;
-    if (answers.annual_training === 'no') score += 1;
+    if (answers.training_review === 'no') score += 1;
     if (score <= 1) return 'low';
     if (score <= 3) return 'medium';
     return 'high';
@@ -127,11 +127,11 @@ const ExposureCheck = () => {
                                 <Shield size={14} /> Free · 60 seconds · No signup
                             </div>
                             <h1 style={{ fontSize: '36px', fontWeight: '800', color: '#0f172a', marginBottom: '12px' }}>
-                                Is SB 553 a problem for your business?
+                                Workplace Violence Prevention Self-Assessment
                             </h1>
                             <p style={{ fontSize: '17px', color: '#475569' }}>
-                                Answer {QUESTIONS.length} questions. Find out if California's workplace violence
-                                prevention law applies to you — and what to do if it does.
+                                Answer {QUESTIONS.length} educational questions to identify workplace violence prevention
+                                topics you may want to review. Rules may apply based on your circumstances; this tool does not determine legal applicability. Consult qualified California counsel.
                             </p>
                         </div>
 
@@ -240,10 +240,10 @@ const ExposureCheck = () => {
 
                         <div style={{ background: '#fff', border: '2px solid #2563EB', borderRadius: '12px', padding: '32px', marginTop: '24px', textAlign: 'center' }}>
                             <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>
-                                Want a customized plan in 20 minutes?
+                                Start with a customizable plan template
                             </h3>
                             <p style={{ fontSize: '15px', color: '#475569', marginBottom: '20px' }}>
-                                CompCleared generates a Cal/OSHA-aligned Workplace Violence Prevention Plan tailored to your business. Free to start.
+                                CompCleared provides a customizable workplace violence prevention plan template to review and adapt for your business. It is not legal advice.
                             </p>
                             <button
                                 onClick={() => navigate('/signup')}
@@ -280,8 +280,8 @@ const ExposureCheck = () => {
                         <a href="/terms" className="footer-link">Terms</a>
                         <a href="/about" className="footer-link">About</a>
                         <p className="footer-disclaimer">
-                            This is a screening tool, not legal advice. For complex situations, consult a
-                            California-licensed employment attorney.
+                            This educational self-assessment is not legal advice. Consult qualified California counsel
+                            about your circumstances.
                         </p>
                         <p>&copy; 2026 CompCleared. All rights reserved.</p>
                     </div>

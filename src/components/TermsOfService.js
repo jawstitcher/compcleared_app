@@ -42,29 +42,23 @@ const TermsOfService = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>2. Subscriptions and Payment</h2>
                 <p style={{ marginBottom: '16px' }}>
-                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year) with a 14-day
-                    money-back guarantee. By providing a payment method, you authorize us to charge the applicable fees.
+                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year). By providing a
+                    payment method, you authorize us to charge the applicable fees.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
-                    <strong>Auto-Renewal Disclosure.</strong> Your subscription automatically renews at the end of
-                    each billing period unless you cancel before the renewal date. You will be charged the then-current
-                    subscription fee. We will send you a reminder email at least 15 days before any annual renewal.
+                    <strong>Subscription billing.</strong> Paid plans are purchased through Stripe Checkout and renew
+                    according to the plan you select. Prices are shown in USD. Contact support with billing or tax questions.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
-                    <strong>14-Day Money-Back Guarantee.</strong> If you are not satisfied with a paid subscription
-                    within the first 14 days, email <a href="mailto:[email protected]" style={{ color: '#2563EB' }}>[email protected]</a> for
-                    a full refund.
+                    <strong>Billing and refund questions.</strong> Email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a> with billing or refund questions.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>3. Cancellation</h2>
                 <p style={{ marginBottom: '16px' }}>
-                    You may cancel your subscription at any time, for any reason, through your account settings.
-                    Cancellation is effective immediately. We will not require you to call, chat with a retention
-                    agent, or take any action other than a single click. You will receive a confirmation email.
+                    You may manage your subscription through Stripe’s secure billing portal.
                 </p>
                 <p style={{ marginBottom: '24px' }}>
-                    After cancellation, your service data will be retained for 30 days in case you change your
-                    mind, then permanently deleted, except where longer retention is required by law.
+                    For data requests, email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>4. Acceptable Use</h2>
@@ -79,8 +73,8 @@ const TermsOfService = () => {
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>5. Your Content</h2>
                 <p style={{ marginBottom: '24px' }}>
                     You retain all rights to the data and content you upload to CompCleared. We do not claim
-                    ownership of your incident records, training records, or generated plans. You may export
-                    your data at any time.
+                    ownership of your incident records, training records, or generated plans. CompCleared provides
+                    PDF exports for available product records; contact support for other data requests.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>6. Limitation of Liability</h2>
@@ -122,15 +116,14 @@ const TermsOfService = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>10. Changes to These Terms</h2>
                 <p style={{ marginBottom: '24px' }}>
-                    We may update these Terms from time to time. Material changes will be announced via email at
-                    least 30 days before they take effect. Continued use of CompCleared after the effective date
-                    constitutes acceptance of the updated Terms.
+                    We may update these Terms from time to time. Material updates will be posted on this page.
+                    Continued use of CompCleared after the effective date constitutes acceptance of the updated Terms.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>11. Contact</h2>
                 <p style={{ marginBottom: '24px' }}>
                     Questions about these Terms? Email{' '}
-                    <a href="mailto:[email protected]" style={{ color: '#2563EB' }}>[email protected]</a>.
+                    <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <div style={{ marginTop: '40px', padding: '20px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: '14px', color: '#64748B' }}>

@@ -5,11 +5,15 @@ import './LandingPage.css';
 
 const Contact = () => {
     const navigate = useNavigate();
-    const [submitted, setSubmitted] = useState(false);
+    const [email, setEmail] = useState('');
+    const [subject, setSubject] = useState('General Question');
+    const [message, setMessage] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setSubmitted(true);
+        const emailSubject = encodeURIComponent(subject);
+        const emailBody = encodeURIComponent(`From: ${email}\n\n${message}`);
+        window.location.href = `mailto:support@compcleared.com?subject=${emailSubject}&body=${emailBody}`;
     };
 
     return (
@@ -30,30 +34,18 @@ const Contact = () => {
                     Contact
                 </h1>
                 <p style={{ fontSize: '16px', color: '#64748b', textAlign: 'center', marginBottom: '40px' }}>
-                    Email is the fastest way to reach us. We typically respond within 1-2 business days.
+                    Email support@compcleared.com; we typically respond within 1–2 business days.
                 </p>
 
-                {submitted ? (
-                    <div style={{ backgroundColor: '#ecfdf5', border: '1px solid #10b981', borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-                        <h3 style={{ color: '#047857', marginBottom: '10px' }}>Message Received</h3>
-                        <p style={{ color: '#065f46' }}>Thanks for reaching out. We'll get back to you within 1-2 business days.</p>
-                        <button
-                            onClick={() => navigate('/')}
-                            style={{ marginTop: '20px', padding: '10px 20px', background: '#059669', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                        >
-                            Return Home
-                        </button>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit} style={{ border: '1px solid #e2e8f0', padding: '40px', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+                <form onSubmit={handleSubmit} style={{ border: '1px solid #e2e8f0', padding: '40px', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
                         <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>Email</label>
-                            <input type="email" required style={{ width: '100%', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '4px' }} />
+                            <label htmlFor="contact-email" style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>Email</label>
+                            <input id="contact-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '4px' }} />
                         </div>
 
                         <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>Subject</label>
-                            <select style={{ width: '100%', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '4px' }}>
+                            <label htmlFor="contact-subject" style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>Subject</label>
+                            <select id="contact-subject" value={subject} onChange={(e) => setSubject(e.target.value)} style={{ width: '100%', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '4px' }}>
                                 <option>General Question</option>
                                 <option>Technical Support</option>
                                 <option>Billing Question</option>
@@ -63,15 +55,14 @@ const Contact = () => {
                         </div>
 
                         <div style={{ marginBottom: '30px' }}>
-                            <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>Message</label>
-                            <textarea required rows="5" style={{ width: '100%', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '4px' }}></textarea>
+                            <label htmlFor="contact-message" style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>Message</label>
+                            <textarea id="contact-message" required rows="5" value={message} onChange={(e) => setMessage(e.target.value)} style={{ width: '100%', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '4px' }} />
                         </div>
 
                         <button type="submit" style={{ width: '100%', padding: '14px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', fontSize: '16px', fontWeight: '600', cursor: 'pointer' }}>
                             Send Message
                         </button>
-                    </form>
-                )}
+                </form>
 
                 <div style={{ textAlign: 'center', marginTop: '40px', color: '#94a3b8', fontSize: '14px' }}>
                     <p>CompCleared</p>

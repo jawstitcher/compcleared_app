@@ -13,18 +13,18 @@ const Sidebar = ({ children, onLogout }) => {
         {
             section: 'Active',
             items: [
-                { name: 'SB 553 Compliance', icon: ShieldCheck, path: '/dashboard', active: true, sub: ['Incident Log', 'Written Plan', 'Reports'] }
+                { name: 'Workplace Violence Prevention Plan & Records', icon: ShieldCheck, path: '/dashboard', active: true, sub: ['Incident Log', 'Written Plan', 'Reports'] }
             ]
         },
         {
-            section: 'Coming Q3 2026 — Pro',
+            section: 'Planned Features',
             items: [
                 { name: 'OSHA 300 Log', icon: ClipboardList, path: null, locked: true, badge: 'Pro Upgrade' },
                 { name: 'Employee Handbooks', icon: BookOpen, path: null, locked: true, badge: 'Pro Upgrade' }
             ]
         },
         {
-            section: 'Coming Q4 2026',
+            section: 'Records',
             items: [
                 { name: 'Training Tracker', icon: Users, path: '/training', active: true }
             ]
@@ -46,7 +46,7 @@ const Sidebar = ({ children, onLogout }) => {
                 <div style={{ padding: '0 20px 24px', borderBottom: '1px solid #e2e8f0', marginBottom: '16px' }}>
                     <Logo size="small" />
                     <p style={{ marginTop: '8px', fontSize: '12px', color: '#64748b', fontWeight: '500' }}>
-                        ✓ Complete Compliance. Cleared.
+                        Organize records. Stay prepared.
                     </p>
                 </div>
 

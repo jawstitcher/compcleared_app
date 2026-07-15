@@ -8,70 +8,59 @@ const RESOURCES = [
     {
         slug: 'what-is-sb-553',
         title: 'What is SB 553?',
-        summary: 'Plain-English overview of California\'s workplace violence prevention law: who it applies to, what it requires, and when.',
+        summary: 'Plain-English overview of California workplace violence prevention rules and questions employers may need to evaluate.',
         readTime: '5 min',
         status: 'available',
-        content: `California Senate Bill 553, also known as the Workplace Violence Prevention Act, took effect July 1, 2024. It requires almost all California employers to:
+        content: `California Senate Bill 553, also known as the Workplace Violence Prevention Act, took effect July 1, 2024. Depending on their circumstances, California employers may need to evaluate whether they should:
 
 1. **Establish, implement, and maintain** a written Workplace Violence Prevention Plan (WVPP)
-2. **Maintain a violent incident log** for five years
+2. **Maintain workplace violence prevention records** that may apply to their business
 3. **Provide annual training** to all employees on workplace violence prevention
 4. **Record workplace violence hazards** specific to their industry and worksite
 
 The law was passed in response to rising workplace violence incidents, particularly in healthcare, retail, and other public-facing industries. Cal/OSHA has enforcement authority and can issue citations for non-compliance.
 
-**Who is exempt?** Limited exemptions include certain healthcare facilities already covered by Cal/OSHA Section 3342, employees working from home, workplaces with fewer than 10 employees that are not accessible to the public, and facilities operated by the Department of Corrections and Rehabilitation.
+**Who may be exempt?** Exemptions may apply in limited circumstances, including certain healthcare facilities already covered by other Cal/OSHA rules, employees working from home, some workplaces with fewer than 10 employees that are not accessible to the public, and some correctional facilities. Review current official materials and qualified counsel for your circumstances.
 
-**What are the penalties?** Civil penalties range from $18,000 per serious violation to $150,000 for willful or repeat violations. Willful violations that cause death can carry criminal penalties including fines up to $250,000 and up to 6 months imprisonment.`
+For advice about requirements, enforcement, or potential penalties, consult current Cal/OSHA materials and qualified counsel. This general information is not legal advice.`
     },
     {
         slug: 'penalties-and-fines',
-        title: 'SB 553 Penalties & Fines',
-        summary: 'What Cal/OSHA can actually fine you for, in dollars. The honest math on what non-compliance costs vs. what compliance costs.',
+        title: 'Understanding Enforcement Information',
+        summary: 'Where to find current Cal/OSHA enforcement information and when to seek legal advice.',
         readTime: '4 min',
         status: 'available',
-        content: `Cal/OSHA's penalty schedule (8 CCR § 336, adjusted 2025) for SB 553 violations:
+        content: `Cal/OSHA enforcement policies and penalty schedules can change. Consult current official Cal/OSHA materials and qualified counsel for guidance about how workplace violence prevention rules apply to your business.
 
-| Violation Type | Maximum Penalty |
-|----------------|-----------------|
-| Regulatory or General | up to $16,285 |
-| Serious (realistic possibility of death or serious harm) | up to $25,000 |
-| Willful or Repeat | up to $162,851 |
-| Failure to Abate | up to $15,000 per day |
-
-**Criminal penalties** for willful violations that cause death: up to $250,000 fine and/or up to 6 months imprisonment (Cal. Lab. Code § 6432).
-
-**What "serious" means for SB 553:** Cal/OSHA considers a violation "serious" if there is a realistic possibility that death or serious physical harm could result from the hazard. Because the entire purpose of SB 553 is to prevent workplace violence deaths, most SB 553 violations are likely to be classified as serious, exposing employers to the higher $25,000 penalty.
-
-**The cost math:** CompCleared Pro is $19/month ($228/year) or $149/year. A single serious violation citation is $25,000. The math is not complicated.`
+CompCleared helps organize plan, training, and incident records; it does not determine legal obligations, predict enforcement, or provide legal advice.`
     },
     {
         slug: 'wvpp-vs-iipp',
         title: 'WVPP vs IIPP: What\'s the Difference?',
-        summary: 'If you already have an Injury and Illness Prevention Program, do you still need a separate Workplace Violence Prevention Plan? Yes.',
+        summary: 'Learn about workplace violence prevention plan considerations alongside an Injury and Illness Prevention Program.',
         readTime: '3 min',
         status: 'available',
         content: `Many California employers already have an Injury and Illness Prevention Program (IIPP) — Cal/OSHA has required it since 1991. A reasonable question is: do you still need a separate Workplace Violence Prevention Plan (WVPP) under SB 553?
 
-**Yes.** They are separate plans with different content requirements.
+They may be separate plans with different content considerations.
 
-**What an IIPP covers:** General workplace hazards — slips, trips, falls, chemical exposure, equipment safety, ergonomic issues. It is required for almost all California employers under Cal/OSHA Section 3203.
+**What an IIPP can cover:** General workplace hazards — slips, trips, falls, chemical exposure, equipment safety, and ergonomic issues. Review current Cal/OSHA materials and qualified counsel about whether it applies to your workplace.
 
 **What a WVPP covers:** Specifically workplace violence — the four recognized types (stranger violence, customer/client violence, worker-on-worker violence, personal relationship violence spillover), hazard assessment specific to violence risk, incident response procedures, and post-incident support.
 
-**Can you reference your IIPP in your WVPP?** Yes. A common approach is to have your WVPP supplement your IIPP — they share some administrative scaffolding (responsible person, training system, hazard assessment process) but the WVPP must stand on its own for the violence-specific content.
+**Can you reference your IIPP in your WVPP?** Some organizations may choose to coordinate these documents because they can share administrative information. Consult current Cal/OSHA materials and qualified counsel about the content that may apply to each plan.
 
-**Bottom line:** If you only have an IIPP, you are not SB 553 compliant. You need a separate, written WVPP that addresses the 12 required sections specifically.`
+**Bottom line:** If you only have an IIPP, you may need to evaluate whether a separate written WVPP is appropriate for your workplace. Consult current Cal/OSHA materials and qualified counsel about the content that may apply.`
     },
     {
         slug: 'training-requirements',
-        title: 'Annual Training: What You Actually Have to Cover',
-        summary: 'SB 553 requires annual training for every employee. Here is what that training has to include, in plain English.',
+        title: 'Annual Training: Topics to Review',
+        summary: 'Topics California employers may need to consider when reviewing workplace violence prevention training.',
         readTime: '5 min',
         status: 'available',
-        content: `SB 553 requires initial training when the plan is established, and annual training thereafter, for every employee. The training must be appropriate for the employee's job duties and the workplace hazards they face.
+        content: `California employers may need to provide initial and periodic workplace violence prevention training, depending on their circumstances. Any training should be appropriate for employees' job duties and workplace hazards. Consult current Cal/OSHA materials and qualified counsel about timing and content.
 
-**What the training has to cover:**
+**Topics to consider when reviewing training:**
 
 1. **Your company's WVPP** — how to access it, what it says, who is responsible
 2. **How to report workplace violence** — the specific process at your company
@@ -81,26 +70,26 @@ The law was passed in response to rising workplace violence incidents, particula
 6. **How to respond** to actual or imminent workplace violence
 7. **Resources** for coping with the aftermath of workplace violence (for employees who experience it)
 
-**Initial training** is required when the plan is first established. **Annual refresher** training is required every year after that. **Additional training** is required whenever a new or previously unrecognized workplace violence hazard is identified, or after a violent incident occurs.
+Employers may need to revisit training when a plan is established, periodically thereafter, or when workplace conditions change. The applicable triggers can depend on the workplace and current rules.
 
-**What you must document:**
+**Information you may need to document:**
 
 - Date of training
 - Names of employees who attended
 - Names/qualifications of the trainer
 - Topics covered
 
-Records must be retained for at least one year (or longer if the training relates to a specific hazard that has not been addressed). CompCleared's training log captures all of this automatically.`
+Review applicable recordkeeping requirements with qualified counsel. CompCleared's training log helps organize the information you enter.`
     },
     {
         slug: 'incident-log-guide',
         title: 'The Violent Incident Log: A Practical Guide',
-        summary: 'The 14 fields Cal/OSHA requires for every workplace violence incident, who fills them out, and how long you keep them.',
+        summary: 'Information employers may need to consider when organizing workplace violence incident records.',
         readTime: '6 min',
         status: 'available',
-        content: `The Violent Incident Log (VIL) is the most concrete record SB 553 requires. For every workplace violence incident, you must record:
+        content: `The Violent Incident Log (VIL) is a workplace violence record employers may need to maintain. Depending on the circumstances and applicable rules, an incident record may include:
 
-**Required fields (from Cal/OSHA guidance):**
+**Information to consider (review current Cal/OSHA guidance):**
 
 1. Date of incident
 2. Time of incident
@@ -119,39 +108,39 @@ Records must be retained for at least one year (or longer if the training relate
 15. Name and title of person logging the record
 16. Date the record was logged
 
-**The public-facing version:** SB 553 requires that the VIL, when made available to employees (upon request) or to Cal/OSHA, must NOT include personally identifying information about the individuals involved. This means you need two versions: a complete internal record and a redacted public version.
+**Sharing records:** Privacy obligations may apply when incident records are shared with employees or agencies. Consult current Cal/OSHA materials and qualified counsel about whether redaction or different versions are appropriate for your records.
 
-**Retention:** 5 years minimum. Many employers keep them longer.
+**Recordkeeping:** Review applicable retention and privacy requirements with qualified counsel.
 
-**How CompCleared handles this:** the incident log form captures all 14 required fields, timestamps the record server-side, and exports both complete and redacted versions.`
+**How CompCleared helps:** the incident log form captures the information you enter and can generate available PDF exports.`
     },
     {
         slug: 'inspection-prep',
         title: 'What to Do When Cal/OSHA Shows Up',
-        summary: 'A Cal/OSHA inspection is not a surprise you want unprepared for. Here is what happens, what they ask for, and what to have ready.',
+        summary: 'Materials an employer may want to organize before reviewing an inspection response with qualified counsel.',
         readTime: '5 min',
         status: 'available',
-        content: `Cal/OSHA inspections are usually triggered by a complaint, a referral (often from another agency), or a programmed inspection of high-hazard industries. For SB 553 specifically, expect increased enforcement after the permanent standard takes effect (statutorily due Dec 31, 2026).
+        content: `Cal/OSHA inspections can be triggered by a complaint, referral, or programmed inspection. Inspection practices and rules may change, so consult current official materials and qualified counsel for your situation.
 
-**What an inspector will ask for:**
+**Materials an inspector may ask for:**
 
 1. Your written Workplace Violence Prevention Plan (WVPP)
-2. Your Violent Incident Log (VIL) for the past 5 years
+2. Your Violent Incident Log (VIL) for the applicable record period
 3. Records of all employee training (initial + annual, for all employees)
 4. Documentation of your hazard assessment process
 5. Records of any incidents, including corrective actions taken
 6. Records of any employee complaints about workplace violence
 
-**What to have ready (the audit bundle):**
+**Records you may want to organize:**
 
 - Single PDF containing your current WVPP
 - Single PDF containing your VIL for the requested period (redacted of PII)
 - Single PDF containing your training records (date, attendees, topics, trainer)
 - Any hazard assessments or workplace inspection records
 
-**Time pressure:** Cal/OSHA can request records on a short timeline (often 15 days). If your records are scattered across emails, filing cabinets, and someone's laptop, you will scramble. CompCleared's one-click "Export Audit Bundle" generates exactly the package you need.
+**Record organization:** Keeping records organized can make internal review easier. CompCleared provides available PDF exports for product records.
 
-**What NOT to do:** Do not lie, do not destroy records, do not refuse access. Cal/OSHA has the legal authority to enter and inspect during business hours. Obstruction is a separate violation with its own penalties.`
+For inspection obligations or response guidance, consult current official Cal/OSHA materials and qualified counsel. This resource is not legal advice.`
     }
 ];
 
@@ -255,13 +244,13 @@ const Resources = () => {
 
                 <div style={{ marginTop: '60px', padding: '40px', background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '12px', textAlign: 'center', color: '#fff' }}>
                     <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px' }}>
-                        Stop reading. Start complying.
+                        Ready to organize your records?
                     </h2>
                     <p style={{ fontSize: '16px', color: '#CBD5E1', marginBottom: '24px' }}>
-                        CompCleared generates a customized SB 553 plan in 20 minutes.
+                        CompCleared provides plan and record organization tools for your review.
                     </p>
                     <button onClick={() => navigate('/signup')} className="btn-cta">
-                        Get Started Free
+                        Explore CompCleared Pro
                     </button>
                 </div>
             </div>
