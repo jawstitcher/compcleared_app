@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Signup from './Signup';
 import TermsOfService from './TermsOfService';
@@ -6,6 +6,7 @@ import PrivacyPolicy from './PrivacyPolicy';
 import PricingPage from '../foundation/PricingPage';
 import LandingPage from './LandingPage';
 import About from './About';
+import FAQ from './FAQ';
 
 const renderPage = (Component) => render(<MemoryRouter><Component /></MemoryRouter>);
 
@@ -49,4 +50,23 @@ test('marketing pages do not promise refunds, regulatory email alerts, or unrest
   renderPage(TermsOfService);
   expect(screen.queryByText(/export your data at any time/i)).not.toBeInTheDocument();
   expect(screen.getByText(/PDF exports for available product records/i)).toBeInTheDocument();
+});
+
+test('public copy does not promise compliance outcomes, penalties, or Stripe tax handling', () => {
+  renderPage(LandingPage);
+  expect(screen.queryByText(/helps California small businesses meet SB 553/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Cal\/OSHA citations for SB 553 violations start at/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(FAQ);
+  fireEvent.click(screen.getByRole('button', { name: /can I cancel/i }));
+  expect(screen.queryByText(/14-day money-back guarantee/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(PricingPage);
+  expect(screen.queryByText(/applicable taxes are shown by Stripe/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(TermsOfService);
+  expect(screen.queryByText(/applicable taxes are shown by Stripe/i)).not.toBeInTheDocument();
 });

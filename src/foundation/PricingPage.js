@@ -157,7 +157,7 @@ const PricingPage = () => {
                         figure out if we can help, and if not, we'll point you to someone who can.
                     </p>
                     <p style={{ fontSize: '13px', color: '#64748B' }}>
-                        Prices are shown in USD. Any applicable taxes are shown by Stripe at checkout.
+                        Prices are shown in USD. Contact support with billing or tax questions.
                     </p>
                 </div>
 
@@ -169,7 +169,7 @@ const PricingPage = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                         {[
                             { q: 'How do I manage my subscription?', a: 'Manage your subscription through Stripe’s secure billing portal. For refunds or data requests, email support@compcleared.com.' },
-                            { q: 'Do you charge sales tax?', a: 'Prices are shown in USD. Any applicable taxes are shown by Stripe at checkout.' },
+                            { q: 'Do you charge sales tax?', a: 'Prices are shown in USD. Contact support@compcleared.com with billing or tax questions.' },
                             { q: 'How are billing or refund questions handled?', a: 'For billing or refund questions, email support@compcleared.com. The SB 553 applicability check and resources do not require a card.' },
                         ].map((item, i) => (
                             <div key={i} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '20px' }}>

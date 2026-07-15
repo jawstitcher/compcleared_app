@@ -46,7 +46,7 @@ const Sidebar = ({ children, onLogout }) => {
                 <div style={{ padding: '0 20px 24px', borderBottom: '1px solid #e2e8f0', marginBottom: '16px' }}>
                     <Logo size="small" />
                     <p style={{ marginTop: '8px', fontSize: '12px', color: '#64748b', fontWeight: '500' }}>
-                        ✓ Complete Compliance. Cleared.
+                        Organize records. Stay prepared.
                     </p>
                 </div>
 

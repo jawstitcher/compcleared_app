@@ -4,7 +4,7 @@ import './LandingPage.css';
 const DEFAULT_ITEMS = [
     {
         q: 'What does CompCleared help me do?',
-        a: 'CompCleared helps California employers create a workplace violence prevention plan, keep incident and training records, and export audit-ready documentation for SB 553.'
+        a: 'CompCleared helps California employers organize a workplace violence prevention plan, incident records, training records, and available PDF exports.'
     },
     {
         q: 'Is CompCleared legal advice?',
@@ -12,7 +12,7 @@ const DEFAULT_ITEMS = [
     },
     {
         q: 'Can I cancel?',
-        a: 'Yes. You can cancel anytime. Paid subscriptions include a 14-day money-back guarantee.'
+        a: 'Yes. You can cancel anytime. For billing or refund questions, email support@compcleared.com.'
     }
 ];
 

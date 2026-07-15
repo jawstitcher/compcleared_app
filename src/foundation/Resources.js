@@ -14,7 +14,7 @@ const RESOURCES = [
         content: `California Senate Bill 553, also known as the Workplace Violence Prevention Act, took effect July 1, 2024. It requires almost all California employers to:
 
 1. **Establish, implement, and maintain** a written Workplace Violence Prevention Plan (WVPP)
-2. **Maintain a violent incident log** for five years
+2. **Maintain workplace violence prevention records** as required for your business
 3. **Provide annual training** to all employees on workplace violence prevention
 4. **Record workplace violence hazards** specific to their industry and worksite
 
@@ -22,28 +22,17 @@ The law was passed in response to rising workplace violence incidents, particula
 
 **Who is exempt?** Limited exemptions include certain healthcare facilities already covered by Cal/OSHA Section 3342, employees working from home, workplaces with fewer than 10 employees that are not accessible to the public, and facilities operated by the Department of Corrections and Rehabilitation.
 
-**What are the penalties?** Civil penalties range from $18,000 per serious violation to $150,000 for willful or repeat violations. Willful violations that cause death can carry criminal penalties including fines up to $250,000 and up to 6 months imprisonment.`
+For advice about requirements, enforcement, or potential penalties, consult current Cal/OSHA materials and qualified counsel. This general information is not legal advice.`
     },
     {
         slug: 'penalties-and-fines',
-        title: 'SB 553 Penalties & Fines',
-        summary: 'What Cal/OSHA can actually fine you for, in dollars. The honest math on what non-compliance costs vs. what compliance costs.',
+        title: 'Understanding Enforcement Information',
+        summary: 'Where to find current Cal/OSHA enforcement information and when to seek legal advice.',
         readTime: '4 min',
         status: 'available',
-        content: `Cal/OSHA's penalty schedule (8 CCR § 336, adjusted 2025) for SB 553 violations:
+        content: `Cal/OSHA enforcement policies and penalty schedules can change. Consult current official Cal/OSHA materials and qualified counsel for guidance about how workplace violence prevention rules apply to your business.
 
-| Violation Type | Maximum Penalty |
-|----------------|-----------------|
-| Regulatory or General | up to $16,285 |
-| Serious (realistic possibility of death or serious harm) | up to $25,000 |
-| Willful or Repeat | up to $162,851 |
-| Failure to Abate | up to $15,000 per day |
-
-**Criminal penalties** for willful violations that cause death: up to $250,000 fine and/or up to 6 months imprisonment (Cal. Lab. Code § 6432).
-
-**What "serious" means for SB 553:** Cal/OSHA considers a violation "serious" if there is a realistic possibility that death or serious physical harm could result from the hazard. Because the entire purpose of SB 553 is to prevent workplace violence deaths, most SB 553 violations are likely to be classified as serious, exposing employers to the higher $25,000 penalty.
-
-**The cost math:** CompCleared Pro is $19/month ($228/year) or $149/year. A single serious violation citation is $25,000. The math is not complicated.`
+CompCleared helps organize plan, training, and incident records; it does not determine legal obligations, predict enforcement, or provide legal advice.`
     },
     {
         slug: 'wvpp-vs-iipp',
@@ -90,7 +79,7 @@ The law was passed in response to rising workplace violence incidents, particula
 - Names/qualifications of the trainer
 - Topics covered
 
-Records must be retained for at least one year (or longer if the training relates to a specific hazard that has not been addressed). CompCleared's training log captures all of this automatically.`
+Review applicable recordkeeping requirements with qualified counsel. CompCleared's training log helps organize the information you enter.`
     },
     {
         slug: 'incident-log-guide',
@@ -121,9 +110,9 @@ Records must be retained for at least one year (or longer if the training relate
 
 **The public-facing version:** SB 553 requires that the VIL, when made available to employees (upon request) or to Cal/OSHA, must NOT include personally identifying information about the individuals involved. This means you need two versions: a complete internal record and a redacted public version.
 
-**Retention:** 5 years minimum. Many employers keep them longer.
+**Recordkeeping:** Review applicable retention and privacy requirements with qualified counsel.
 
-**How CompCleared handles this:** the incident log form captures all 14 required fields, timestamps the record server-side, and exports both complete and redacted versions.`
+**How CompCleared helps:** the incident log form captures the information you enter and can generate available PDF exports.`
     },
     {
         slug: 'inspection-prep',
@@ -136,7 +125,7 @@ Records must be retained for at least one year (or longer if the training relate
 **What an inspector will ask for:**
 
 1. Your written Workplace Violence Prevention Plan (WVPP)
-2. Your Violent Incident Log (VIL) for the past 5 years
+2. Your Violent Incident Log (VIL) for the applicable record period
 3. Records of all employee training (initial + annual, for all employees)
 4. Documentation of your hazard assessment process
 5. Records of any incidents, including corrective actions taken
@@ -149,9 +138,9 @@ Records must be retained for at least one year (or longer if the training relate
 - Single PDF containing your training records (date, attendees, topics, trainer)
 - Any hazard assessments or workplace inspection records
 
-**Time pressure:** Cal/OSHA can request records on a short timeline (often 15 days). If your records are scattered across emails, filing cabinets, and someone's laptop, you will scramble. CompCleared's one-click "Export Audit Bundle" generates exactly the package you need.
+**Record organization:** Keeping records organized can make internal review easier. CompCleared provides available PDF exports for product records.
 
-**What NOT to do:** Do not lie, do not destroy records, do not refuse access. Cal/OSHA has the legal authority to enter and inspect during business hours. Obstruction is a separate violation with its own penalties.`
+For inspection obligations or response guidance, consult current official Cal/OSHA materials and qualified counsel. This resource is not legal advice.`
     }
 ];
 

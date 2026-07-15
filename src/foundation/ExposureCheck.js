@@ -57,10 +57,10 @@ const RESULTS = {
         ]
     },
     high: {
-        title: 'Likely Non-Compliant — Act Now',
+        title: 'Review Your Next Steps',
         color: '#EF4444',
         icon: AlertTriangle,
-        summary: 'Based on your answers, SB 553 almost certainly applies to your business and you may be out of compliance. Cal/OSHA penalties start at $18,000 per serious violation.',
+        summary: 'Based on your answers, workplace violence prevention requirements may apply to your business. This screening tool is not legal advice.',
         next: [
             'Write a Workplace Violence Prevention Plan this week — not next quarter',
             'Train all employees and document it (date, attendees, topics)',

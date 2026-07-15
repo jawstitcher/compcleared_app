@@ -19,10 +19,10 @@ const Footer = () => {
                     <div>
                         <Logo size="small" type="white" />
                         <p style={{ marginTop: '12px', fontSize: '20px', fontWeight: '700', color: '#fff' }}>
-                            ✓ Complete Compliance. Cleared.
+                            Organize records. Stay prepared.
                         </p>
                         <p style={{ marginTop: '8px', fontSize: '14px', lineHeight: 1.5 }}>
-                            The all-in-one HR compliance platform for California small businesses.
+                            Record-organization tools for California small businesses.
                         </p>
                     </div>
 

@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
@@ -6,6 +7,14 @@ os.environ.pop("DATABASE_URL", None)
 
 import pytest
 import backend.app as app_module
+
+
+def test_generated_pdf_copy_does_not_certify_compliance_or_legal_defensibility():
+    source = Path(app_module.__file__).read_text()
+
+    assert "CALIFORNIA SB 553 COMPLIANCE CERTIFICATION" not in source
+    assert "In Compliance with California SB 553 / LC 6401.9" not in source
+    assert "audit trails for legal defensibility" not in source
 
 
 class StatefulCheckoutDb:

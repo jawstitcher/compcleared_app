@@ -25,7 +25,7 @@ const About = () => {
                     About CompCleared
                 </h1>
                 <p style={{ fontSize: '20px', lineHeight: '1.5', color: '#475569', textAlign: 'center', marginBottom: '40px', fontWeight: '500' }}>
-                    <span style={{ color: '#10B981', fontWeight: '700' }}>✓ Complete Compliance. Cleared.</span>
+                    <span style={{ color: '#10B981', fontWeight: '700' }}>Organize records. Stay prepared.</span>
                 </p>
                 <p style={{ fontSize: '18px', lineHeight: '1.6', color: '#475569', textAlign: 'center', marginBottom: '60px' }}>
                     CompCleared was built by workplace safety experts to take the anxiety out of California labor laws.
@@ -47,11 +47,11 @@ const About = () => {
                 <section style={{ marginBottom: '60px' }}>
                     <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a', marginBottom: '15px' }}>What we actually do</h2>
                     <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginBottom: '16px' }}>
-                        CompCleared is a comprehensive compliance shield for California small businesses. Right now we deliver:
+                        CompCleared helps California small businesses organize workplace violence prevention records. Right now we deliver:
                     </p>
                     <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
-                        <li style={{ marginBottom: '8px' }}><strong>SB 553 Workplace Violence Prevention</strong> — written WVPP, 14-field incident log, training tracker, audit-ready PDF</li>
-                        <li style={{ marginBottom: '8px' }}>Cal/OSHA inspection-readiness guide and resources</li>
+                        <li style={{ marginBottom: '8px' }}><strong>Workplace Violence Prevention</strong> — plan template, incident log, training tracker, and available PDF exports</li>
+                        <li style={{ marginBottom: '8px' }}>General workplace violence prevention guides and resources</li>
                         <li style={{ marginBottom: '8px' }}>Cal/OSHA resources to help you keep your plan and records organized</li>
                     </ul>
                     <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginTop: '20px' }}>
@@ -59,7 +59,7 @@ const About = () => {
                     </p>
                     <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
                         <li style={{ marginBottom: '8px' }}><strong>OSHA 300 / 300A Injury Logs</strong> — extend your incident log to all workplace injuries, auto-fill end-of-year Cal/OSHA forms</li>
-                        <li style={{ marginBottom: '8px' }}><strong>California Employee Handbook Generator</strong> — customized, California-compliant handbooks that update when labor laws change</li>
+                        <li style={{ marginBottom: '8px' }}><strong>California Employee Handbook Generator</strong> — customizable handbook templates for review</li>
                     </ul>
                 </section>
 

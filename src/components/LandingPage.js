@@ -52,19 +52,19 @@ function LandingPage() {
                 <div className="hero-inner">
                     <img
                         src="/california-badge.png"
-                        alt="SB 553 compliant Cal/OSHA ready badge"
+                        alt="California workplace violence prevention badge"
                         className="hero-badge"
                     />
                     <div className="hero-eyebrow">
-                        <ShieldCheck size={16} /> California SB 553 workplace violence compliance
+                        <ShieldCheck size={16} /> California workplace violence prevention records
                     </div>
                     <h1 className="hero-title">
-                        Complete Compliance.<br />Cleared. <span className="accent">✓</span>
+                        Organize your records.<br />Stay prepared. <span className="accent">✓</span>
                     </h1>
                     <p className="hero-lede">
-                        CompCleared helps California small businesses meet SB 553 workplace violence
-                        prevention requirements — a written plan, incident log, training records, and an
-                        audit-ready PDF, all in one place.
+                        CompCleared helps California small businesses organize a workplace violence
+                        prevention plan, incident records, training records, and available PDF exports in one place.
+                        It is not legal advice.
                     </p>
                     <div className="hero-actions">
                         <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
@@ -88,13 +88,13 @@ function LandingPage() {
                     </strong>
                 </div>
                 <p style={{ fontSize: '16px', color: '#7f1d1d', margin: 0 }}>
-                    Cal/OSHA citations for SB 553 violations start at <strong>$18,000</strong> and can reach <strong>$150,000</strong> for willful or repeat violations. Criminal penalties are possible. CompCleared starts at <strong>$19/month</strong>.
+                    Use the free readiness check to organize your next steps. CompCleared starts at <strong>$19/month</strong> and does not provide legal advice.
                 </p>
             </section>
 
             <section style={{ maxWidth: '1100px', margin: '0 auto 80px', padding: '0 20px' }}>
                 <h2 style={{ fontSize: '36px', fontWeight: '800', color: '#0f172a', textAlign: 'center', marginBottom: '12px' }}>
-                    One platform. Every California HR compliance box.
+                    One place for workplace violence prevention records.
                 </h2>
                 <p style={{ fontSize: '16px', color: '#64748b', textAlign: 'center', marginBottom: '48px' }}>
                     Start with SB 553 today. OSHA 300 and Employee Handbooks ship next.
@@ -150,7 +150,7 @@ function LandingPage() {
 
             <section style={{ maxWidth: '900px', margin: '0 auto 80px', padding: '0 20px', textAlign: 'center' }}>
                 <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#0f172a', marginBottom: '40px' }}>
-                    From SB 553 uncertainty to audit-ready records in 3 steps
+                    Organize workplace violence prevention records in 3 steps
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
                     {[
@@ -174,11 +174,11 @@ function LandingPage() {
             <section style={{ maxWidth: '1000px', margin: '0 auto 80px', padding: '0 20px' }}>
                 <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '16px', padding: '48px 40px', textAlign: 'center', color: '#fff' }}>
                     <h2 style={{ fontSize: '30px', fontWeight: '800', marginBottom: '12px', lineHeight: 1.2 }}>
-                        See where you stand — then get compliant
+                        See where you stand — then organize your records
                     </h2>
                     <p style={{ fontSize: '17px', color: '#CBD5E1', maxWidth: '560px', margin: '0 auto 28px', lineHeight: 1.6 }}>
                         Start with the free SB 553 readiness check. When you're ready, CompCleared Pro
-                        builds your plan, incident log, and audit-ready records for $19/month.
+                        helps organize your plan, incident log, and available PDF records for $19/month.
                     </p>
                     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>

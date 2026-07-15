@@ -68,8 +68,8 @@ const TrainingLog = () => {
             <div className="form-card">
                 <div className="form-header">
                     <Logo size="medium" />
-                    <h1>SB 553 Training Certification</h1>
-                    <p>Log a completed training session for Cal/OSHA compliance.</p>
+                    <h1>Workplace Violence Training Record</h1>
+                    <p>Log a completed training session for your internal records.</p>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -138,7 +138,7 @@ const TrainingLog = () => {
                     </div>
 
                     <div className="compliance-note">
-                        <p><strong>Compliance Reminder:</strong> SB 553 requires training records to be kept for at least 1 year. This includes training dates, content descriptions, and names/qualifications of trainers.</p>
+                        <p><strong>Recordkeeping reminder:</strong> Review applicable training-record requirements with qualified counsel. CompCleared does not provide legal advice.</p>
                     </div>
 
                     <div className="form-actions">
@@ -146,7 +146,7 @@ const TrainingLog = () => {
                             Cancel
                         </button>
                         <button type="submit" className="btn-primary" disabled={loading}>
-                            {loading ? 'Saving...' : 'Certify Training Session'}
+                            {loading ? 'Saving...' : 'Save Training Record'}
                         </button>
                     </div>
                 </form>

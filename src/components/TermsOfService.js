@@ -47,7 +47,7 @@ const TermsOfService = () => {
                 </p>
                 <p style={{ marginBottom: '16px' }}>
                     <strong>Subscription billing.</strong> Paid plans are purchased through Stripe Checkout and renew
-                    according to the plan you select. Prices are shown in USD, and any applicable taxes are shown by Stripe at checkout.
+                    according to the plan you select. Prices are shown in USD. Contact support with billing or tax questions.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
                     <strong>Billing and refund questions.</strong> Email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a> with billing or refund questions.
