@@ -178,6 +178,12 @@ def health():
 def signup():
     """Create a new user account"""
     data = request.json
+    company_id = session.get('verified_checkout_company_id')
+    if not company_id:
+        return jsonify({
+            'success': False,
+            'error': 'Complete payment verification before creating an account'
+        }), 403
     
     conn = get_db()
     c = conn.cursor()
@@ -197,7 +203,7 @@ def signup():
             company_id, email, password_hash, name, role, created_at
         ) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id''',
         (
-            data.get('company_id'),
+            company_id,
             data['email'],
             password_hash,
             data.get('name', ''),
@@ -210,8 +216,9 @@ def signup():
         
         # Create session
         session['user_id'] = user_id
-        session['company_id'] = data.get('company_id')
+        session['company_id'] = company_id
         session['email'] = data['email']
+        session.pop('verified_checkout_company_id', None)
         
         return jsonify({
             'success': True,
@@ -353,21 +360,41 @@ def verify_session():
         
     try:
         checkout_session = stripe.checkout.Session.retrieve(session_id)
-        
-        if checkout_session.payment_status == 'paid':
-            conn = get_db()
-            c = conn.cursor()
-            c.execute('''UPDATE companies
-                         SET subscription_status = 'active',
-                             stripe_customer_id = %s,
-                             stripe_subscription_id = %s
-                         WHERE id = %s''',
-                      (checkout_session.customer, checkout_session.subscription, company_id))
-            conn.commit()
+
+        metadata_company_id = checkout_session.metadata.get('company_id')
+        if (metadata_company_id != company_id or
+                checkout_session.client_reference_id != company_id):
+            return jsonify({
+                'success': False,
+                'error': 'Checkout session does not match this company'
+            }), 403
+
+        if checkout_session.payment_status != 'paid' or not checkout_session.subscription:
+            return jsonify({'success': False, 'status': checkout_session.payment_status}), 400
+
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''SELECT id FROM companies
+                     WHERE id = %s AND subscription_status = 'pending' ''',
+                  (company_id,))
+        company = c.fetchone()
+        if not company:
             conn.close()
-            return jsonify({'success': True, 'status': 'active'})
-        else:
-            return jsonify({'success': False, 'status': checkout_session.payment_status})
+            return jsonify({
+                'success': False,
+                'error': 'Company is not awaiting checkout verification'
+            }), 403
+
+        session['verified_checkout_company_id'] = int(company_id)
+        c.execute('''UPDATE companies
+                     SET subscription_status = 'active',
+                         stripe_customer_id = %s,
+                         stripe_subscription_id = %s
+                     WHERE id = %s''',
+                  (checkout_session.customer, checkout_session.subscription, company_id))
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True, 'status': 'active'})
             
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400

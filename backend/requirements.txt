@@ -7,3 +7,4 @@ python-dotenv==1.0.0
 reportlab
 psycopg[binary]==3.2.3
 gunicorn==23.0.0
+pytest==8.3.5
