@@ -52,7 +52,7 @@ const About = () => {
                     <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
                         <li style={{ marginBottom: '8px' }}><strong>SB 553 Workplace Violence Prevention</strong> — written WVPP, 14-field incident log, training tracker, audit-ready PDF</li>
                         <li style={{ marginBottom: '8px' }}>Cal/OSHA inspection-readiness guide and resources</li>
-                        <li style={{ marginBottom: '8px' }}>Email alerts when Cal/OSHA's permanent standard (due Dec 31, 2026) changes the rules</li>
+                        <li style={{ marginBottom: '8px' }}>Cal/OSHA resources to help you keep your plan and records organized</li>
                     </ul>
                     <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginTop: '20px' }}>
                         Coming Q3 2026:

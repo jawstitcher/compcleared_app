@@ -48,6 +48,10 @@ PRICE_IDS = {
     'annual': os.environ.get('STRIPE_PRICE_ANNUAL')
 }
 
+# A Checkout authorization exists only long enough to create the first account.
+# The browser session stores a reference to this row, never the authorization itself.
+CHECKOUT_AUTHORIZATION_TTL = timedelta(minutes=30)
+
 # Database setup for SB 553 Workplace Violence Compliance
 def init_db():
     database_url = get_database_url()
@@ -82,6 +86,28 @@ def init_db():
                     location_id TEXT,
                     created_at TEXT,
                     FOREIGN KEY (company_id) REFERENCES companies (id)
+                )''')
+
+    # This table is intentionally independent of Flask's signed client cookie. It
+    # makes the authorization durable across a webhook/browser race and lets the
+    # signup transaction consume it exactly once.
+    c.execute('''CREATE TABLE IF NOT EXISTS checkout_authorizations (
+                    checkout_session_id TEXT PRIMARY KEY,
+                    company_id INTEGER NOT NULL REFERENCES companies (id),
+                    expires_at TIMESTAMPTZ NOT NULL,
+                    consumed_at TIMESTAMPTZ
+                )''')
+    # Existing databases may have received the initial table before consumed_at
+    # was introduced; this makes the change safe to deploy repeatedly.
+    c.execute('''ALTER TABLE checkout_authorizations
+                 ADD COLUMN IF NOT EXISTS consumed_at TIMESTAMPTZ''')
+    c.execute('''CREATE INDEX IF NOT EXISTS checkout_authorizations_expiry_idx
+                 ON checkout_authorizations (expires_at)''')
+    # Stripe can deliver subscription cancellation before checkout completion.
+    # Retain that fact even while the company is still pending.
+    c.execute('''CREATE TABLE IF NOT EXISTS canceled_stripe_subscriptions (
+                    stripe_subscription_id TEXT PRIMARY KEY,
+                    canceled_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
                 )''')
 
     # Workplace Violence Incidents table (SB 553 compliant)
@@ -178,8 +204,8 @@ def health():
 def signup():
     """Create a new user account"""
     data = request.json
-    company_id = session.get('verified_checkout_company_id')
-    if not company_id:
+    checkout_session_id = session.get('verified_checkout_session_id')
+    if not checkout_session_id:
         return jsonify({
             'success': False,
             'error': 'Complete payment verification before creating an account'
@@ -194,6 +220,24 @@ def signup():
         if c.fetchone():
             conn.close()
             return jsonify({'success': False, 'error': 'Email already registered'}), 400
+
+        # UPDATE ... RETURNING is the one-time authorization consume operation.
+        # It and the user insert share one transaction, so an insert failure rolls
+        # the consumption back instead of stranding a legitimate payer.
+        c.execute('''UPDATE checkout_authorizations SET consumed_at = NOW()
+                     WHERE checkout_session_id = %s AND expires_at > NOW()
+                       AND consumed_at IS NULL
+                     RETURNING company_id''', (checkout_session_id,))
+        authorization = c.fetchone()
+        if not authorization:
+            conn.rollback()
+            conn.close()
+            session.pop('verified_checkout_session_id', None)
+            return jsonify({
+                'success': False,
+                'error': 'Complete payment verification before creating an account'
+            }), 403
+        company_id = authorization['company_id']
         
         # Hash password (using pbkdf2 for compatibility)
         password_hash = generate_password_hash(data['password'], method='pbkdf2:sha256')
@@ -218,7 +262,7 @@ def signup():
         session['user_id'] = user_id
         session['company_id'] = company_id
         session['email'] = data['email']
-        session.pop('verified_checkout_company_id', None)
+        session.pop('verified_checkout_session_id', None)
         
         return jsonify({
             'success': True,
@@ -227,6 +271,7 @@ def signup():
         }), 201
         
     except Exception as e:
+        conn.rollback()
         conn.close()
         return jsonify({'success': False, 'error': str(e)}), 400
 
@@ -361,7 +406,7 @@ def verify_session():
     try:
         checkout_session = stripe.checkout.Session.retrieve(session_id)
 
-        metadata_company_id = checkout_session.metadata.get('company_id')
+        metadata_company_id = (checkout_session.metadata or {}).get('company_id')
         if (metadata_company_id != company_id or
                 checkout_session.client_reference_id != company_id):
             return jsonify({
@@ -374,26 +419,53 @@ def verify_session():
 
         conn = get_db()
         c = conn.cursor()
-        c.execute('''SELECT id FROM companies
-                     WHERE id = %s AND subscription_status = 'pending' ''',
-                  (company_id,))
+        # Serialize checkout completion and cancellation for this Stripe
+        # subscription, even if the cancellation webhook arrives first.
+        c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))', (checkout_session.subscription,))
+        # Browser verification may follow the webhook. Accept only the matching
+        # active subscription in that ordering; a canceled company can never pass.
+        c.execute('''SELECT id, subscription_status, stripe_subscription_id
+                     FROM companies WHERE id = %s FOR UPDATE''', (company_id,))
         company = c.fetchone()
-        if not company:
+        if not company or company['subscription_status'] not in ('pending', 'active'):
             conn.close()
             return jsonify({
                 'success': False,
                 'error': 'Company is not awaiting checkout verification'
             }), 403
 
-        session['verified_checkout_company_id'] = int(company_id)
-        c.execute('''UPDATE companies
-                     SET subscription_status = 'active',
-                         stripe_customer_id = %s,
-                         stripe_subscription_id = %s
-                     WHERE id = %s''',
-                  (checkout_session.customer, checkout_session.subscription, company_id))
+        c.execute('''SELECT stripe_subscription_id
+                     FROM canceled_stripe_subscriptions
+                     WHERE stripe_subscription_id = %s''', (checkout_session.subscription,))
+        if c.fetchone():
+            conn.close()
+            return jsonify({
+                'success': False,
+                'error': 'Company is not awaiting checkout verification'
+            }), 403
+
+        if company['subscription_status'] == 'pending':
+            c.execute('''UPDATE companies
+                         SET subscription_status = 'active',
+                             stripe_customer_id = %s,
+                             stripe_subscription_id = %s
+                         WHERE id = %s AND subscription_status = 'pending' ''',
+                      (checkout_session.customer, checkout_session.subscription, company_id))
+        elif company['stripe_subscription_id'] != checkout_session.subscription:
+            conn.close()
+            return jsonify({
+                'success': False,
+                'error': 'Company is not awaiting checkout verification'
+            }), 403
+
+        c.execute('''INSERT INTO checkout_authorizations (
+                         checkout_session_id, company_id, expires_at
+                     ) VALUES (%s, %s, %s)
+                     ON CONFLICT (checkout_session_id) DO NOTHING''',
+                  (session_id, company_id, datetime.now().astimezone() + CHECKOUT_AUTHORIZATION_TTL))
         conn.commit()
         conn.close()
+        session['verified_checkout_session_id'] = session_id
         return jsonify({'success': True, 'status': 'active'})
             
     except Exception as e:
@@ -416,21 +488,30 @@ def stripe_webhook():
     # Handle subscription events
     if event['type'] == 'checkout.session.completed':
         session_data = event['data']['object']
-        # Try metadata first, then client_reference_id
-        company_id = session_data.get('metadata', {}).get('company_id') or session_data.get('client_reference_id')
+        metadata_company_id = session_data.get('metadata', {}).get('company_id')
+        company_id = session_data.get('client_reference_id')
         
-        if company_id:
+        if (company_id and company_id == metadata_company_id and
+                session_data.get('payment_status') == 'paid' and
+                session_data.get('subscription')):
             conn = get_db()
             c = conn.cursor()
+            c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))',
+                      (session_data['subscription'],))
             c.execute('''UPDATE companies
                          SET subscription_status = %s,
                              stripe_customer_id = %s,
                              stripe_subscription_id = %s
-                         WHERE id = %s''',
+                         WHERE id = %s AND subscription_status = 'pending'
+                           AND NOT EXISTS (
+                               SELECT 1 FROM canceled_stripe_subscriptions
+                               WHERE stripe_subscription_id = %s
+                           )''',
                       ('active', 
                        session_data['customer'],
                        session_data['subscription'],
-                       company_id))
+                       company_id,
+                       session_data['subscription']))
             conn.commit()
             conn.close()
             print(f"✅ Subscription activated for company {company_id}")
@@ -440,6 +521,10 @@ def stripe_webhook():
         
         conn = get_db()
         c = conn.cursor()
+        c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))', (subscription['id'],))
+        c.execute('''INSERT INTO canceled_stripe_subscriptions (stripe_subscription_id)
+                     VALUES (%s) ON CONFLICT (stripe_subscription_id) DO NOTHING''',
+                  (subscription['id'],))
         c.execute('''UPDATE companies
                      SET subscription_status = %s
                      WHERE stripe_subscription_id = %s''',

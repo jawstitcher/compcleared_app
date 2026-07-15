@@ -73,8 +73,8 @@ const TermsOfService = () => {
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>5. Your Content</h2>
                 <p style={{ marginBottom: '24px' }}>
                     You retain all rights to the data and content you upload to CompCleared. We do not claim
-                    ownership of your incident records, training records, or generated plans. You may export
-                    your data at any time.
+                    ownership of your incident records, training records, or generated plans. CompCleared provides
+                    PDF exports for available product records; contact support for other data requests.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>6. Limitation of Liability</h2>

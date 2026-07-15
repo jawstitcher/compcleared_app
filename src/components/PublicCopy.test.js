@@ -4,6 +4,8 @@ import Signup from './Signup';
 import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
 import PricingPage from '../foundation/PricingPage';
+import LandingPage from './LandingPage';
+import About from './About';
 
 const renderPage = (Component) => render(<MemoryRouter><Component /></MemoryRouter>);
 
@@ -32,4 +34,19 @@ test('terms and privacy material updates are posted on their applicable pages', 
   renderPage(PrivacyPolicy);
   expect(screen.queryByText(/announced via email/i)).not.toBeInTheDocument();
   expect(screen.getByText(/material updates.*posted on this page/i)).toBeInTheDocument();
+});
+
+test('marketing pages do not promise refunds, regulatory email alerts, or unrestricted exports', () => {
+  renderPage(LandingPage);
+  expect(screen.queryByText(/14-day money-back guarantee/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/export your audit-ready PDF in one click/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(About);
+  expect(screen.queryByText(/email alerts when Cal\/OSHA/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(TermsOfService);
+  expect(screen.queryByText(/export your data at any time/i)).not.toBeInTheDocument();
+  expect(screen.getByText(/PDF exports for available product records/i)).toBeInTheDocument();
 });

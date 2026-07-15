@@ -75,7 +75,7 @@ function LandingPage() {
                         </button>
                     </div>
                     <p className="hero-trust">
-                        Free readiness check, no signup &nbsp;·&nbsp; Cancel Pro anytime &nbsp;·&nbsp; 14-day money-back guarantee
+                        Free readiness check, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
                     </p>
                 </div>
             </section>
@@ -156,7 +156,7 @@ function LandingPage() {
                     {[
                         { num: '1', title: 'Answer 5 questions about your business', time: '60 seconds' },
                         { num: '2', title: 'Log incidents & training as they happen', time: '2 minutes per entry' },
-                        { num: '3', title: 'Export your audit-ready PDF in one click', time: '30 seconds' }
+                        { num: '3', title: 'Generate available PDF records when you need them', time: '30 seconds' }
                     ].map((step) => (
                         <div key={step.num} style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px' }}>
                             <div style={{ fontSize: '36px', fontWeight: '800', color: '#10B981', marginBottom: '8px' }}>
@@ -189,7 +189,7 @@ function LandingPage() {
                         </button>
                     </div>
                     <p style={{ fontSize: '13px', color: '#94A3B8', marginTop: '16px' }}>
-                        Free check, no signup &nbsp;·&nbsp; Cancel Pro anytime &nbsp;·&nbsp; 14-day money-back guarantee
+                        Free check, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
                     </p>
                 </div>
             </section>

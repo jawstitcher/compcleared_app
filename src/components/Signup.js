@@ -75,8 +75,6 @@ function Signup() {
             const data = await response.json();
 
             if (data.success) {
-                // Save company_id for after payment
-                sessionStorage.setItem('company_id', data.company_id);
                 sessionStorage.setItem('signup_data', JSON.stringify(formData));
 
                 // Redirect to Stripe checkout
@@ -96,8 +94,6 @@ function Signup() {
         setError('');
         setLoading(true);
 
-        const company_id = sessionStorage.getItem('company_id');
-
         try {
             const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
             const response = await fetch(`${apiUrl}/api/signup`, {
@@ -105,7 +101,6 @@ function Signup() {
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({
-                    company_id: parseInt(company_id),
                     email: formData.email,
                     password: formData.password,
                     name: formData.name,
@@ -116,7 +111,6 @@ function Signup() {
             const data = await response.json();
 
             if (data.success) {
-                sessionStorage.removeItem('company_id');
                 sessionStorage.removeItem('signup_data');
                 navigate('/dashboard');
             } else {
@@ -140,11 +134,13 @@ function Signup() {
             const verifyPayment = async () => {
                 try {
                     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-                    const res = await fetch(`${apiUrl}/api/verify-session?session_id=${sessionId}&company_id=${companyId}`);
+                    const res = await fetch(
+                        `${apiUrl}/api/verify-session?session_id=${sessionId}&company_id=${companyId}`,
+                        { credentials: 'include' }
+                    );
                     const verificationData = await res.json();
 
                     if (verificationData.success) {
-                        sessionStorage.setItem('company_id', companyId);
                         const savedData = sessionStorage.getItem('signup_data');
                         if (savedData) {
                             setFormData(JSON.parse(savedData));
