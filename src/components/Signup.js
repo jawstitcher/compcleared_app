@@ -14,7 +14,6 @@ const TIERS = {
             'Violent Incident Log (digital, all 14 fields)',
             'Training tracker (annual, initial, post-incident, new-hazard)',
             'Audit-ready PDF export (one click)',
-            '14-day money-back guarantee',
         ]
     },
     annual: {
@@ -275,7 +274,7 @@ function Signup() {
                         </div>
 
                         <p style={{ marginBottom: '16px', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>
-                            You’ll be taken to Stripe to complete your selected paid plan. The free readiness check is available without an account.
+                            You’ll be taken to Stripe to complete your selected paid plan. The free readiness check is available without an account. For billing or refund questions, email support@compcleared.com.
                         </p>
                         <button
                             type="submit"

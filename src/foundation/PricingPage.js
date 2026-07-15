@@ -133,7 +133,6 @@ const PricingPage = () => {
                                 'Violent Incident Log (digital, all 14 fields)',
                                 'Training tracker (annual, initial, post-incident, new-hazard)',
                                 'Audit-ready PDF export (one click)',
-                                '14-day money-back guarantee',
                             ].map((f, i) => (
                                 <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '15px', color: i === 0 ? '#CBD5E1' : '#fff' }}>
                                     {i === 0 ? (
@@ -171,7 +170,7 @@ const PricingPage = () => {
                         {[
                             { q: 'How do I manage my subscription?', a: 'Manage your subscription through Stripe’s secure billing portal. For refunds or data requests, email support@compcleared.com.' },
                             { q: 'Do you charge sales tax?', a: 'Prices are shown in USD. Any applicable taxes are shown by Stripe at checkout.' },
-                            { q: 'Is there a guarantee?', a: 'Yes. CompCleared offers a 14-day money-back guarantee on paid subscriptions. The SB 553 applicability check and resources do not require a card.' },
+                            { q: 'How are billing or refund questions handled?', a: 'For billing or refund questions, email support@compcleared.com. The SB 553 applicability check and resources do not require a card.' },
                         ].map((item, i) => (
                             <div key={i} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '20px' }}>
                                 <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>{item.q}</h3>

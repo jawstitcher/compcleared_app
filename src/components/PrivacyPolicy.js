@@ -71,8 +71,8 @@ const PrivacyPolicy = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>7. Changes to This Policy</h2>
                 <p style={{ marginBottom: '24px' }}>
-                    We may update this policy from time to time. Material changes will be announced via email and
-                    on this page. The "Effective Date" at the top reflects the most recent update.
+                    We may update this policy from time to time. Material updates will be posted on this page. The
+                    "Effective Date" at the top reflects the most recent update.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>8. Contact</h2>

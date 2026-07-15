@@ -42,17 +42,15 @@ const TermsOfService = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>2. Subscriptions and Payment</h2>
                 <p style={{ marginBottom: '16px' }}>
-                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year) with a 14-day
-                    money-back guarantee. By providing a payment method, you authorize us to charge the applicable fees.
+                    CompCleared Pro is offered as a recurring subscription ($19/month or $149/year). By providing a
+                    payment method, you authorize us to charge the applicable fees.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
                     <strong>Subscription billing.</strong> Paid plans are purchased through Stripe Checkout and renew
                     according to the plan you select. Prices are shown in USD, and any applicable taxes are shown by Stripe at checkout.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
-                    <strong>14-Day Money-Back Guarantee.</strong> If you are not satisfied with a paid subscription
-                    within the first 14 days, email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a> for
-                    a full refund.
+                    <strong>Billing and refund questions.</strong> Email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a> with billing or refund questions.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>3. Cancellation</h2>
@@ -60,7 +58,7 @@ const TermsOfService = () => {
                     You may manage your subscription through Stripe’s secure billing portal.
                 </p>
                 <p style={{ marginBottom: '24px' }}>
-                    For refunds or data requests, email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
+                    For data requests, email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>4. Acceptable Use</h2>
@@ -118,9 +116,8 @@ const TermsOfService = () => {
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>10. Changes to These Terms</h2>
                 <p style={{ marginBottom: '24px' }}>
-                    We may update these Terms from time to time. Material changes will be announced via email at
-                    least 30 days before they take effect. Continued use of CompCleared after the effective date
-                    constitutes acceptance of the updated Terms.
+                    We may update these Terms from time to time. Material updates will be posted on this page.
+                    Continued use of CompCleared after the effective date constitutes acceptance of the updated Terms.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>11. Contact</h2>
