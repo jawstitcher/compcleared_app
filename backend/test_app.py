@@ -17,6 +17,30 @@ def test_generated_pdf_copy_does_not_certify_compliance_or_legal_defensibility()
     assert "audit trails for legal defensibility" not in source
 
 
+def test_written_plan_pdf_is_a_customizable_template_without_unimplemented_commitments():
+    source = Path(app_module.__file__).read_text()
+    written_plan_source = source[source.index("def generate_written_plan"):]
+
+    assert "customizable workplace violence prevention plan template" in written_plan_source.lower()
+    assert "not legal advice" in written_plan_source.lower()
+    assert "portal accessible to all employees" not in written_plan_source.lower()
+    assert "ensures that all employees are involved" not in written_plan_source.lower()
+    assert "all findings will be recorded" not in written_plan_source.lower()
+    assert "all employees will receive initial and annual training" not in written_plan_source.lower()
+    assert "as required by law" not in written_plan_source.lower()
+
+
+def test_public_document_metadata_uses_a_neutral_plan_and_records_title():
+    project_root = Path(app_module.__file__).parents[1]
+    manifest = (project_root / "public" / "manifest.json").read_text()
+    index_html = (project_root / "public" / "index.html").read_text()
+
+    assert "Workplace Violence Prevention Plan & Records" in manifest
+    assert "SB 553 Compliance" not in manifest
+    assert "Workplace Violence Prevention Plan &amp; Records" in index_html
+    assert "SB 553 Workplace Violence Compliance" not in index_html
+
+
 class StatefulCheckoutDb:
     """Small in-memory transaction fake for signup/cancellation ordering tests."""
 

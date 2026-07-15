@@ -55,10 +55,10 @@ const About = () => {
                         <li style={{ marginBottom: '8px' }}>Cal/OSHA resources to help you keep your plan and records organized</li>
                     </ul>
                     <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginTop: '20px' }}>
-                        Coming Q3 2026:
+                        Planned tools:
                     </p>
                     <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
-                        <li style={{ marginBottom: '8px' }}><strong>OSHA 300 / 300A Injury Logs</strong> — extend your incident log to all workplace injuries, auto-fill end-of-year Cal/OSHA forms</li>
+                        <li style={{ marginBottom: '8px' }}><strong>OSHA 300 / 300A Injury Logs</strong> — planned tools for organizing workplace injury records</li>
                         <li style={{ marginBottom: '8px' }}><strong>California Employee Handbook Generator</strong> — customizable handbook templates for review</li>
                     </ul>
                 </section>

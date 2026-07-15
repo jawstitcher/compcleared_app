@@ -9,6 +9,7 @@ import About from './About';
 import FAQ from './FAQ';
 import ComplianceHub from '../foundation/ComplianceHub';
 import Resources from '../foundation/Resources';
+import ExposureCheck from '../foundation/ExposureCheck';
 
 const renderPage = (Component) => render(<MemoryRouter><Component /></MemoryRouter>);
 
@@ -108,4 +109,27 @@ test('public pages use available PDF exports and cautious legal language', () =>
 
   renderPage(About);
   expect(screen.queryByText(/workplace safety experts/i)).not.toBeInTheDocument();
+});
+
+test('readiness check is an educational self-assessment and does not determine legal applicability', () => {
+  renderPage(ExposureCheck);
+
+  expect(screen.getByRole('heading', { name: /workplace violence prevention self-assessment/i })).toBeInTheDocument();
+  expect(screen.getByText(/may apply.*consult qualified california counsel/i)).toBeInTheDocument();
+  expect(screen.queryByText(/is sb 553 a problem for your business/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/annual training is required/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/protects you from civil liability/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/cal\/osha-aligned/i)).not.toBeInTheDocument();
+});
+
+test('public content does not promise future Form 300 autofill or dated feature delivery', () => {
+  renderPage(LandingPage);
+
+  expect(screen.queryByText(/auto-fill your end-of-year cal\/osha form 300/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/coming q3 2026/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(About);
+  expect(screen.queryByText(/coming q3 2026/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/auto-fill end-of-year cal\/osha forms/i)).not.toBeInTheDocument();
 });

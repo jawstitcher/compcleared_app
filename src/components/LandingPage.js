@@ -16,7 +16,7 @@ const MODULES = [
     {
         name: 'OSHA 300 / 300A Injury Logs',
         status: 'coming-soon',
-        description: 'Extend your incident log to cover all workplace injuries. Auto-fill your end-of-year Cal/OSHA Form 300.',
+        description: 'Planned injury-log tools for organizing workplace injury records.',
         icon: ClipboardList
     },
     {
@@ -97,7 +97,7 @@ function LandingPage() {
                     One place for workplace violence prevention records.
                 </h2>
                 <p style={{ fontSize: '16px', color: '#64748b', textAlign: 'center', marginBottom: '48px' }}>
-                    Start with SB 553 today. OSHA 300 and Employee Handbooks ship next.
+                    CompCleared currently helps organize workplace violence prevention records. Other tools are planned.
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
                     {MODULES.map((mod) => {
@@ -121,7 +121,7 @@ function LandingPage() {
                                         textTransform: 'uppercase', letterSpacing: '0.5px',
                                         display: 'flex', alignItems: 'center', gap: '4px'
                                     }}>
-                                        <Lock size={11} /> Coming Q3 2026
+                                        <Lock size={11} /> Planned
                                     </div>
                                 )}
                                 {isActive && (
