@@ -112,3 +112,15 @@ When ready for real payments:
 7. Redeploy Railway and Vercel if they do not auto-redeploy after env changes.
 
 Never paste `sk_live_`, `whsec_`, or database URLs into chat.
+
+### Live billing readiness
+
+- Railway `STRIPE_SECRET_KEY` begins with `sk_live_`.
+- Railway `STRIPE_PRICE_MONTHLY` and `STRIPE_PRICE_ANNUAL` match live-mode Stripe Price IDs.
+- Railway `STRIPE_WEBHOOK_SECRET` is copied from the active live webhook destination.
+- Railway changes are deployed and `/api/health` returns 200.
+- Stripe Billing Portal is configured to allow subscription cancellation.
+
+Open `/signup`, select each plan, and stop when Stripe opens Checkout. Confirm it is live mode and shows the intended product, price, and billing interval. Do not enter a card during this no-charge check.
+
+After the owner authorizes a small real purchase, confirm the live webhook delivery succeeds, the company activates, and the Stripe Billing Portal opens. Refund/cancel through the portal only after recording the result.
