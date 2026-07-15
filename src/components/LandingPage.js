@@ -10,7 +10,7 @@ const MODULES = [
     {
         name: 'SB 553 Workplace Violence Prevention',
         status: 'active',
-        description: 'Written WVPP, digital incident log, training tracker, audit-ready PDF.',
+        description: 'Plan template, digital incident log, training tracker, and available PDF exports.',
         icon: ShieldCheck
     },
     {
@@ -22,7 +22,7 @@ const MODULES = [
     {
         name: 'California Employee Handbook Generator',
         status: 'coming-soon',
-        description: 'Generate a customized, California-compliant employee handbook. Updates when labor laws change.',
+        description: 'Customizable employee handbook templates for review when this module becomes available.',
         icon: BarChart3
     }
 ];

@@ -28,8 +28,8 @@ const About = () => {
                     <span style={{ color: '#10B981', fontWeight: '700' }}>Organize records. Stay prepared.</span>
                 </p>
                 <p style={{ fontSize: '18px', lineHeight: '1.6', color: '#475569', textAlign: 'center', marginBottom: '60px' }}>
-                    CompCleared was built by workplace safety experts to take the anxiety out of California labor laws.
-                    We turn complex regulatory mandates into simple, 2-minute workflows so business owners can focus on building their empire.
+                    CompCleared is built by a small independent team to make workplace violence prevention record organization less daunting.
+                    We provide straightforward tools that help business owners keep information together while they consult qualified professionals about their obligations.
                 </p>
 
                 <section style={{ marginBottom: '60px' }}>

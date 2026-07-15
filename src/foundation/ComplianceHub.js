@@ -1,17 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { FileText, AlertTriangle, MessageSquare, CheckCircle, Send, User } from 'lucide-react';
-import { apiUrl } from '../api';
+import { FileText, AlertTriangle, MessageSquare, Send, User } from 'lucide-react';
 import './ComplianceHub.css';
 
 const ComplianceHub = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([
-        { id: 1, sender: 'bot', text: 'I am the CompCleared Compliance Assistant. Ask me any question about your workplace safety plan to satisfy your SB 553 interactive training requirement.' }
+        { id: 1, sender: 'bot', text: 'I am the CompCleared Plan & Record Helper. I can help you find and organize information in your workplace violence prevention materials. I do not provide legal advice or certify training.' }
     ]);
     const [input, setInput] = useState('');
-    const [trainingComplete, setTrainingComplete] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -32,12 +30,12 @@ const ComplianceHub = () => {
 
         // Simulate AI Response (In production, this hits an LLM endpoint)
         setTimeout(() => {
-            let botText = "That is a great question regarding your specific Workplace Violence Prevention Plan. According to Cal/OSHA standards, employees should report such concerns immediately via the 'Report Incident' button on this dashboard. Would you like to know more about the reporting hierarchy?";
+            let botText = "You can use this workspace to locate the relevant plan materials and organize the information you enter. Review your organization's procedures and consult qualified counsel for guidance on applicable requirements.";
 
             if (input.toLowerCase().includes('emergency') || input.toLowerCase().includes('911')) {
-                botText = "In an emergency, your first action must always be to dial 911. After you are safe, please log the incident here.";
+                botText = "If there is an emergency, contact emergency services when it is safe to do so and follow your organization's procedures. You can organize incident information here afterward.";
             } else if (input.toLowerCase().includes('evacuation') || input.toLowerCase().includes('escape')) {
-                botText = "Your specific plan details evacuation routes. Generally, move away from the threat toward the nearest secure exit. Do not return for personal items.";
+                botText = "Refer to your organization's written procedures for evacuation and emergency response. This helper can help you locate and organize related plan materials.";
             }
 
             const botMsg = { id: messages.length + 2, sender: 'bot', text: botText };
@@ -45,35 +43,12 @@ const ComplianceHub = () => {
         }, 1000);
     };
 
-    const markTrainingComplete = async () => {
-        try {
-            const response = await fetch(apiUrl('/api/training'), {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    training_date: new Date().toISOString().split('T')[0],
-                    training_type: 'Interactive AI Session',
-                    trainer_name: 'CompCleared AI Assistant v2.1',
-                    topic_description: 'SB 553 Interactive Q&A: Plan Review and Incident Reporting Protocols',
-                    attendee_count: 1
-                })
-            });
-
-            if (response.ok) {
-                setTrainingComplete(true);
-            }
-        } catch (error) {
-            console.error("Failed to log training", error);
-        }
-    };
-
     return (
         <div className="hub-container">
             <nav className="hub-nav">
                 <div onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Logo size="small" />
-                    <span className="hub-title">Employee Compliance Hub</span>
+                    <span className="hub-title">Employee Record Organization Hub</span>
                 </div>
                 <button className="btn-outline-sm" onClick={() => navigate('/dashboard')}>Back to Dashboard</button>
             </nav>
@@ -84,7 +59,7 @@ const ComplianceHub = () => {
                     <div className="action-card plan-card">
                         <div className="icon-wrapper"><FileText size={32} /></div>
                         <h3>Workplace Violence Prevention Plan</h3>
-                        <p>Review the official safety protocols for your location.</p>
+                        <p>Review the workplace violence prevention materials for your location.</p>
                         <button className="btn-action" onClick={() => alert("Opening PDF Generator...")}>View My Plan (PDF)</button>
                     </div>
 
@@ -96,25 +71,16 @@ const ComplianceHub = () => {
                     </div>
                 </div>
 
-                {/* Right Column: AI Trainer */}
+                {/* Right Column: AI helper */}
                 <div className="hub-chat">
                     <div className="chat-header">
                         <div className="chat-header-info">
                             <MessageSquare size={20} />
                             <div>
-                                <h3>Interactive Safety Assistant</h3>
+                                <h3>Plan &amp; Record Helper</h3>
                                 <div className="online-status"><span className="dot"></span> Online</div>
                             </div>
                         </div>
-                        {!trainingComplete ? (
-                            <button className="btn-complete" onClick={markTrainingComplete}>
-                                Mark Training Complete
-                            </button>
-                        ) : (
-                            <div className="completion-badge">
-                                <CheckCircle size={16} /> Training Logged
-                            </div>
-                        )}
                     </div>
 
                     <div className="chat-body">
@@ -134,14 +100,14 @@ const ComplianceHub = () => {
                         <form onSubmit={handleSend} className="chat-input-container">
                             <input
                                 type="text"
-                                placeholder="Ask a question about the safety plan..."
+                                placeholder="Ask about your plan or records..."
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                             />
                             <button type="submit" disabled={!input.trim()}><Send size={18} /></button>
                         </form>
                         <p className="legal-disclaimer">
-                            Interactions are logged for compliance purposes (SB 553 Training Record).
+                            This helper does not create training records or certify training. Review applicable requirements with qualified counsel.
                         </p>
                     </div>
                 </div>

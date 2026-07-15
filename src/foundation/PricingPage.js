@@ -70,7 +70,6 @@ const PricingPage = () => {
                             {[
                                 'Free SB 553 applicability check (5 questions)',
                                 'Read the SB 553 reference guide',
-                                'Download the Cal/OSHA model WVPP template',
                                 'No account required'
                             ].map((f, i) => (
                                 <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '15px', color: '#334155' }}>
@@ -129,10 +128,10 @@ const PricingPage = () => {
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {[
                                 'Everything in Free, plus:',
-                                'Customized WVPP generator (PDF, all 6 sections)',
+                                'Customized WVPP plan template',
                                 'Violent Incident Log (digital, all 14 fields)',
                                 'Training tracker (annual, initial, post-incident, new-hazard)',
-                                'Audit-ready PDF export (one click)',
+                                'Available PDF exports for product records',
                             ].map((f, i) => (
                                 <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '15px', color: i === 0 ? '#CBD5E1' : '#fff' }}>
                                     {i === 0 ? (

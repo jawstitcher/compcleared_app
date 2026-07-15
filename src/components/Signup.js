@@ -10,10 +10,10 @@ const TIERS = {
         price: '$19/month',
         employees: 'For any California employer',
         features: [
-            'Customized WVPP generator (PDF, all 6 sections)',
+            'Customized WVPP plan template',
             'Violent Incident Log (digital, all 14 fields)',
             'Training tracker (annual, initial, post-incident, new-hazard)',
-            'Audit-ready PDF export (one click)',
+            'Available PDF exports for product records',
         ]
     },
     annual: {
