@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import Footer from './Footer';
-import { ShieldCheck, ClipboardList, BarChart3, AlertTriangle, Lock } from 'lucide-react';
+import { ShieldCheck, AlertTriangle } from 'lucide-react';
 import FAQ from './FAQ';
 import './LandingPage.css';
 
@@ -12,18 +12,6 @@ const MODULES = [
         status: 'active',
         description: 'Plan template, digital incident log, training tracker, and available PDF exports.',
         icon: ShieldCheck
-    },
-    {
-        name: 'OSHA 300 / 300A Injury Logs',
-        status: 'coming-soon',
-        description: 'Planned injury-log tools for organizing workplace injury records.',
-        icon: ClipboardList
-    },
-    {
-        name: 'California Employee Handbook Generator',
-        status: 'coming-soon',
-        description: 'Customizable employee handbook templates for review when this module becomes available.',
-        icon: BarChart3
     }
 ];
 
@@ -68,14 +56,14 @@ function LandingPage() {
                     </p>
                     <div className="hero-actions">
                         <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
-                            Free SB 553 Readiness Check →
+                            Free Educational Self-Assessment →
                         </button>
                         <button className="btn-hero-secondary" onClick={() => navigate('/signup')}>
                             Start CompCleared Pro · $19/mo
                         </button>
                     </div>
                     <p className="hero-trust">
-                        Free readiness check, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
+                        Free self-assessment, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
                     </p>
                 </div>
             </section>
@@ -97,7 +85,7 @@ function LandingPage() {
                     One place for workplace violence prevention records.
                 </h2>
                 <p style={{ fontSize: '16px', color: '#64748b', textAlign: 'center', marginBottom: '48px' }}>
-                    CompCleared currently helps organize workplace violence prevention records. Other tools are planned.
+                    CompCleared helps organize workplace violence prevention records.
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
                     {MODULES.map((mod) => {
@@ -112,18 +100,6 @@ function LandingPage() {
                                 position: 'relative',
                                 opacity: isActive ? 1 : 0.85
                             }}>
-                                {!isActive && (
-                                    <div style={{
-                                        position: 'absolute', top: '16px', right: '16px',
-                                        background: '#fef3c7', color: '#92400e',
-                                        fontSize: '11px', fontWeight: '700',
-                                        padding: '4px 10px', borderRadius: '12px',
-                                        textTransform: 'uppercase', letterSpacing: '0.5px',
-                                        display: 'flex', alignItems: 'center', gap: '4px'
-                                    }}>
-                                        <Lock size={11} /> Planned
-                                    </div>
-                                )}
                                 {isActive && (
                                     <div style={{
                                         position: 'absolute', top: '16px', right: '16px',
@@ -177,19 +153,19 @@ function LandingPage() {
                         See where you stand — then organize your records
                     </h2>
                     <p style={{ fontSize: '17px', color: '#CBD5E1', maxWidth: '560px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-                        Start with the free SB 553 readiness check. When you're ready, CompCleared Pro
+                        Start with the free educational self-assessment. When you're ready, CompCleared Pro
                         helps organize your plan, incident log, and available PDF records for $19/month.
                     </p>
                     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
-                            Free SB 553 Readiness Check →
+                            Free Educational Self-Assessment →
                         </button>
                         <button className="btn-cta" onClick={() => navigate('/signup')}>
                             Start CompCleared Pro
                         </button>
                     </div>
                     <p style={{ fontSize: '13px', color: '#94A3B8', marginTop: '16px' }}>
-                        Free check, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
+                        Free self-assessment, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
                     </p>
                 </div>
             </section>

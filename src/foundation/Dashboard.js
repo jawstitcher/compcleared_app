@@ -182,7 +182,7 @@ const Dashboard = () => {
                     <div className="header-actions">
                         <button className="btn btn-secondary" onClick={() => window.open(apiUrl('/api/report/pdf'), '_blank')}>
                             <Download size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                            Export Audit Log (PDF)
+                            Export Incident Summary (PDF)
                         </button>
                         <button className="btn btn-primary" onClick={() => window.location.href = '/'}>
                             <PlusCircle size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />

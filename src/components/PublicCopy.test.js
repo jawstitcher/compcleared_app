@@ -10,6 +10,7 @@ import FAQ from './FAQ';
 import ComplianceHub from '../foundation/ComplianceHub';
 import Resources from '../foundation/Resources';
 import ExposureCheck from '../foundation/ExposureCheck';
+import Dashboard from '../foundation/Dashboard';
 
 const renderPage = (Component) => render(<MemoryRouter><Component /></MemoryRouter>);
 
@@ -132,4 +133,41 @@ test('public content does not promise future Form 300 autofill or dated feature 
   renderPage(About);
   expect(screen.queryByText(/coming q3 2026/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/auto-fill end-of-year cal\/osha forms/i)).not.toBeInTheDocument();
+});
+
+test('public pages describe the free tool as an educational self-assessment', () => {
+  renderPage(PricingPage);
+
+  expect(screen.getByRole('button', { name: /start free self-assessment/i })).toBeInTheDocument();
+  expect(screen.getByText(/free educational self-assessment.*5 questions/i)).toBeInTheDocument();
+  expect(screen.queryByText(/applicability check/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(Resources);
+  expect(screen.getByText(/learn about workplace violence prevention plan considerations/i)).toBeInTheDocument();
+});
+
+test('marketing pages do not promote unavailable or planned products', () => {
+  renderPage(LandingPage);
+
+  expect(screen.queryByText(/OSHA 300 \/ 300A Injury Logs/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Employee Handbook Generator/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/other tools are planned/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(About);
+  expect(screen.queryByText(/planned tools/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/OSHA 300 \/ 300A Injury Logs/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Employee Handbook Generator/i)).not.toBeInTheDocument();
+});
+
+test('dashboard calls the incident PDF an export summary, not an audit log', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    json: async () => ({ success: true, incidents: [], stats: { total_incidents: 0, by_type: [], recent_30_days: 0 }, training_records: [] })
+  });
+
+  renderPage(Dashboard);
+
+  expect(await screen.findByRole('button', { name: /export incident summary \(PDF\)/i })).toBeInTheDocument();
+  expect(screen.queryByText(/export audit log/i)).not.toBeInTheDocument();
 });

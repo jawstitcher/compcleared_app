@@ -28,6 +28,19 @@ def test_written_plan_pdf_is_a_customizable_template_without_unimplemented_commi
     assert "all findings will be recorded" not in written_plan_source.lower()
     assert "all employees will receive initial and annual training" not in written_plan_source.lower()
     assert "as required by law" not in written_plan_source.lower()
+    assert "Effective Date: [Customer to complete]" in written_plan_source
+    assert "Last Review Date: [Customer to complete]" in written_plan_source
+    assert "datetime.now().strftime('%B %d, %Y')" not in written_plan_source
+
+
+def test_incident_pdf_is_labeled_as_a_non_exhaustive_customer_record_summary():
+    source = Path(app_module.__file__).read_text()
+    incident_report_source = source[source.index("def generate_pdf_report"):source.index("def generate_written_plan")]
+
+    assert "WORKPLACE VIOLENCE INCIDENT RECORD SUMMARY" in incident_report_source
+    assert "Customer organization: {company['name']}" in incident_report_source
+    assert "not a complete record of every incident" in incident_report_source.lower()
+    assert "CALIFORNIA SB 553 COMPLIANCE" not in incident_report_source
 
 
 def test_public_document_metadata_uses_a_neutral_plan_and_records_title():

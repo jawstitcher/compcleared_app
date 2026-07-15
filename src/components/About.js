@@ -54,13 +54,6 @@ const About = () => {
                         <li style={{ marginBottom: '8px' }}>General workplace violence prevention guides and resources</li>
                         <li style={{ marginBottom: '8px' }}>Cal/OSHA resources to help you keep your plan and records organized</li>
                     </ul>
-                    <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#334155', marginTop: '20px' }}>
-                        Planned tools:
-                    </p>
-                    <ul style={{ listStyleType: 'disc', paddingLeft: '24px', color: '#334155', lineHeight: '1.8' }}>
-                        <li style={{ marginBottom: '8px' }}><strong>OSHA 300 / 300A Injury Logs</strong> — planned tools for organizing workplace injury records</li>
-                        <li style={{ marginBottom: '8px' }}><strong>California Employee Handbook Generator</strong> — customizable handbook templates for review</li>
-                    </ul>
                 </section>
 
                 <section style={{ marginBottom: '60px' }}>

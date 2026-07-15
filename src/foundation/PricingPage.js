@@ -27,7 +27,7 @@ const PricingPage = () => {
                         Simple pricing. No surprises.
                     </h1>
                     <p style={{ fontSize: '18px', color: '#475569', maxWidth: '640px', margin: '0 auto' }}>
-                        Start with the free readiness check, then use Pro to organize your plan, training records, and incident log.
+                        Start with the free educational self-assessment, then use Pro to organize your plan, training records, and incident log.
                     </p>
                 </div>
 
@@ -64,11 +64,11 @@ const PricingPage = () => {
                                 marginBottom: '24px'
                             }}
                         >
-                            Check SB 553 Requirements
+                            Start Free Self-Assessment
                         </button>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {[
-                                'Free SB 553 applicability check (5 questions)',
+                                'Free educational self-assessment (5 questions)',
                                 'Read the SB 553 reference guide',
                                 'No account required'
                             ].map((f, i) => (
@@ -169,7 +169,7 @@ const PricingPage = () => {
                         {[
                             { q: 'How do I manage my subscription?', a: 'Manage your subscription through Stripe’s secure billing portal. For refunds or data requests, email support@compcleared.com.' },
                             { q: 'Do you charge sales tax?', a: 'Prices are shown in USD. Contact support@compcleared.com with billing or tax questions.' },
-                            { q: 'How are billing or refund questions handled?', a: 'For billing or refund questions, email support@compcleared.com. The SB 553 applicability check and resources do not require a card.' },
+                            { q: 'How are billing or refund questions handled?', a: 'For billing or refund questions, email support@compcleared.com. The educational self-assessment and resources do not require a card.' },
                         ].map((item, i) => (
                             <div key={i} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '20px' }}>
                                 <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>{item.q}</h3>

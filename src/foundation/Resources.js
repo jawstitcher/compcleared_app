@@ -37,7 +37,7 @@ CompCleared helps organize plan, training, and incident records; it does not det
     {
         slug: 'wvpp-vs-iipp',
         title: 'WVPP vs IIPP: What\'s the Difference?',
-        summary: 'If you already have an Injury and Illness Prevention Program, do you still need a separate Workplace Violence Prevention Plan? Yes.',
+        summary: 'Learn about workplace violence prevention plan considerations alongside an Injury and Illness Prevention Program.',
         readTime: '3 min',
         status: 'available',
         content: `Many California employers already have an Injury and Illness Prevention Program (IIPP) — Cal/OSHA has required it since 1991. A reasonable question is: do you still need a separate Workplace Violence Prevention Plan (WVPP) under SB 553?
