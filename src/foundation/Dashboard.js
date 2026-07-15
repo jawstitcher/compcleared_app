@@ -59,6 +59,16 @@ const Dashboard = () => {
         });
     };
 
+    const openBillingPortal = async () => {
+        const response = await fetch(apiUrl('/api/billing-portal'), {
+            method: 'POST',
+            credentials: 'include'
+        });
+        const data = await response.json();
+        if (data.success) window.location.assign(data.url);
+        else window.alert(data.error || 'Unable to open subscription management.');
+    };
+
     if (loading) {
         return (
             <div className="dashboard">
@@ -71,6 +81,9 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="dashboard-header">
                 <Logo size="large" />
+                <button className="btn btn-outline manage-subscription" onClick={openBillingPortal}>
+                    Manage subscription
+                </button>
                 <h1>SB 553 Compliance Dashboard</h1>
             </div>
 

@@ -451,6 +451,25 @@ def stripe_webhook():
 
 # Protected endpoints (require auth + subscription)
 
+@app.route('/api/billing-portal', methods=['POST'])
+@login_required
+@subscription_required
+def create_billing_portal():
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('SELECT stripe_customer_id FROM companies WHERE id = %s', (session['company_id'],))
+    company = c.fetchone()
+    conn.close()
+
+    if not company or not company['stripe_customer_id']:
+        return jsonify({'success': False, 'error': 'Billing account is not available yet'}), 409
+
+    portal_session = stripe.billing_portal.Session.create(
+        customer=company['stripe_customer_id'],
+        return_url=f'{FRONTEND_URL}/dashboard',
+    )
+    return jsonify({'success': True, 'url': portal_session.url})
+
 @app.route('/api/incidents', methods=['POST'])
 @login_required
 @subscription_required

@@ -1,6 +1,6 @@
 import os
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 os.environ.pop("DATABASE_URL", None)
 
@@ -38,3 +38,30 @@ def test_signup_rejects_client_selected_company_without_verified_checkout(client
     })
     assert response.status_code == 403
     assert response.get_json()["error"] == "Complete payment verification before creating an account"
+
+
+def test_billing_portal_requires_login(client):
+    response = client.post("/api/billing-portal")
+    assert response.status_code == 401
+
+
+def test_billing_portal_uses_signed_in_company_customer_id(client):
+    fake_connection = MagicMock()
+    fake_cursor = fake_connection.cursor.return_value
+    fake_cursor.fetchone.return_value = {
+        "subscription_status": "active",
+        "stripe_customer_id": "cus_correct",
+    }
+    portal = SimpleNamespace(url="https://billing.stripe.com/session/test")
+    with client.session_transaction() as flask_session:
+        flask_session["user_id"] = 11
+        flask_session["company_id"] = 7
+    with patch.object(app_module, "get_db", return_value=fake_connection), \
+         patch.object(app_module.stripe.billing_portal.Session, "create", return_value=portal) as create:
+        response = client.post("/api/billing-portal")
+    assert response.status_code == 200
+    assert response.get_json()["url"] == portal.url
+    create.assert_called_once_with(
+        customer="cus_correct",
+        return_url=app_module.FRONTEND_URL + "/dashboard",
+    )
