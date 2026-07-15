@@ -23,9 +23,7 @@ const PrivacyPolicy = () => {
 
                 <p style={{ marginBottom: '24px' }}>
                     This Privacy Policy describes how CompCleared ("we," "us," or "our") collects, uses, and protects
-                    information from users of our website and service. We are committed to handling your information
-                    transparently and in compliance with the California Consumer Privacy Act (CCPA/CPRA), the California
-                    Online Privacy Protection Act (CalOPPA), and other applicable laws.
+                    information from users of our website and service.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>1. Information We Collect</h2>
@@ -42,34 +40,21 @@ const PrivacyPolicy = () => {
                 <ul style={{ paddingLeft: '24px', marginBottom: '24px' }}>
                     <li style={{ marginBottom: '8px' }}>Provide, maintain, and improve the CompCleared service</li>
                     <li style={{ marginBottom: '8px' }}>Process subscription payments</li>
-                    <li style={{ marginBottom: '8px' }}>Send service-related notifications (regulatory changes, account alerts, support responses)</li>
+                    <li style={{ marginBottom: '8px' }}>Respond to support requests</li>
                     <li style={{ marginBottom: '8px' }}>Comply with legal obligations</li>
                 </ul>
                 <p style={{ marginBottom: '24px' }}><strong>We do not sell your personal information.</strong> We do not share it with third parties for their marketing purposes.</p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>3. Data Storage and Security</h2>
                 <p style={{ marginBottom: '24px' }}>
-                    Service data is stored on encrypted database servers. Data is encrypted in transit (TLS) and at rest.
-                    We retain service data for the duration of your subscription plus 30 days after cancellation,
-                    unless a longer retention period is required by law (SB 553 requires incident log retention for 5 years).
+                    We store service data to provide the CompCleared service. For questions or requests about your data,
+                    email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
-                <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>4. Your Rights (California Residents)</h2>
-                <p style={{ marginBottom: '16px' }}>Under CCPA/CPRA, you have the right to:</p>
-                <ul style={{ paddingLeft: '24px', marginBottom: '24px' }}>
-                    <li style={{ marginBottom: '8px' }}>Know what personal information we collect and how we use it</li>
-                    <li style={{ marginBottom: '8px' }}>Request deletion of your personal information</li>
-                    <li style={{ marginBottom: '8px' }}>Correct inaccurate personal information</li>
-                    <li style={{ marginBottom: '8px' }}>Opt out of the sale or sharing of personal information (we do not sell or share)</li>
-                    <li style={{ marginBottom: '8px' }}>Limit the use of sensitive personal information</li>
-                </ul>
+                <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>4. Data Requests</h2>
                 <p style={{ marginBottom: '24px' }}>
-                    To exercise these rights, email{' '}
-                    <a href="mailto:[email protected]" style={{ color: '#2563EB' }}>[email protected]</a>.
-                    We will respond within 45 days as required by California law.
-                </p>
-                <p style={{ marginBottom: '24px' }}>
-                    We honor Global Privacy Control (GPC) signals from your browser.
+                    To make a request about your personal information, email{' '}
+                    <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>5. HIPAA and Protected Health Information</h2>
@@ -93,7 +78,7 @@ const PrivacyPolicy = () => {
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>8. Contact</h2>
                 <p style={{ marginBottom: '24px' }}>
                     Questions about this policy? Email{' '}
-                    <a href="mailto:[email protected]" style={{ color: '#2563EB' }}>[email protected]</a>.
+                    <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <div style={{ marginTop: '40px', padding: '20px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: '14px', color: '#64748B' }}>

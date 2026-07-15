@@ -46,25 +46,21 @@ const TermsOfService = () => {
                     money-back guarantee. By providing a payment method, you authorize us to charge the applicable fees.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
-                    <strong>Auto-Renewal Disclosure.</strong> Your subscription automatically renews at the end of
-                    each billing period unless you cancel before the renewal date. You will be charged the then-current
-                    subscription fee. We will send you a reminder email at least 15 days before any annual renewal.
+                    <strong>Subscription billing.</strong> Paid plans are purchased through Stripe Checkout and renew
+                    according to the plan you select. Prices are shown in USD, and any applicable taxes are shown by Stripe at checkout.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
                     <strong>14-Day Money-Back Guarantee.</strong> If you are not satisfied with a paid subscription
-                    within the first 14 days, email <a href="mailto:[email protected]" style={{ color: '#2563EB' }}>[email protected]</a> for
+                    within the first 14 days, email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a> for
                     a full refund.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>3. Cancellation</h2>
                 <p style={{ marginBottom: '16px' }}>
-                    You may cancel your subscription at any time, for any reason, through your account settings.
-                    Cancellation is effective immediately. We will not require you to call, chat with a retention
-                    agent, or take any action other than a single click. You will receive a confirmation email.
+                    You may manage your subscription through Stripe’s secure billing portal.
                 </p>
                 <p style={{ marginBottom: '24px' }}>
-                    After cancellation, your service data will be retained for 30 days in case you change your
-                    mind, then permanently deleted, except where longer retention is required by law.
+                    For refunds or data requests, email <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>4. Acceptable Use</h2>
@@ -130,7 +126,7 @@ const TermsOfService = () => {
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#0f172a', marginTop: '32px', marginBottom: '12px' }}>11. Contact</h2>
                 <p style={{ marginBottom: '24px' }}>
                     Questions about these Terms? Email{' '}
-                    <a href="mailto:[email protected]" style={{ color: '#2563EB' }}>[email protected]</a>.
+                    <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
                 <div style={{ marginTop: '40px', padding: '20px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: '14px', color: '#64748B' }}>
