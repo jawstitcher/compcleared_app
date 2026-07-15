@@ -221,13 +221,49 @@ def signup():
             conn.close()
             return jsonify({'success': False, 'error': 'Email already registered'}), 400
 
+        # Take the same subscription lock as checkout completion and cancellation.
+        # The subsequent consume statement rechecks the company state while this
+        # lock is held, so a cancellation cannot race a first-account signup.
+        c.execute('''SELECT authorization.company_id, company.stripe_subscription_id
+                     FROM checkout_authorizations AS authorization
+                     JOIN companies AS company ON company.id = authorization.company_id
+                     WHERE authorization.checkout_session_id = %s
+                       AND authorization.expires_at > NOW()
+                       AND authorization.consumed_at IS NULL
+                     FOR UPDATE''', (checkout_session_id,))
+        checkout_authorization = c.fetchone()
+        if not checkout_authorization or not checkout_authorization['stripe_subscription_id']:
+            conn.rollback()
+            conn.close()
+            session.pop('verified_checkout_session_id', None)
+            return jsonify({
+                'success': False,
+                'error': 'Complete payment verification before creating an account'
+            }), 403
+
+        c.execute('SELECT pg_advisory_xact_lock(hashtext(%s))',
+                  (checkout_authorization['stripe_subscription_id'],))
+
         # UPDATE ... RETURNING is the one-time authorization consume operation.
         # It and the user insert share one transaction, so an insert failure rolls
-        # the consumption back instead of stranding a legitimate payer.
-        c.execute('''UPDATE checkout_authorizations SET consumed_at = NOW()
-                     WHERE checkout_session_id = %s AND expires_at > NOW()
-                       AND consumed_at IS NULL
-                     RETURNING company_id''', (checkout_session_id,))
+        # the consumption back instead of stranding a legitimate payer. Joining
+        # companies and the cancellation marker makes this a final, atomic active
+        # subscription check under the shared subscription lock.
+        c.execute('''UPDATE checkout_authorizations AS authorization
+                     SET consumed_at = NOW()
+                     FROM companies AS company
+                     WHERE authorization.checkout_session_id = %s
+                       AND authorization.company_id = company.id
+                       AND authorization.expires_at > NOW()
+                       AND authorization.consumed_at IS NULL
+                       AND company.subscription_status = 'active'
+                       AND company.stripe_subscription_id = %s
+                       AND NOT EXISTS (
+                           SELECT 1 FROM canceled_stripe_subscriptions
+                           WHERE stripe_subscription_id = company.stripe_subscription_id
+                       )
+                     RETURNING authorization.company_id''',
+                  (checkout_session_id, checkout_authorization['stripe_subscription_id']))
         authorization = c.fetchone()
         if not authorization:
             conn.rollback()
@@ -529,6 +565,16 @@ def stripe_webhook():
                      SET subscription_status = %s
                      WHERE stripe_subscription_id = %s''',
                   ('canceled', subscription['id']))
+        # Invalidate outstanding browser authorizations in the same locked
+        # transaction. This covers cancellation delivered before the browser
+        # returns from Checkout and makes stale cookies unusable immediately.
+        c.execute('''UPDATE checkout_authorizations AS authorization
+                     SET consumed_at = NOW()
+                     FROM companies AS company
+                     WHERE authorization.company_id = company.id
+                       AND company.stripe_subscription_id = %s
+                       AND authorization.consumed_at IS NULL''',
+                  (subscription['id'],))
         conn.commit()
         conn.close()
     

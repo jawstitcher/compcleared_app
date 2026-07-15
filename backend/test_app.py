@@ -8,6 +8,91 @@ import pytest
 import backend.app as app_module
 
 
+class StatefulCheckoutDb:
+    """Small in-memory transaction fake for signup/cancellation ordering tests."""
+
+    def __init__(self):
+        self.companies = {
+            7: {
+                "id": 7,
+                "subscription_status": "active",
+                "stripe_subscription_id": "sub_123",
+            }
+        }
+        self.authorizations = {"cs_paid": {"company_id": 7, "consumed": False}}
+        self.canceled_subscriptions = set()
+        self.users = []
+        self.cursor_instance = StatefulCheckoutCursor(self)
+
+    def cursor(self):
+        return self.cursor_instance
+
+    def commit(self):
+        pass
+
+    def rollback(self):
+        pass
+
+    def close(self):
+        pass
+
+
+class StatefulCheckoutCursor:
+    def __init__(self, database):
+        self.database = database
+        self.result = None
+
+    def execute(self, statement, params=()):
+        normalized = " ".join(statement.split())
+        self.result = None
+
+        if "SELECT id FROM users WHERE email" in normalized:
+            email = params[0]
+            self.result = next((user for user in self.database.users if user["email"] == email), None)
+        elif "SELECT authorization.company_id, company.stripe_subscription_id" in normalized:
+            authorization = self.database.authorizations.get(params[0])
+            if authorization:
+                company = self.database.companies[authorization["company_id"]]
+                self.result = {
+                    "company_id": authorization["company_id"],
+                    "stripe_subscription_id": company["stripe_subscription_id"],
+                }
+        elif ("UPDATE checkout_authorizations" in normalized
+              and "checkout_session_id = %s" in normalized):
+            authorization = self.database.authorizations.get(params[0])
+            company = (self.database.companies.get(authorization["company_id"])
+                       if authorization else None)
+            # The production statement must join the company/cancellation state;
+            # without that join, a canceled authorization remains consumable.
+            active_and_not_canceled = (
+                "FROM companies" not in normalized or (
+                    company and company["subscription_status"] == "active"
+                    and company["stripe_subscription_id"] not in self.database.canceled_subscriptions
+                )
+            )
+            if authorization and not authorization["consumed"] and active_and_not_canceled:
+                authorization["consumed"] = True
+                self.result = {"company_id": authorization["company_id"]}
+        elif "INSERT INTO users" in normalized:
+            user = {"id": len(self.database.users) + 1, "email": params[1]}
+            self.database.users.append(user)
+            self.result = user
+        elif "INSERT INTO canceled_stripe_subscriptions" in normalized:
+            self.database.canceled_subscriptions.add(params[0])
+        elif "SET subscription_status = %s" in normalized and "stripe_subscription_id = %s" in normalized:
+            for company in self.database.companies.values():
+                if company["stripe_subscription_id"] == params[1]:
+                    company["subscription_status"] = params[0]
+        elif "UPDATE checkout_authorizations" in normalized and "stripe_subscription_id" in normalized:
+            for authorization in self.database.authorizations.values():
+                company = self.database.companies[authorization["company_id"]]
+                if company["stripe_subscription_id"] == params[0]:
+                    authorization["consumed"] = True
+
+    def fetchone(self):
+        return self.result
+
+
 @pytest.fixture
 def client():
     app_module.app.config.update(TESTING=True, SECRET_KEY="test-secret")
@@ -103,16 +188,15 @@ def test_signup_rejects_a_stale_checkout_authorization(client):
             "email": "owner@example.com", "password": "safe-password", "name": "Owner",
         })
     assert response.status_code == 403
-    consume = connection.cursor.return_value.execute.call_args_list[1]
-    assert "SET consumed_at = NOW()" in consume.args[0]
-    assert "consumed_at IS NULL" in consume.args[0]
-    assert "expires_at > NOW()" in consume.args[0]
 
 
 def test_signup_consumes_the_checkout_authorization_once(client):
     connection = MagicMock()
     connection.cursor.return_value.fetchone.side_effect = [
-        None, {"company_id": 7}, {"id": 22},
+        None,
+        {"company_id": 7, "stripe_subscription_id": "sub_123"},
+        {"company_id": 7},
+        {"id": 22},
     ]
     with client.session_transaction() as flask_session:
         flask_session["verified_checkout_session_id"] = "cs_paid"
@@ -125,6 +209,48 @@ def test_signup_consumes_the_checkout_authorization_once(client):
     with client.session_transaction() as flask_session:
         assert "verified_checkout_session_id" not in flask_session
     assert client.post("/api/signup", json={}).status_code == 403
+
+
+def test_signup_consumption_is_one_time_in_behavior(client):
+    database = StatefulCheckoutDb()
+    with client.session_transaction() as flask_session:
+        flask_session["verified_checkout_session_id"] = "cs_paid"
+    with patch.object(app_module, "get_db", return_value=database):
+        first = client.post("/api/signup", json={
+            "email": "owner@example.com", "password": "safe-password", "name": "Owner",
+        })
+        with client.session_transaction() as flask_session:
+            flask_session["verified_checkout_session_id"] = "cs_paid"
+        second = client.post("/api/signup", json={
+            "email": "second@example.com", "password": "safe-password", "name": "Second",
+        })
+
+    assert first.status_code == 201
+    assert second.status_code == 403
+    assert [user["email"] for user in database.users] == ["owner@example.com"]
+    assert database.authorizations["cs_paid"]["consumed"] is True
+
+
+def test_cancellation_before_signup_prevents_user_creation(client):
+    database = StatefulCheckoutDb()
+    canceled_event = {
+        "type": "customer.subscription.deleted",
+        "data": {"object": {"id": "sub_123"}},
+    }
+    with patch.object(app_module.stripe.Webhook, "construct_event", return_value=canceled_event), \
+         patch.object(app_module, "get_db", return_value=database):
+        cancellation = client.post("/api/webhook", data=b"canceled", headers={"Stripe-Signature": "sig"})
+        with client.session_transaction() as flask_session:
+            flask_session["verified_checkout_session_id"] = "cs_paid"
+        signup = client.post("/api/signup", json={
+            "email": "owner@example.com", "password": "safe-password", "name": "Owner",
+        })
+
+    assert cancellation.status_code == 200
+    assert signup.status_code == 403
+    assert database.companies[7]["subscription_status"] == "canceled"
+    assert database.authorizations["cs_paid"]["consumed"] is True
+    assert database.users == []
 
 
 def test_consumed_checkout_authorization_cannot_be_reissued(client):
