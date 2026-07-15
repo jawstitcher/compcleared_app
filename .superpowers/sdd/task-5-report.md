@@ -20,3 +20,8 @@ Results: `backend/test_app.py` passed (4 tests), React passed (5 suites, 7 tests
 ## Safety constraint
 
 No live Stripe credentials were viewed or recorded, and no payment flow was completed. The deployed health endpoint is read-only and does not create a charge.
+
+## Review follow-up
+
+- Added the exact direct prohibition, “Do not make a live charge without explicit owner authorization.”, to both live billing readiness checklists in `QUICKSTART.md` and `DEPLOYMENT.md`.
+- Targeted grep found the exact sentence once in each file. `python3 -m pytest backend/test_app.py -q` passed (4 tests), `CI=true npm test -- --watchAll=false` passed (5 suites, 7 tests), and `CI=true npm run build` completed successfully.

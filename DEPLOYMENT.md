@@ -153,6 +153,7 @@ When ready to accept real money:
 - Railway `STRIPE_WEBHOOK_SECRET` is copied from the active live webhook destination.
 - Railway changes are deployed and `/api/health` returns 200.
 - Stripe Billing Portal is configured to allow subscription cancellation.
+- Do not make a live charge without explicit owner authorization.
 
 Open `/signup`, select each plan, and stop when Stripe opens Checkout. Confirm it is live mode and shows the intended product, price, and billing interval. Do not enter a card during this no-charge check.
 
