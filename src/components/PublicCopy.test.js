@@ -147,6 +147,19 @@ test('public pages describe the free tool as an educational self-assessment', ()
   expect(screen.getByText(/learn about workplace violence prevention plan considerations/i)).toBeInTheDocument();
 });
 
+test('landing page leads with SB 553 context and makes Pro the primary next step', () => {
+  renderPage(LandingPage);
+
+  expect(screen.getByRole('heading', { name: /california workplace violence prevention, organized/i })).toBeInTheDocument();
+  expect(screen.getByText(/sb 553.*california labor code section 6401\.9/i)).toBeInTheDocument();
+  expect(screen.getAllByRole('button', { name: /start compcleared pro.*\$19\/mo/i }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('button', { name: /free educational self-assessment/i }).length).toBeGreaterThan(0);
+  cleanup();
+
+  renderPage(PricingPage);
+  expect(screen.getByText(/choose a plan, complete secure checkout, then create your account/i)).toBeInTheDocument();
+});
+
 test('marketing pages do not promote unavailable or planned products', () => {
   renderPage(LandingPage);
 

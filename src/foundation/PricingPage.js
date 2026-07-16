@@ -29,6 +29,9 @@ const PricingPage = () => {
                     <p style={{ fontSize: '18px', color: '#475569', maxWidth: '640px', margin: '0 auto' }}>
                         Start with the free educational self-assessment, then use Pro to organize your plan, training records, and incident log.
                     </p>
+                    <p style={{ fontSize: '14px', color: '#64748B', margin: '16px auto 0' }}>
+                        Choose a plan, complete secure checkout, then create your account.
+                    </p>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '40px' }}>

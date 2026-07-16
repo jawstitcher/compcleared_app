@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import Footer from './Footer';
-import { ShieldCheck, AlertTriangle } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import FAQ from './FAQ';
 import './LandingPage.css';
 
@@ -44,39 +44,38 @@ function LandingPage() {
                         className="hero-badge"
                     />
                     <div className="hero-eyebrow">
-                        <ShieldCheck size={16} /> California workplace violence prevention records
+                        <ShieldCheck size={16} /> SB 553 · California Labor Code section 6401.9
                     </div>
                     <h1 className="hero-title">
-                        Organize your records.<br />Stay prepared. <span className="accent">✓</span>
+                        California workplace violence prevention, <span className="accent">organized.</span>
                     </h1>
                     <p className="hero-lede">
-                        CompCleared helps California small businesses organize a workplace violence
-                        prevention plan, incident records, training records, and available PDF exports in one place.
-                        It is not legal advice.
+                        Keep your plan template, training records, incident records, and available PDF exports together
+                        in one practical workspace. For California employers evaluating SB 553 requirements. Not legal advice.
                     </p>
                     <div className="hero-actions">
-                        <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
-                            Free Educational Self-Assessment →
+                        <button className="btn-hero-primary" onClick={() => navigate('/signup')}>
+                            Start CompCleared Pro · $19/mo →
                         </button>
-                        <button className="btn-hero-secondary" onClick={() => navigate('/signup')}>
-                            Start CompCleared Pro · $19/mo
+                        <button className="btn-hero-secondary" onClick={() => navigate('/exposure-check')}>
+                            Free Educational Self-Assessment
                         </button>
                     </div>
                     <p className="hero-trust">
-                        Free self-assessment, no signup &nbsp;·&nbsp; Manage Pro through Stripe &nbsp;·&nbsp; Billing questions? Email support
+                        Secure Stripe checkout &nbsp;·&nbsp; Create your account after payment &nbsp;·&nbsp; Free self-assessment, no signup
                     </p>
                 </div>
             </section>
 
-            <section style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '24px 32px', maxWidth: '800px', margin: '56px auto 80px', textAlign: 'center' }}>
+            <section style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '24px 32px', maxWidth: '800px', margin: '56px auto 80px', textAlign: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <AlertTriangle size={20} color="#dc2626" />
-                    <strong style={{ color: '#991b1b', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        The deadline is real
+                    <ShieldCheck size={20} color="#1d4ed8" />
+                    <strong style={{ color: '#1e3a8a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        Built around SB 553 recordkeeping work
                     </strong>
                 </div>
-                <p style={{ fontSize: '16px', color: '#7f1d1d', margin: 0 }}>
-                    Use the free readiness check to organize your next steps. CompCleared starts at <strong>$19/month</strong> and does not provide legal advice.
+                <p style={{ fontSize: '16px', color: '#1e3a8a', margin: 0 }}>
+                    Use CompCleared to organize the plan, training, and incident materials your business maintains. Check applicability with qualified California counsel.
                 </p>
             </section>
 
@@ -157,11 +156,11 @@ function LandingPage() {
                         helps organize your plan, incident log, and available PDF records for $19/month.
                     </p>
                     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <button className="btn-hero-primary" onClick={() => navigate('/exposure-check')}>
-                            Free Educational Self-Assessment →
-                        </button>
                         <button className="btn-cta" onClick={() => navigate('/signup')}>
-                            Start CompCleared Pro
+                            Start CompCleared Pro · $19/mo
+                        </button>
+                        <button className="btn-hero-secondary" onClick={() => navigate('/exposure-check')}>
+                            Free Educational Self-Assessment
                         </button>
                     </div>
                     <p style={{ fontSize: '13px', color: '#94A3B8', marginTop: '16px' }}>
