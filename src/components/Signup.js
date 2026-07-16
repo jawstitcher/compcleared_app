@@ -160,252 +160,154 @@ function Signup() {
     }, [navigate]);
 
     return (
-        <div className="container" style={{ maxWidth: '1000px', margin: '40px auto', padding: '20px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <Logo size="large" />
-            </div>
-            <h1 style={{ textAlign: 'center', marginBottom: '40px', color: '#0f172a', fontSize: '2.5rem' }}>
-                Get Started with <span style={{ color: '#0f172a', fontWeight: '800' }}>Comp</span><span style={{ color: '#2563EB', fontWeight: '800' }}>Cleared</span>
-            </h1>
+        <main className="signup-page">
+            <div className="signup-container">
+                <header className="signup-header">
+                    <button className="brand-link" type="button" onClick={() => navigate('/')}>
+                        <Logo size="large" />
+                    </button>
+                    <p className="signup-eyebrow">Secure Stripe checkout</p>
+                    <h1>Start CompCleared Pro</h1>
+                    <p>Choose a plan, complete payment, then create your workspace account.</p>
+                </header>
 
-            {error && (
-                <div style={{
-                    background: '#fee',
-                    border: '1px solid #c00',
-                    padding: '15px',
-                    borderRadius: '8px',
-                    marginBottom: '20px',
-                    color: '#c00'
-                }}>
-                    {error}
-                </div>
-            )}
-
-            {step === 1 && (
-                <>
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                        gap: '20px',
-                        marginBottom: '40px'
-                    }}>
-                        {Object.entries(TIERS).map(([key, tier]) => (
-                            <div
-                                key={key}
-                                onClick={() => handleTierSelect(key)}
-                                style={{
-                                    border: formData.tier === key ? '3px solid #2563EB' : '2px solid #ddd',
-                                    borderRadius: '12px',
-                                    padding: '30px',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s',
-                                    background: formData.tier === key ? '#f0f9ff' : 'white'
-                                }}
-                            >
-                                <h3 style={{ marginTop: 0 }}>{tier.name}</h3>
-                                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563EB', margin: '15px 0' }}>
-                                    {tier.price}
-                                </div>
-                                <div style={{ color: '#666', marginBottom: '20px' }}>{tier.employees}</div>
-                                <ul style={{ listStyle: 'none', padding: 0 }}>
-                                    {tier.features.map((feature, idx) => (
-                                        <li key={idx} style={{ padding: '8px 0', borderTop: '1px solid #eee' }}>
-                                            ✓ {feature}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+                {error && (
+                    <div className="error-alert" role="alert">
+                        {error}
                     </div>
+                )}
 
-                    <form onSubmit={handleCompanySubmit} style={{
-                        background: 'white',
-                        border: '2px solid #ddd',
-                        borderRadius: '12px',
-                        padding: '30px',
-                        maxWidth: '500px',
-                        margin: '0 auto'
-                    }}>
-                        <h3>Company Information</h3>
+                {step === 1 && (
+                    <>
+                        <div className="tiers-grid" role="radiogroup" aria-label="Choose a CompCleared Pro plan">
+                            {Object.entries(TIERS).map(([key, tier]) => {
+                                const isSelected = formData.tier === key;
 
-                        <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-                                Company Name *
-                            </label>
+                                return (
+                                    <button
+                                        key={key}
+                                        type="button"
+                                        role="radio"
+                                        aria-checked={isSelected}
+                                        aria-label={`${tier.name} plan: ${tier.price}`}
+                                        className={`tier-card ${isSelected ? 'selected' : ''}`}
+                                        onClick={() => handleTierSelect(key)}
+                                    >
+                                        <span className="tier-card-header">
+                                            <span>
+                                                <span className="tier-name">{tier.name}</span>
+                                                <span className="tier-employees">{tier.employees}</span>
+                                            </span>
+                                            {tier.popular && <span className="tier-badge">Best value</span>}
+                                        </span>
+                                        <span className="tier-price">{tier.price}</span>
+                                        <ul className="tier-features">
+                                            {tier.features.map((feature, idx) => (
+                                                <li key={idx}>{feature}</li>
+                                            ))}
+                                        </ul>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <form className="signup-form" onSubmit={handleCompanySubmit}>
+                            <h2>Company information</h2>
+
+                            <div className="form-group">
+                                <label htmlFor="company_name">Company name *</label>
+                                <input
+                                    id="company_name"
+                                    type="text"
+                                    name="company_name"
+                                    value={formData.company_name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="employee_count">Number of employees *</label>
+                                <input
+                                    id="employee_count"
+                                    type="number"
+                                    name="employee_count"
+                                    value={formData.employee_count}
+                                    onChange={handleChange}
+                                    required
+                                    min="1"
+                                />
+                            </div>
+
+                            <p className="checkout-note">
+                                You’ll be taken to Stripe to complete your selected paid plan. The free readiness
+                                check is available without an account. For billing or refund questions, email
+                                support@compcleared.com.
+                            </p>
+                            <button type="submit" disabled={loading} className="submit-btn">
+                                {loading ? 'Processing...' : 'Continue to Stripe'}
+                            </button>
+                        </form>
+                    </>
+                )}
+
+                {step === 2 && (
+                    <form className="signup-form" onSubmit={handleAccountSubmit}>
+                        <div className="success-alert" role="status">
+                            Payment successful. Complete your account setup.
+                        </div>
+
+                        <h2>Create your account</h2>
+
+                        <div className="form-group">
+                            <label htmlFor="name">Full name *</label>
                             <input
+                                id="name"
                                 type="text"
-                                name="company_name"
-                                value={formData.company_name}
+                                name="name"
+                                value={formData.name}
                                 onChange={handleChange}
                                 required
-                                style={{
-                                    width: '100%',
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: '1px solid #ddd',
-                                    fontSize: '16px'
-                                }}
                             />
                         </div>
 
-                        <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-                                Number of Employees *
-                            </label>
+                        <div className="form-group">
+                            <label htmlFor="email">Email *</label>
                             <input
-                                type="number"
-                                name="employee_count"
-                                value={formData.employee_count}
+                                id="email"
+                                type="email"
+                                name="email"
+                                value={formData.email}
                                 onChange={handleChange}
                                 required
-                                min="1"
-                                style={{
-                                    width: '100%',
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: '1px solid #ddd',
-                                    fontSize: '16px'
-                                }}
                             />
                         </div>
 
-                        <p style={{ marginBottom: '16px', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>
-                            You’ll be taken to Stripe to complete your selected paid plan. The free readiness check is available without an account. For billing or refund questions, email support@compcleared.com.
-                        </p>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            style={{
-                                width: '100%',
-                                padding: '15px',
-                                background: '#2563EB',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '8px',
-                                fontSize: '18px',
-                                fontWeight: 'bold',
-                                cursor: loading ? 'not-allowed' : 'pointer',
-                                opacity: loading ? 0.6 : 1
-                            }}
-                        >
-                            {loading ? 'Processing...' : 'Continue to Payment'}
+                        <div className="form-group">
+                            <label htmlFor="password">Password *</label>
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                minLength="8"
+                            />
+                            <small>Minimum 8 characters</small>
+                        </div>
+
+                        <button type="submit" disabled={loading} className="submit-btn">
+                            {loading ? 'Creating account...' : 'Complete setup'}
                         </button>
                     </form>
-                </>
-            )}
+                )}
 
-            {step === 2 && (
-                <form onSubmit={handleAccountSubmit} style={{
-                    background: 'white',
-                    border: '2px solid #ddd',
-                    borderRadius: '12px',
-                    padding: '30px',
-                    maxWidth: '500px',
-                    margin: '0 auto'
-                }}>
-                    <div style={{
-                        background: '#d1fae5',
-                        border: '1px solid #10b981',
-                        padding: '15px',
-                        borderRadius: '8px',
-                        marginBottom: '30px',
-                        textAlign: 'center'
-                    }}>
-                        ✓ Payment successful! Complete your account setup.
-                    </div>
-
-                    <h3>Create Your Account</h3>
-
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-                            Full Name *
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                borderRadius: '8px',
-                                border: '1px solid #ddd',
-                                fontSize: '16px'
-                            }}
-                        />
-                    </div>
-
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-                            Email *
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                borderRadius: '8px',
-                                border: '1px solid #ddd',
-                                fontSize: '16px'
-                            }}
-                        />
-                    </div>
-
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-                            Password *
-                        </label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            minLength="8"
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                borderRadius: '8px',
-                                border: '1px solid #ddd',
-                                fontSize: '16px'
-                            }}
-                        />
-                        <small style={{ color: '#666' }}>Minimum 8 characters</small>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            width: '100%',
-                            padding: '15px',
-                            background: '#2563eb',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            fontSize: '18px',
-                            fontWeight: 'bold',
-                            cursor: loading ? 'not-allowed' : 'pointer',
-                            opacity: loading ? 0.6 : 1
-                        }}
-                    >
-                        {loading ? 'Creating Account...' : 'Complete Setup'}
-                    </button>
-                </form>
-            )}
-
-            <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                Already have an account?{' '}
-                <a href="/login" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 'bold' }}>
-                    Log in
-                </a>
+                <div className="signup-footer">
+                    Already have an account? <a href="/login">Log in</a>
+                </div>
             </div>
-        </div>
+        </main>
     );
 }
 

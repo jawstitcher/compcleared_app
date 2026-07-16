@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Signup from './Signup';
 
@@ -16,4 +16,13 @@ test('includes cookies when verifying a returning Stripe checkout session', asyn
     { credentials: 'include' },
   );
   fetchMock.mockRestore();
+});
+
+test('signup page has one main landmark and accessible plan choices', () => {
+  window.history.pushState({}, '', '/signup');
+  render(<MemoryRouter><Signup /></MemoryRouter>);
+
+  expect(screen.getAllByRole('main')).toHaveLength(1);
+  expect(screen.getByRole('radio', { name: /monthly/i })).toBeInTheDocument();
+  expect(screen.getByRole('radio', { name: /annual/i })).toBeChecked();
 });

@@ -6,3 +6,8 @@ test('renders the CompCleared landing page', () => {
   expect(screen.getByRole('heading', { name: /California workplace violence prevention, organized/i })).toBeInTheDocument();
   expect(screen.getAllByText(/Start CompCleared Pro · \$19\/mo/i).length).toBeGreaterThan(0);
 });
+
+test('landing page exposes one main landmark', () => {
+  render(<App />);
+  expect(screen.getAllByRole('main')).toHaveLength(1);
+});

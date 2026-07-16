@@ -25,7 +25,8 @@ const Logo = ({ type = 'color', size = 'medium' }) => {
         <div style={containerStyle}>
             <img
                 src="/logo.svg"
-                alt="CompCleared Logo"
+                alt=""
+                aria-hidden="true"
                 style={{
                     width: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
                     height: size === 'large' ? '48px' : size === 'small' ? '24px' : '36px',
