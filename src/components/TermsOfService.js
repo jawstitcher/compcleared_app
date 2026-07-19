@@ -126,12 +126,7 @@ const TermsOfService = () => {
                     <a href="mailto:support@compcleared.com" style={{ color: '#2563EB' }}>support@compcleared.com</a>.
                 </p>
 
-                <div style={{ marginTop: '40px', padding: '20px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: '14px', color: '#64748B' }}>
-                    <strong>Note:</strong> This is a placeholder Terms of Service suitable for early-stage launch.
-                    Before accepting payment from customers, have this reviewed by a California-licensed attorney
-                    familiar with technology and consumer protection law. Services like TermsFeed or Termly can
-                    generate a more comprehensive version for ~$200, and a lawyer review is ~$500-1,000.
-                </div>
+                {/* Internal launch note: keep legal docs under attorney review as the business matures. */}
             </div>
         </div>
     );

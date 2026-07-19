@@ -45,6 +45,17 @@ test('terms and privacy material updates are posted on their applicable pages', 
   expect(screen.getByText(/material updates.*posted on this page/i)).toBeInTheDocument();
 });
 
+test('legal pages do not show internal placeholder review notes to customers', () => {
+  renderPage(TermsOfService);
+  expect(screen.queryByText(/placeholder Terms of Service/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/before accepting payment from customers/i)).not.toBeInTheDocument();
+  cleanup();
+
+  renderPage(PrivacyPolicy);
+  expect(screen.queryByText(/placeholder privacy policy/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/reviewed by a California-licensed attorney/i)).not.toBeInTheDocument();
+});
+
 test('marketing pages do not promise refunds, regulatory email alerts, or unrestricted exports', () => {
   renderPage(LandingPage);
   expect(screen.queryByText(/14-day money-back guarantee/i)).not.toBeInTheDocument();
@@ -117,6 +128,7 @@ test('readiness check is an educational self-assessment and does not determine l
 
   expect(screen.getByRole('heading', { name: /workplace violence prevention self-assessment/i })).toBeInTheDocument();
   expect(screen.getByText(/may apply.*consult qualified california counsel/i)).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /get started free/i })).not.toBeInTheDocument();
   expect(screen.queryByText(/is sb 553 a problem for your business/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/annual training is required/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/protects you from civil liability/i)).not.toBeInTheDocument();

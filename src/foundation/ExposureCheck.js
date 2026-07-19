@@ -250,7 +250,7 @@ const ExposureCheck = () => {
                                 className="btn-cta"
                                 style={{ marginRight: '12px' }}
                             >
-                                Get Started Free
+                                Start CompCleared Pro
                             </button>
                             <button
                                 onClick={reset}
